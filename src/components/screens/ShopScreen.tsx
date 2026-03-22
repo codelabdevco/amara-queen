@@ -29,6 +29,7 @@ export default function ShopScreen() {
   const [credits, setCredits] = useState(0);
   const [loggedIn, setLoggedIn] = useState(false);
   const [payMethod, setPayMethod] = useState<"credit" | "transfer">("transfer");
+  const [viewProduct, setViewProduct] = useState<Product | null>(null);
   const [promptPayInfo, setPromptPayInfo] = useState({ number: "", name: "" });
 
   // Shipping form
@@ -198,22 +199,23 @@ export default function ShopScreen() {
       {/* Product grid */}
       <div className="grid grid-cols-2 gap-2.5 w-full max-w-md">
         {products.map((product, idx) => (
-          <motion.div key={product.id} className="rounded-2xl bg-[#2a1215]/90 overflow-hidden"
+          <motion.div key={product.id} className="rounded-2xl bg-[#2a1215]/90 overflow-hidden cursor-pointer active:scale-[0.97] transition-transform"
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 + idx * 0.05, duration: 0.4, ease: EASE }}
+            onClick={() => setViewProduct(product)}
           >
             <div className="aspect-square bg-[#1e0c0c] flex items-center justify-center">
               <span className="text-3xl text-gold/60">{product.icon}</span>
             </div>
             <div className="p-3">
               <p className="text-white/80 text-xs font-medium leading-tight mb-0.5">{product.name}</p>
-              <p className="text-white/30 text-[0.55rem] leading-4 mb-2">{product.description}</p>
+              <p className="text-white/30 text-[0.55rem] leading-4 mb-2 line-clamp-2">{product.description}</p>
               <div className="flex items-center justify-between">
                 <span className="text-gold text-sm font-semibold">฿{product.price}</span>
                 <motion.button
                   className="px-2.5 py-1 rounded-lg bg-gold/10 text-gold text-[0.6rem] font-medium active:bg-gold/20"
                   whileTap={{ scale: 0.9 }}
-                  onClick={() => addToCart(product)}
+                  onClick={(e) => { e.stopPropagation(); addToCart(product); }}
                 >
                   + ตะกร้า
                 </motion.button>
@@ -222,6 +224,69 @@ export default function ShopScreen() {
           </motion.div>
         ))}
       </div>
+
+      {/* ── Product Detail Popup ── */}
+      <AnimatePresence>
+        {viewProduct && (
+          <motion.div
+            className="fixed inset-0 z-[120] flex items-center justify-center px-4"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            onClick={() => setViewProduct(null)}
+          >
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+            <motion.div
+              className="relative bg-[#2a1215] rounded-2xl w-full max-w-[340px] overflow-hidden"
+              initial={{ scale: 0.85, y: 30 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              onClick={e => e.stopPropagation()}
+            >
+              {/* Product image */}
+              <div className="aspect-[4/3] bg-[#1e0c0c] flex items-center justify-center relative">
+                <span className="text-6xl text-gold/50">{viewProduct.icon}</span>
+                <button
+                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 flex items-center justify-center text-white/50 hover:text-white/80"
+                  onClick={() => setViewProduct(null)}
+                >
+                  &#10005;
+                </button>
+              </div>
+
+              {/* Product info */}
+              <div className="p-5 space-y-3">
+                <div>
+                  <h3 className="text-gold text-base font-semibold">{viewProduct.name}</h3>
+                  {viewProduct.category && (
+                    <span className="text-[#8B7A4A]/60 text-[0.6rem] uppercase tracking-wider">{viewProduct.category}</span>
+                  )}
+                </div>
+
+                <p className="text-white/50 text-xs leading-5">{viewProduct.description}</p>
+
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-gold text-xl font-semibold">฿{viewProduct.price}</span>
+                  <div className="flex gap-2">
+                    {cart.find(i => i.id === viewProduct.id) ? (
+                      <div className="flex items-center gap-2">
+                        <button className="w-8 h-8 rounded-full bg-[#1e0c0c] text-white/50 text-sm flex items-center justify-center"
+                          onClick={() => updateQty(viewProduct.id, -1)}>-</button>
+                        <span className="text-gold text-sm font-semibold w-5 text-center">
+                          {cart.find(i => i.id === viewProduct.id)?.qty || 0}
+                        </span>
+                        <button className="w-8 h-8 rounded-full bg-[#1e0c0c] text-white/50 text-sm flex items-center justify-center"
+                          onClick={() => { addToCart(viewProduct); }}>+</button>
+                      </div>
+                    ) : (
+                      <LaurelButton variant="gold" onClick={() => addToCart(viewProduct)}>
+                        เพิ่มลงตะกร้า
+                      </LaurelButton>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Cart / Checkout Panel ── */}
       <AnimatePresence>
