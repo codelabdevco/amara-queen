@@ -23,24 +23,24 @@ export default function TimePicker({ value, onChange }: Props) {
     }
   }
 
-  const selectClass = "bg-[#08090e] border border-white/10 rounded-lg px-2 py-2.5 text-sm text-white focus:border-gold/30 outline-none appearance-none cursor-pointer transition-colors hover:border-white/20 [color-scheme:dark]";
+  const selectClass = "bg-[#1e0c0c] border border-white/10 rounded-lg px-2 py-2.5 text-sm text-white focus:border-gold/30 outline-none appearance-none cursor-pointer transition-colors hover:border-white/20 [color-scheme:dark]";
 
   return (
     <div className="grid grid-cols-2 gap-2">
       <div className="relative">
         <select value={parsed.hour ? String(parseInt(parsed.hour)) : ""} onChange={e => handleChange("hour", e.target.value)} className={`${selectClass} w-full`}>
-          <option value="" className="bg-[#08090e] text-white/30">ชั่วโมง</option>
+          <option value="" className="bg-[#1e0c0c] text-white/30">ชั่วโมง</option>
           {Array.from({ length: 24 }, (_, i) => (
-            <option key={i} value={String(i)} className="bg-[#08090e]">{String(i).padStart(2, "0")} น.</option>
+            <option key={i} value={String(i)} className="bg-[#1e0c0c]">{String(i).padStart(2, "0")} น.</option>
           ))}
         </select>
         <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white/20 text-[0.5rem] pointer-events-none">▼</span>
       </div>
       <div className="relative">
         <select value={parsed.minute ? String(parseInt(parsed.minute)) : ""} onChange={e => handleChange("minute", e.target.value)} className={`${selectClass} w-full`}>
-          <option value="" className="bg-[#08090e] text-white/30">นาที</option>
+          <option value="" className="bg-[#1e0c0c] text-white/30">นาที</option>
           {Array.from({ length: 60 }, (_, i) => (
-            <option key={i} value={String(i)} className="bg-[#08090e]">{String(i).padStart(2, "0")} นาที</option>
+            <option key={i} value={String(i)} className="bg-[#1e0c0c]">{String(i).padStart(2, "0")} นาที</option>
           ))}
         </select>
         <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white/20 text-[0.5rem] pointer-events-none">▼</span>

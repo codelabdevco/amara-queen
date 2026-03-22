@@ -121,7 +121,7 @@ export default function BookingScreen() {
       {/* Profile Card */}
       {profileData?.profile && (
         <motion.div
-          className="w-full max-w-full mb-5 bg-[#0c0d14] border border-white/[0.06] rounded-2xl p-4"
+          className="w-full max-w-full mb-5 bg-[#2a1215] border border-gold/[0.08] rounded-2xl p-4"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: EASE }}
@@ -148,13 +148,13 @@ export default function BookingScreen() {
           </div>
 
           <div className="grid grid-cols-2 gap-2 mt-3">
-            <div className="bg-[#08090e] rounded-lg p-2.5 text-center">
+            <div className="bg-[#1e0c0c] rounded-lg p-2.5 text-center">
               <p className="text-gold text-lg font-semibold">{profileData.totalReadings}</p>
-              <p className="text-white/25 text-[0.6rem]">ดูดวงแล้ว</p>
+              <p className="text-gold/25 text-[0.6rem]">ดูดวงแล้ว</p>
             </div>
-            <div className="bg-[#08090e] rounded-lg p-2.5 text-center">
+            <div className="bg-[#1e0c0c] rounded-lg p-2.5 text-center">
               <p className="text-gold text-lg font-semibold">{profileData.credits}</p>
-              <p className="text-white/25 text-[0.6rem]">เครดิตคงเหลือ</p>
+              <p className="text-gold/25 text-[0.6rem]">เครดิตคงเหลือ</p>
             </div>
           </div>
         </motion.div>
@@ -168,7 +168,7 @@ export default function BookingScreen() {
         transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
       >
         <h2 className="text-lg text-gold font-semibold tracking-wide">นัดหมอดู</h2>
-        <p className="text-white/25 text-xs mt-1">จองคิวดูดวงกับหมอดูตัวจริง</p>
+        <p className="text-gold/25 text-xs mt-1">จองคิวดูดวงกับหมอดูตัวจริง</p>
       </motion.div>
 
       <AnimatePresence mode="wait">
@@ -185,7 +185,7 @@ export default function BookingScreen() {
             {TELLERS.map((teller, idx) => (
               <motion.button
                 key={teller.id}
-                className="w-full rounded-2xl border border-white/[0.06] bg-[#0c0d14]/90 p-4 text-left active:scale-[0.98] transition-transform"
+                className="w-full rounded-2xl border border-gold/[0.08] bg-[#2a1215]/90 p-4 text-left active:scale-[0.98] transition-transform"
                 style={{ borderColor: `${teller.color}20` }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -225,7 +225,7 @@ export default function BookingScreen() {
             transition={{ duration: 0.35, ease: EASE }}
           >
             {/* Selected teller info */}
-            <div className="flex items-center gap-3 mb-5 p-3 rounded-xl border border-white/[0.06] bg-[#0c0d14]/90">
+            <div className="flex items-center gap-3 mb-5 p-3 rounded-xl border border-gold/[0.08] bg-[#2a1215]/90">
               <div
                 className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
                 style={{ background: `${selectedTeller.color}18`, border: `2px solid ${selectedTeller.color}40`, color: selectedTeller.color }}
@@ -247,13 +247,13 @@ export default function BookingScreen() {
                   <button
                     key={idx}
                     className={`flex-shrink-0 w-14 rounded-xl p-2 flex flex-col items-center gap-0.5 border transition-colors ${
-                      isSel ? "border-gold/60 bg-gold/10" : "border-white/[0.06] bg-[#0c0d14]/90"
+                      isSel ? "border-gold/60 bg-gold/10" : "border-gold/[0.08] bg-[#2a1215]/90"
                     }`}
                     onClick={() => { setSelectedDate(day); setSelectedTime(null); }}
                   >
                     <span className="text-[0.6rem] text-white/35">{THAI_DAYS[day.getDay()]}</span>
                     <span className={`text-sm font-semibold ${isSel ? "text-gold" : "text-white/70"}`}>{day.getDate()}</span>
-                    <span className="text-[0.55rem] text-white/25">
+                    <span className="text-[0.55rem] text-gold/25">
                       {day.toLocaleDateString("th-TH", { month: "short" })}
                     </span>
                   </button>
@@ -278,7 +278,7 @@ export default function BookingScreen() {
                         className={`rounded-lg py-2 text-xs font-medium border transition-colors ${
                           isSel
                             ? "border-gold/60 bg-gold/10 text-gold"
-                            : "border-white/[0.06] bg-[#0c0d14]/90 text-white/50 active:bg-white/5"
+                            : "border-gold/[0.08] bg-[#2a1215]/90 text-white/50 active:bg-gold/5"
                         }`}
                         onClick={() => setSelectedTime(slot)}
                       >
@@ -308,7 +308,7 @@ export default function BookingScreen() {
         {step === "confirm" && selectedTeller && selectedDate && selectedTime && (
           <motion.div
             key="confirm"
-            className="w-full max-w-md rounded-2xl border border-white/[0.08] bg-[#0c0d14]/95 p-6"
+            className="w-full max-w-md rounded-2xl border border-white/[0.08] bg-[#2a1215]/95 p-6"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}

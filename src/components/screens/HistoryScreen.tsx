@@ -51,7 +51,7 @@ export default function HistoryScreen({ onClose }: Props) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[100] bg-[#08090e]/95 backdrop-blur-sm overflow-y-auto"
+      className="fixed inset-0 z-[100] bg-[#1e0c0c]/95 backdrop-blur-sm overflow-y-auto"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -83,13 +83,13 @@ export default function HistoryScreen({ onClose }: Props) {
               return (
                 <motion.div
                   key={r.id}
-                  className="rounded-xl border border-white/[0.06] bg-[#0c0d14]/90 overflow-hidden"
+                  className="rounded-xl border border-gold/[0.08] bg-[#2a1215]/90 overflow-hidden"
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.03, duration: 0.4, ease: EASE }}
                 >
                   <button
-                    className="w-full text-left p-4 active:bg-white/[0.02] transition-colors"
+                    className="w-full text-left p-4 active:bg-gold/[0.02] transition-colors"
                     onClick={() => setExpanded(isOpen ? null : r.id)}
                   >
                     <div className="flex items-center gap-3">
@@ -109,7 +109,7 @@ export default function HistoryScreen({ onClose }: Props) {
                             {TREND_LABEL[r.reading.trend] || "กลางๆ"}
                           </span>
                         </div>
-                        <p className="text-[0.65rem] text-white/25 mt-0.5">{formatDate(r.timestamp)} · {r.spread}</p>
+                        <p className="text-[0.65rem] text-gold/25 mt-0.5">{formatDate(r.timestamp)} · {r.spread}</p>
                       </div>
                       <span className={`text-white/20 text-xs transition-transform ${isOpen ? "rotate-180" : ""}`}>▼</span>
                     </div>
@@ -127,7 +127,7 @@ export default function HistoryScreen({ onClose }: Props) {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <div className="px-4 pb-4 space-y-3 border-t border-white/[0.04] pt-3">
+                        <div className="px-4 pb-4 space-y-3 border-t border-gold/[0.06] pt-3">
                           {r.reading.summary && (
                             <p className="text-xs text-white/60 leading-6">{r.reading.summary}</p>
                           )}

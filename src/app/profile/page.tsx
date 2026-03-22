@@ -119,12 +119,12 @@ export default function ProfilePage() {
                   <InfoCard label="สีนำโชค" value={data.zodiac.luckyColor} />
                 </div>
 
-                <div className="bg-[#0c0d14] border border-gold/10 rounded-xl p-3.5">
+                <div className="bg-[#2a1215] border border-gold/10 rounded-xl p-3.5">
                   <p className="text-gold/50 text-[0.6rem] uppercase tracking-wider mb-1.5">บุคลิกภาพ</p>
                   <p className="text-white/60 text-xs leading-5">{data.zodiac.personality}</p>
                 </div>
 
-                <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-3.5">
+                <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-3.5">
                   <p className="text-white/30 text-[0.6rem] uppercase tracking-wider mb-1.5">ราศีที่เข้ากัน</p>
                   <p className="text-gold/70 text-sm font-medium">{data.zodiac.compatibility}</p>
                 </div>
@@ -139,7 +139,7 @@ export default function ProfilePage() {
               transition={{ delay: 0.3, duration: 0.5 }}
             >
               <p className="text-white/30 text-[0.65rem] uppercase tracking-wider">ข้อมูลติดต่อ</p>
-              <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-4 space-y-3">
+              <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-4 space-y-3">
                 {data.profile.phone && <InfoRow label="เบอร์โทร" value={data.profile.phone} />}
                 {data.profile.email && <InfoRow label="อีเมล" value={data.profile.email} />}
                 {data.profile.occupation && <InfoRow label="อาชีพ" value={data.profile.occupation} />}
@@ -176,17 +176,17 @@ export default function ProfilePage() {
 
 function StatBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-3 text-center">
+    <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-3 text-center">
       <p className="text-gold text-xl font-semibold">{value}</p>
-      <p className="text-white/25 text-[0.6rem] mt-0.5">{label}</p>
+      <p className="text-gold/25 text-[0.6rem] mt-0.5">{label}</p>
     </div>
   );
 }
 
 function InfoCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-2.5 text-center">
-      <p className="text-white/25 text-[0.55rem] uppercase tracking-wider">{label}</p>
+    <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-2.5 text-center">
+      <p className="text-gold/25 text-[0.55rem] uppercase tracking-wider">{label}</p>
       <p className="text-gold text-sm font-semibold mt-0.5">{value}</p>
       {sub && <p className="text-white/20 text-[0.55rem] mt-0.5">{sub}</p>}
     </div>

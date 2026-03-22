@@ -20,10 +20,10 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-[100] bg-[#0c0d14]/95 backdrop-blur-md border-t border-white/[0.06]"
-      style={{ paddingBottom: "max(8px, env(safe-area-inset-bottom))" }}
+      className="fixed bottom-0 left-0 right-0 z-[100] backdrop-blur-md border-t border-gold/[0.08]"
+      style={{ paddingBottom: "max(8px, env(safe-area-inset-bottom))", background: "linear-gradient(180deg, rgba(26,10,10,0.97), #1a0a0a)" }}
     >
-      <div className="flex items-center justify-around px-2 pt-1.5">
+      <div className="flex items-center justify-around px-2 pt-2">
         {TABS.map((tab) => {
           const isActive = pathname === tab.href || (tab.href !== "/home" && pathname.startsWith(tab.href));
           return (
@@ -41,7 +41,7 @@ export default function BottomNav() {
               )}
               <span
                 className={`text-lg transition-colors ${
-                  isActive ? "text-gold" : "text-white/25"
+                  isActive ? "text-gold" : "text-gold/25"
                 }`}
               >
                 {isActive ? tab.activeIcon : tab.icon}

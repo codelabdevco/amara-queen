@@ -106,7 +106,7 @@ export default function CalendarScreen() {
         transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
       >
         <h2 className="text-lg text-gold font-semibold tracking-wide">วันดีวันร้าย</h2>
-        <p className="text-white/25 text-xs mt-1">ปฏิทินดวงรายสัปดาห์</p>
+        <p className="text-gold/25 text-xs mt-1">ปฏิทินดวงรายสัปดาห์</p>
       </motion.div>
 
       {/* Week nav */}
@@ -117,7 +117,7 @@ export default function CalendarScreen() {
         transition={{ delay: 0.2, duration: 0.5 }}
       >
         <button
-          className="px-3 py-1.5 rounded-lg border border-white/10 text-white/50 text-xs active:bg-white/5"
+          className="px-3 py-1.5 rounded-lg border border-white/10 text-white/50 text-xs active:bg-gold/5"
           onClick={() => { setWeekOffset((o) => o - 1); setSelectedIdx(null); }}
         >
           สัปดาห์ก่อน
@@ -128,7 +128,7 @@ export default function CalendarScreen() {
           {new Date(monday.getTime() + 6 * 86400000).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" })}
         </span>
         <button
-          className="px-3 py-1.5 rounded-lg border border-white/10 text-white/50 text-xs active:bg-white/5"
+          className="px-3 py-1.5 rounded-lg border border-white/10 text-white/50 text-xs active:bg-gold/5"
           onClick={() => { setWeekOffset((o) => o + 1); setSelectedIdx(null); }}
         >
           สัปดาห์ถัดไป
@@ -148,8 +148,8 @@ export default function CalendarScreen() {
                 isSelected
                   ? "border-gold/60 bg-gold/10"
                   : isToday
-                  ? "border-white/20 bg-white/5"
-                  : "border-white/[0.06] bg-[#0c0d14]/90"
+                  ? "border-white/20 bg-gold/5"
+                  : "border-gold/[0.08] bg-[#2a1215]/90"
               }`}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -178,7 +178,7 @@ export default function CalendarScreen() {
         {selected && (
           <motion.div
             key={selected.date.toISOString()}
-            className="w-full max-w-md mt-4 rounded-2xl border border-white/[0.08] bg-[#0c0d14]/95 p-5"
+            className="w-full max-w-md mt-4 rounded-2xl border border-white/[0.08] bg-[#2a1215]/95 p-5"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}

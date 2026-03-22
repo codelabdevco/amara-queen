@@ -127,7 +127,7 @@ export default function CreditBadge() {
           >
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
             <motion.div
-              className="relative bg-[#0c0d14] border border-white/[0.08] rounded-2xl p-6 w-full max-w-[380px]"
+              className="relative bg-[#2a1215] border border-white/[0.08] rounded-2xl p-6 w-full max-w-[380px]"
               initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -145,7 +145,7 @@ export default function CreditBadge() {
                         <button key={i}
                           className={`rounded-xl p-3 border text-center transition-all ${selectedPkg === i
                             ? "bg-gold/10 border-gold/30 shadow-[0_0_12px_rgba(232,212,139,0.08)]"
-                            : "bg-[#08090e] border-white/[0.06] hover:border-white/10"}`}
+                            : "bg-[#1e0c0c] border-gold/[0.08] hover:border-white/10"}`}
                           onClick={() => setSelectedPkg(i)}
                         >
                           <p className="text-gold font-semibold text-lg">{pkg.credits}</p>
@@ -180,7 +180,7 @@ export default function CreditBadge() {
                         <img src={qrUrl} alt="PromptPay QR" className="w-48 h-48" />
                       </div>
                     ) : (
-                      <div className="bg-white/5 rounded-xl w-48 h-48 mx-auto flex items-center justify-center">
+                      <div className="bg-gold/5 rounded-xl w-48 h-48 mx-auto flex items-center justify-center">
                         <div className="w-6 h-6 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
                       </div>
                     )}

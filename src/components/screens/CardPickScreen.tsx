@@ -387,7 +387,7 @@ export default function CardPickScreen() {
           {stage === "layout" && (
             <motion.div key="h-lay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.2 }}>
               <p className="text-gold font-semibold text-sm mb-0.5">{selectedSpread.nameTH}</p>
-              <p className="text-white/25 text-xs">แตะไพ่เพื่อเปิด</p>
+              <p className="text-gold/25 text-xs">แตะไพ่เพื่อเปิด</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -597,7 +597,7 @@ export default function CardPickScreen() {
                       <div className="absolute inset-0 [backface-visibility:hidden] rounded-lg overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.4)]">
                         <MiniCardBack width={cardW} height={cardH} />
                       </div>
-                      <div className={`absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-lg border border-gold/30 overflow-hidden bg-[#08090e] shadow-[0_2px_12px_rgba(0,0,0,0.4)] ${card.isReversed ? "rotate-180" : ""}`}>
+                      <div className={`absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-lg border border-gold/30 overflow-hidden bg-[#1e0c0c] shadow-[0_2px_12px_rgba(0,0,0,0.4)] ${card.isReversed ? "rotate-180" : ""}`}>
                         {card.image && <img src={card.image} alt={card.nameEn} className="absolute inset-0 w-full h-full object-cover" />}
                         <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-1">
                           <p className="text-[0.5rem] text-gold text-center truncate">{card.nameTh}</p>
@@ -621,7 +621,7 @@ export default function CardPickScreen() {
 
       {/* Hint */}
       {isPickable && pickedCards.length === 0 && (
-        <motion.p className="text-white/25 text-[0.6rem] mt-2 flex-shrink-0"
+        <motion.p className="text-gold/25 text-[0.6rem] mt-2 flex-shrink-0"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.5 }}
         >แตะไพ่ที่คุณรู้สึกสัมผัสได้</motion.p>
       )}

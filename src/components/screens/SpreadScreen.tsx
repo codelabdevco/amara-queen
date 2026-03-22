@@ -36,7 +36,7 @@ export default function SpreadScreen() {
             <motion.button
               key={s.id}
               className={`w-full flex items-center gap-3 p-3.5 rounded-xl border text-left active:bg-gold/5
-                ${isDefault ? "border-gold/40 bg-gold/5" : "border-white/10 bg-[#0c0d14]/80"}`}
+                ${isDefault ? "border-gold/40 bg-gold/5" : "border-white/10 bg-[#2a1215]/80"}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 + idx * 0.04, duration: 0.4, ease: EASE }}
@@ -53,7 +53,7 @@ export default function SpreadScreen() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-white/90 font-medium">{s.nameTH}</span>
-                  <span className="text-[0.6rem] text-white/25">{s.cardCount} ใบ</span>
+                  <span className="text-[0.6rem] text-gold/25">{s.cardCount} ใบ</span>
                   {isDefault && <span className="text-[0.55rem] text-gold/60 ml-auto">แนะนำ</span>}
                 </div>
                 <p className="text-[0.65rem] text-white/30 mt-0.5">{s.desc}</p>

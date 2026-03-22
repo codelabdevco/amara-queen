@@ -98,7 +98,7 @@ export default function AdminSettingsPage() {
         ) : (
           <div className="max-w-2xl space-y-6">
             {/* Prompt Template */}
-            <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">
+            <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
               <label className="block text-white/50 text-xs mb-2 uppercase tracking-wider">
                 Prompt Template
               </label>
@@ -106,13 +106,13 @@ export default function AdminSettingsPage() {
                 value={settings.promptTemplate}
                 onChange={(e) => update("promptTemplate", e.target.value)}
                 rows={10}
-                className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm font-mono leading-relaxed focus:border-gold/30 outline-none transition-colors resize-y"
+                className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2.5 text-white text-sm font-mono leading-relaxed focus:border-gold/30 outline-none transition-colors resize-y"
               />
             </div>
 
             {/* Model & Max Tokens */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">
+              <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
                 <label className="block text-white/50 text-xs mb-2 uppercase tracking-wider">
                   Model
                 </label>
@@ -120,10 +120,10 @@ export default function AdminSettingsPage() {
                   type="text"
                   value={settings.model}
                   onChange={(e) => update("model", e.target.value)}
-                  className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
                 />
               </div>
-              <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">
+              <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
                 <label className="block text-white/50 text-xs mb-2 uppercase tracking-wider">
                   Max Tokens
                 </label>
@@ -131,14 +131,14 @@ export default function AdminSettingsPage() {
                   type="number"
                   value={settings.maxTokens}
                   onChange={(e) => update("maxTokens", Number(e.target.value))}
-                  className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
                 />
               </div>
             </div>
 
             {/* Limits */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">
+              <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
                 <label className="block text-white/50 text-xs mb-2 uppercase tracking-wider">
                   Daily Free Limit
                 </label>
@@ -146,11 +146,11 @@ export default function AdminSettingsPage() {
                   type="number"
                   value={settings.dailyFreeLimit}
                   onChange={(e) => update("dailyFreeLimit", Number(e.target.value))}
-                  className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
                 />
                 <p className="text-white/20 text-xs mt-1.5">จำนวนครั้งต่อวันที่ใช้ฟรี</p>
               </div>
-              <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">
+              <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
                 <label className="block text-white/50 text-xs mb-2 uppercase tracking-wider">
                   Rate Limit / min
                 </label>
@@ -158,7 +158,7 @@ export default function AdminSettingsPage() {
                   type="number"
                   value={settings.rateLimitPerMinute}
                   onChange={(e) => update("rateLimitPerMinute", Number(e.target.value))}
-                  className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
                 />
                 <p className="text-white/20 text-xs mt-1.5">จำกัดต่อนาที</p>
               </div>
@@ -166,7 +166,7 @@ export default function AdminSettingsPage() {
 
             {/* Credit & Payment */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">
+              <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
                 <label className="block text-white/50 text-xs mb-2 uppercase tracking-wider">
                   เครดิต/ครั้ง
                 </label>
@@ -174,11 +174,11 @@ export default function AdminSettingsPage() {
                   type="number"
                   value={settings.creditCostPerReading}
                   onChange={(e) => update("creditCostPerReading", Number(e.target.value))}
-                  className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
                 />
                 <p className="text-white/20 text-xs mt-1.5">จำนวนเครดิตที่หักต่อการดูดวง</p>
               </div>
-              <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">
+              <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
                 <label className="block text-white/50 text-xs mb-2 uppercase tracking-wider">
                   PromptPay เบอร์
                 </label>
@@ -186,11 +186,11 @@ export default function AdminSettingsPage() {
                   type="text"
                   value={settings.promptPayNumber}
                   onChange={(e) => update("promptPayNumber", e.target.value)}
-                  className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
                   placeholder="0812345678"
                 />
               </div>
-              <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">
+              <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
                 <label className="block text-white/50 text-xs mb-2 uppercase tracking-wider">
                   PromptPay ชื่อ
                 </label>
@@ -198,14 +198,14 @@ export default function AdminSettingsPage() {
                   type="text"
                   value={settings.promptPayName}
                   onChange={(e) => update("promptPayName", e.target.value)}
-                  className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:border-gold/30 outline-none transition-colors"
                   placeholder="ชื่อบัญชี"
                 />
               </div>
             </div>
 
             {/* Payment Gateway (Omise) */}
-            <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">
+            <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
               <h3 className="text-white/80 text-sm font-medium mb-4">Payment Gateway (Omise)</h3>
               <div className="flex items-center gap-2 mb-4">
                 <span
@@ -235,7 +235,7 @@ export default function AdminSettingsPage() {
                   <label className="block text-white/40 text-xs mb-1 uppercase tracking-wider">
                     Public Key
                   </label>
-                  <p className="text-white/60 text-sm font-mono bg-[#08090e] border border-white/10 rounded-lg px-3 py-2">
+                  <p className="text-white/60 text-sm font-mono bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2">
                     {settings.omisePublicKey.slice(0, 10)}*****
                   </p>
                 </div>
@@ -245,7 +245,7 @@ export default function AdminSettingsPage() {
                   <label className="block text-white/40 text-xs mb-1 uppercase tracking-wider">
                     Secret Key
                   </label>
-                  <p className="text-white/60 text-sm font-mono bg-[#08090e] border border-white/10 rounded-lg px-3 py-2">
+                  <p className="text-white/60 text-sm font-mono bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2">
                     {settings.omiseSecretKey.slice(0, 10)}*****
                   </p>
                 </div>
@@ -255,7 +255,7 @@ export default function AdminSettingsPage() {
                   Webhook URL
                 </label>
                 <div
-                  className="flex items-center gap-2 bg-[#08090e] border border-white/10 rounded-lg px-3 py-2 cursor-pointer hover:border-gold/30 transition-colors"
+                  className="flex items-center gap-2 bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2 cursor-pointer hover:border-gold/30 transition-colors"
                   onClick={() => {
                     navigator.clipboard.writeText("/api/payment/webhook");
                   }}
@@ -269,13 +269,13 @@ export default function AdminSettingsPage() {
 
             {/* Credit Packages */}
             {settings.creditPackages && settings.creditPackages.length > 0 && (
-              <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">
+              <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
                 <h3 className="text-white/80 text-sm font-medium mb-4">แพ็กเกจเครดิต</h3>
                 <div className="space-y-2">
                   {settings.creditPackages.map((pkg, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between bg-[#08090e] border border-white/10 rounded-lg px-4 py-3"
+                      className="flex items-center justify-between bg-[#1e0c0c] border border-white/10 rounded-lg px-4 py-3"
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-gold font-semibold">{pkg.credits}</span>
@@ -292,7 +292,7 @@ export default function AdminSettingsPage() {
             )}
 
             {/* Maintenance Mode */}
-            <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">
+            <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-white/80 text-sm font-medium">Maintenance Mode</p>

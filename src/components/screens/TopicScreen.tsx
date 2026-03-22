@@ -39,7 +39,7 @@ export default function TopicScreen() {
         <h2 className="text-lg text-gold font-semibold tracking-wide text-center">
           คุณอยากถามเรื่องอะไร
         </h2>
-        <p className="text-white/25 text-xs mt-1 text-center">เลือกหมวดที่ตรงกับคำถามในใจ</p>
+        <p className="text-gold/25 text-xs mt-1 text-center">เลือกหมวดที่ตรงกับคำถามในใจ</p>
       </motion.div>
 
       {/* Topic grid */}
@@ -47,7 +47,7 @@ export default function TopicScreen() {
         {topics.map((t, idx) => (
           <motion.button
             key={t.id}
-            className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-[#0c0d14]/90 text-left active:scale-[0.97] transition-transform"
+            className="group relative overflow-hidden rounded-2xl border border-gold/[0.08] bg-[#2a1215]/90 text-left active:scale-[0.97] transition-transform"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08 + idx * 0.04, duration: 0.5, ease: EASE }}
@@ -77,7 +77,7 @@ export default function TopicScreen() {
               </div>
 
               {/* Description */}
-              <p className="text-[0.6rem] text-white/25 leading-relaxed pl-[46px]">
+              <p className="text-[0.6rem] text-gold/25 leading-relaxed pl-[46px]">
                 {t.desc}
               </p>
             </div>

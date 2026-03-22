@@ -47,12 +47,12 @@ export default function HomeScreen() {
           <>
             <p className="text-white/40 text-xs">สวัสดี</p>
             <h2 className="text-gold text-xl font-semibold">{user.nickname}</h2>
-            {user.zodiac && <p className="text-white/25 text-[0.65rem] mt-0.5">ราศี{user.zodiac.western.signTh}</p>}
+            {user.zodiac && <p className="text-gold/25 text-[0.65rem] mt-0.5">ราศี{user.zodiac.western.signTh}</p>}
           </>
         ) : (
           <>
             <h2 className="text-gold text-lg font-semibold tracking-wide">เลือกบริการ</h2>
-            <p className="text-white/25 text-xs mt-0.5">ค้นหาคำตอบที่จักรวาลมีให้คุณ</p>
+            <p className="text-gold/25 text-xs mt-0.5">ค้นหาคำตอบที่จักรวาลมีให้คุณ</p>
           </>
         )}
       </motion.div>
@@ -77,7 +77,7 @@ export default function HomeScreen() {
           >
             <Link
               href={svc.href}
-              className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-[#0c0d14] block w-[140px] active:scale-[0.96] transition-transform"
+              className="group relative overflow-hidden rounded-2xl border border-gold/[0.08] bg-[#2a1215] block w-[140px] active:scale-[0.96] transition-transform"
             >
               <div
                 className="absolute -top-6 -right-6 w-20 h-20 rounded-full opacity-[0.1] blur-2xl"
@@ -91,7 +91,7 @@ export default function HomeScreen() {
                   <span style={{ color: svc.color }}>{svc.icon}</span>
                 </div>
                 <p className="text-white/85 text-sm font-medium">{svc.name}</p>
-                <p className="text-white/25 text-[0.6rem] mt-0.5">{svc.desc}</p>
+                <p className="text-gold/25 text-[0.6rem] mt-0.5">{svc.desc}</p>
               </div>
               <div className="h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${svc.color}30, transparent)` }} />
             </Link>
@@ -118,7 +118,7 @@ export default function HomeScreen() {
           >
             <Link
               href={svc.href}
-              className="group flex items-center gap-3 p-3.5 rounded-xl border border-white/[0.06] bg-[#0c0d14]/80 active:scale-[0.98] transition-transform"
+              className="group flex items-center gap-3 p-3.5 rounded-xl border border-gold/[0.08] bg-[#2a1215]/80 active:scale-[0.98] transition-transform"
             >
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"
@@ -128,7 +128,7 @@ export default function HomeScreen() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-white/80 text-sm font-medium">{svc.name}</p>
-                <p className="text-white/25 text-[0.6rem]">{svc.desc}</p>
+                <p className="text-gold/25 text-[0.6rem]">{svc.desc}</p>
               </div>
               <span className="text-white/15 text-sm">›</span>
             </Link>

@@ -42,7 +42,7 @@ export default function AdminLoginPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-6 space-y-5"
+          className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-6 space-y-5"
         >
           <div>
             <label className="block text-white/50 text-xs mb-2 uppercase tracking-wider">
@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="กรอกรหัสผ่าน..."
-              className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-white placeholder:text-white/20 focus:border-gold/30 outline-none transition-colors"
+              className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2.5 text-white placeholder:text-white/20 focus:border-gold/30 outline-none transition-colors"
               autoFocus
             />
           </div>

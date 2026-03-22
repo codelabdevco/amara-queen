@@ -210,7 +210,7 @@ export default function SiamSiScreen() {
         transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
       >
         <h2 className="text-xl text-gold font-semibold tracking-[0.15em]">เซียมซี</h2>
-        <p className="text-white/25 text-xs mt-1">เสี่ยงเซียมซี 1-100 พร้อม AI ตีความ</p>
+        <p className="text-gold/25 text-xs mt-1">เสี่ยงเซียมซี 1-100 พร้อม AI ตีความ</p>
       </motion.div>
 
       <AnimatePresence mode="wait">

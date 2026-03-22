@@ -130,7 +130,7 @@ function LoadingCandles() {
       <div className="h-10 relative w-full text-center px-4">
         <AnimatePresence mode="wait">
           <motion.p key={wisdomIdx}
-            className="text-[0.7rem] text-white/25 absolute inset-x-0 px-4 leading-5 italic"
+            className="text-[0.7rem] text-gold/25 absolute inset-x-0 px-4 leading-5 italic"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -259,7 +259,7 @@ function CardLightbox({ card, position, onClose }: { card: { id: number; nameTh:
           {card.image ? (
             <img src={card.image} alt={card.nameEn} className="absolute inset-0 w-full h-full object-cover" />
           ) : (
-            <div className="w-full h-full bg-[#0c0d14] flex items-center justify-center">
+            <div className="w-full h-full bg-[#2a1215] flex items-center justify-center">
               <span className="text-gold/30 text-4xl">✦</span>
             </div>
           )}
@@ -397,7 +397,7 @@ export default function ReadingScreen() {
       <div className="flex gap-1.5 flex-wrap justify-center mb-5 max-w-full">
         {pickedCards.map((card, i) => (
           <motion.button key={i}
-            className={`w-[46px] h-[69px] rounded-md border border-gold/20 overflow-hidden relative bg-[#08090e] ${card.isReversed ? "rotate-180" : ""}`}
+            className={`w-[46px] h-[69px] rounded-md border border-gold/20 overflow-hidden relative bg-[#1e0c0c] ${card.isReversed ? "rotate-180" : ""}`}
             initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.05, duration: 0.5, ease: EASE }}
             whileTap={{ scale: 0.9 }}

@@ -102,9 +102,9 @@ export default function AdminReadingsPage() {
           <p className="text-white/40">ไม่สามารถโหลดข้อมูลได้</p>
         ) : (
           <>
-            <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl overflow-hidden">
+            <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl overflow-hidden">
               {/* Header */}
-              <div className="grid grid-cols-[160px_1fr_1fr_2fr_100px_120px_60px] gap-3 px-5 py-3 border-b border-white/[0.06] text-xs text-white/30 uppercase tracking-wider">
+              <div className="grid grid-cols-[160px_1fr_1fr_2fr_100px_120px_60px] gap-3 px-5 py-3 border-b border-gold/[0.08] text-xs text-white/30 uppercase tracking-wider">
                 <span>วันที่</span>
                 <span>หัวข้อ</span>
                 <span>การ์ด</span>
@@ -121,7 +121,7 @@ export default function AdminReadingsPage() {
               {data.readings.map((r) => (
                 <div key={r._id}>
                   <div
-                    className="grid grid-cols-[160px_1fr_1fr_2fr_100px_120px_60px] gap-3 px-5 py-3 border-b border-white/[0.04] text-sm hover:bg-white/[0.02] cursor-pointer transition-colors items-center"
+                    className="grid grid-cols-[160px_1fr_1fr_2fr_100px_120px_60px] gap-3 px-5 py-3 border-b border-gold/[0.06] text-sm hover:bg-gold/[0.02] cursor-pointer transition-colors items-center"
                     onClick={() => setExpandedId(expandedId === r._id ? null : r._id)}
                   >
                     <span className="text-white/40 text-xs">{formatDate(r.createdAt)}</span>
@@ -144,7 +144,7 @@ export default function AdminReadingsPage() {
 
                   {/* Expanded detail */}
                   {expandedId === r._id && (
-                    <div className="px-5 py-4 border-b border-white/[0.04] bg-white/[0.01] space-y-3">
+                    <div className="px-5 py-4 border-b border-gold/[0.06] bg-white/[0.01] space-y-3">
                       <div>
                         <p className="text-white/30 text-xs mb-1">คำถาม</p>
                         <p className="text-white/70 text-sm">{r.question}</p>

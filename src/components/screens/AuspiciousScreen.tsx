@@ -199,7 +199,7 @@ export default function AuspiciousScreen() {
         transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
       >
         <h2 className="text-xl text-gold font-semibold tracking-[0.15em]">ฤกษ์ยามมงคล</h2>
-        <p className="text-white/25 text-xs mt-1">ดูฤกษ์ดี วันมงคล สำหรับงานสำคัญ</p>
+        <p className="text-gold/25 text-xs mt-1">ดูฤกษ์ดี วันมงคล สำหรับงานสำคัญ</p>
       </motion.div>
 
       <AnimatePresence mode="wait">
@@ -226,7 +226,7 @@ export default function AuspiciousScreen() {
               {EVENT_TYPES.map((evt, idx) => (
                 <motion.button
                   key={evt.id}
-                  className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-[#0c0d14]/90 text-left active:scale-[0.97] transition-transform"
+                  className="group relative overflow-hidden rounded-2xl border border-gold/[0.08] bg-[#2a1215]/90 text-left active:scale-[0.97] transition-transform"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.08 + idx * 0.05, duration: 0.5, ease: EASE }}
@@ -248,7 +248,7 @@ export default function AuspiciousScreen() {
                       </div>
                       <p className="text-[0.8rem] text-white/85 font-medium leading-tight">{evt.name}</p>
                     </div>
-                    <p className="text-[0.6rem] text-white/25 leading-relaxed pl-[46px]">{evt.desc}</p>
+                    <p className="text-[0.6rem] text-gold/25 leading-relaxed pl-[46px]">{evt.desc}</p>
                   </div>
 
                   <div
