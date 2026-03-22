@@ -117,15 +117,15 @@ export default function AdminOrdersPage() {
 
         {/* Summary */}
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-[#2a1215] rounded-xl p-4">
+          <div className="bg-[#111111] rounded-xl p-4">
             <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">คำสั่งซื้อทั้งหมด</p>
-            <p className="text-gold text-xl font-semibold mt-1">{orders.length}</p>
+            <p className="text-[#d4af37] text-xl font-semibold mt-1">{orders.length}</p>
           </div>
-          <div className="bg-[#2a1215] rounded-xl p-4">
+          <div className="bg-[#111111] rounded-xl p-4">
             <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">รอดำเนินการ</p>
             <p className="text-yellow-400 text-xl font-semibold mt-1">{pendingCount}</p>
           </div>
-          <div className="bg-[#2a1215] rounded-xl p-4">
+          <div className="bg-[#111111] rounded-xl p-4">
             <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">รายได้รวม</p>
             <p className="text-green-400 text-xl font-semibold mt-1">฿{formatCurrency(totalRevenue)}</p>
           </div>
@@ -136,7 +136,7 @@ export default function AdminOrdersPage() {
         ) : orders.length === 0 ? (
           <div className="text-white/30 text-center py-20">ยังไม่มีคำสั่งซื้อ</div>
         ) : (
-          <div className="bg-[#2a1215] rounded-xl overflow-hidden">
+          <div className="bg-[#111111] rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-white/30 text-[0.6rem] uppercase tracking-wider border-b border-white/5">
@@ -208,7 +208,7 @@ function OrderRow({
         <td className="px-4 py-3 text-white/50">{formatDate(order.createdAt)}</td>
         <td className="px-4 py-3 text-white/80">{order.username}</td>
         <td className="px-4 py-3 text-center text-white/50">{itemCount} ชิ้น</td>
-        <td className="px-4 py-3 text-right text-gold">฿{formatCurrency(order.total)}</td>
+        <td className="px-4 py-3 text-right text-[#d4af37]">฿{formatCurrency(order.total)}</td>
         <td className="px-4 py-3 text-center">
           <span className="text-white/50 text-xs">{order.paymentMethod}</span>
           <span className={`ml-1 text-xs ${order.paymentStatus === "paid" ? "text-green-400" : "text-yellow-400"}`}>
@@ -227,7 +227,7 @@ function OrderRow({
 
       {expanded && (
         <tr>
-          <td colSpan={7} className="px-4 py-4 bg-[#1e0c0c]">
+          <td colSpan={7} className="px-4 py-4 bg-[#0a0a0a]">
             <div className="grid grid-cols-2 gap-6">
               {/* Items */}
               <div>
@@ -236,12 +236,12 @@ function OrderRow({
                   {order.items.map((item, idx) => (
                     <div key={idx} className="flex justify-between text-sm">
                       <span className="text-white/70">{item.name} x{item.qty}</span>
-                      <span className="text-gold">฿{formatCurrency(item.price * item.qty)}</span>
+                      <span className="text-[#d4af37]">฿{formatCurrency(item.price * item.qty)}</span>
                     </div>
                   ))}
                   <div className="flex justify-between text-sm border-t border-white/10 pt-1 mt-2">
                     <span className="text-white/50 font-medium">รวม</span>
-                    <span className="text-gold font-semibold">฿{formatCurrency(order.total)}</span>
+                    <span className="text-[#d4af37] font-semibold">฿{formatCurrency(order.total)}</span>
                   </div>
                 </div>
               </div>
@@ -262,7 +262,7 @@ function OrderRow({
                     value={order.status}
                     onChange={(e) => onStatusChange(e.target.value as Order["status"])}
                     disabled={updating}
-                    className="bg-[#1e0c0c] border border-white/10 text-white/80 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-gold/50"
+                    className="bg-[#0a0a0a] border border-white/10 text-white/80 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:border-gold/50"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {STATUS_OPTIONS.map((s) => (
@@ -282,13 +282,13 @@ function OrderRow({
                     value={trackingInput}
                     onChange={(e) => onTrackingChange(e.target.value)}
                     placeholder="กรอกเลขพัสดุ"
-                    className="bg-[#1e0c0c] border border-white/10 text-white/80 text-sm rounded-lg px-3 py-1.5 flex-1 focus:outline-none focus:border-gold/50 placeholder:text-white/20"
+                    className="bg-[#0a0a0a] border border-white/10 text-white/80 text-sm rounded-lg px-3 py-1.5 flex-1 focus:outline-none focus:border-gold/50 placeholder:text-white/20"
                     onClick={(e) => e.stopPropagation()}
                   />
                   <button
                     onClick={(e) => { e.stopPropagation(); onSaveTracking(); }}
                     disabled={updating}
-                    className="px-3 py-1.5 bg-gold/10 text-gold text-sm rounded-lg hover:bg-gold/20 transition-colors disabled:opacity-50"
+                    className="px-3 py-1.5 bg-gold/10 text-[#d4af37] text-sm rounded-lg hover:bg-gold/20 transition-colors disabled:opacity-50"
                   >
                     บันทึก
                   </button>

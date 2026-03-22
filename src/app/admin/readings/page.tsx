@@ -102,7 +102,7 @@ export default function AdminReadingsPage() {
           <p className="text-white/40">ไม่สามารถโหลดข้อมูลได้</p>
         ) : (
           <>
-            <div className="bg-[#2a1215] rounded-xl overflow-hidden">
+            <div className="bg-[#111111] rounded-xl overflow-hidden">
               {/* Header */}
               <div className="grid grid-cols-[160px_1fr_1fr_2fr_100px_120px_60px] gap-3 px-5 py-3 text-xs text-white/30 uppercase tracking-wider">
                 <span>วันที่</span>
@@ -128,7 +128,7 @@ export default function AdminReadingsPage() {
                     <span className="text-white/70 truncate">{r.topic}</span>
                     <span className="text-white/50 truncate">{r.spread}</span>
                     <span className="text-white/60 truncate">{r.question}</span>
-                    <span className="text-gold/70 text-xs">{r.trend}</span>
+                    <span className="text-[#d4af37]/70 text-xs">{r.trend}</span>
                     <span className="text-white/40 text-xs truncate">{r.user || "-"}</span>
                     <button
                       onClick={(e) => {
@@ -156,7 +156,7 @@ export default function AdminReadingsPage() {
                             {r.cards.map((c, i) => (
                               <span
                                 key={i}
-                                className="bg-gold/10 text-gold/80 text-xs px-2 py-0.5 rounded"
+                                className="bg-gold/10 text-[#d4af37]/80 text-xs px-2 py-0.5 rounded"
                               >
                                 {c}
                               </span>
@@ -184,7 +184,7 @@ export default function AdminReadingsPage() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page <= 1}
-                  className="px-3 py-1.5 rounded-lg text-sm bg-gold/10 text-gold hover:bg-gold/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 rounded-lg text-sm bg-gold/10 text-[#d4af37] hover:bg-gold/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   ก่อนหน้า
                 </button>
@@ -194,7 +194,7 @@ export default function AdminReadingsPage() {
                 <button
                   onClick={() => setPage((p) => Math.min(data.pages, p + 1))}
                   disabled={page >= data.pages}
-                  className="px-3 py-1.5 rounded-lg text-sm bg-gold/10 text-gold hover:bg-gold/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 rounded-lg text-sm bg-gold/10 text-[#d4af37] hover:bg-gold/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   ถัดไป
                 </button>

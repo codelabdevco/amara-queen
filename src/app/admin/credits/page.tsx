@@ -130,18 +130,18 @@ export default function AdminCreditsPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-[#2a1215] rounded-xl p-4">
+          <div className="bg-[#111111] rounded-xl p-4">
             <p className="text-white/30 text-xs mb-1">คำขอรออนุมัติ</p>
-            <p className="text-gold text-2xl font-semibold">{stats.totalPending}</p>
+            <p className="text-[#d4af37] text-2xl font-semibold">{stats.totalPending}</p>
           </div>
-          <div className="bg-[#2a1215] rounded-xl p-4">
+          <div className="bg-[#111111] rounded-xl p-4">
             <p className="text-white/30 text-xs mb-1">เครดิตที่ออกทั้งหมด</p>
-            <p className="text-gold text-2xl font-semibold">{stats.totalIssued.toLocaleString()}</p>
+            <p className="text-[#d4af37] text-2xl font-semibold">{stats.totalIssued.toLocaleString()}</p>
           </div>
         </div>
 
         {/* Manual add credits */}
-        <div className="bg-[#2a1215] rounded-xl p-5 mb-6">
+        <div className="bg-[#111111] rounded-xl p-5 mb-6">
           <p className="text-white/50 text-sm font-medium mb-3">เพิ่มเครดิตด้วยมือ</p>
           <div className="flex items-center gap-3">
             <input
@@ -149,19 +149,19 @@ export default function AdminCreditsPage() {
               placeholder="ชื่อผู้ใช้ หรือ User ID"
               value={manualUser}
               onChange={(e) => setManualUser(e.target.value)}
-              className="flex-1 bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none"
+              className="flex-1 bg-[#0a0a0a] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none"
             />
             <input
               type="number"
               placeholder="จำนวน"
               value={manualAmount}
               onChange={(e) => setManualAmount(e.target.value)}
-              className="w-24 bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none"
+              className="w-24 bg-[#0a0a0a] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none"
             />
             <button
               onClick={handleManualAdd}
               disabled={addingManual || !manualUser.trim() || !manualAmount}
-              className="px-4 py-2 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-30"
+              className="px-4 py-2 rounded-lg bg-gold/10 text-[#d4af37] text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-30"
             >
               {addingManual ? "กำลังเพิ่ม..." : "เพิ่ม"}
             </button>
@@ -179,7 +179,7 @@ export default function AdminCreditsPage() {
               onClick={() => setTab(t.key)}
               className={`px-4 py-2 rounded-lg text-sm transition-colors ${
                 tab === t.key
-                  ? "bg-gold/10 text-gold"
+                  ? "bg-gold/10 text-[#d4af37]"
                   : "text-white/40 hover:text-white/60 hover:bg-gold/[0.03] border border-transparent"
               }`}
             >
@@ -195,11 +195,11 @@ export default function AdminCreditsPage() {
             กำลังโหลด...
           </div>
         ) : requests.length === 0 ? (
-          <div className="bg-[#2a1215] rounded-xl p-10 text-center text-white/20 text-sm">
+          <div className="bg-[#111111] rounded-xl p-10 text-center text-white/20 text-sm">
             ไม่มีรายการ
           </div>
         ) : (
-          <div className="bg-[#2a1215] rounded-xl overflow-hidden">
+          <div className="bg-[#111111] rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gold/[0.02] text-white/30 text-xs">
@@ -216,7 +216,7 @@ export default function AdminCreditsPage() {
                 {requests.map((req) => (
                   <tr key={req._id} className="border-b border-gold/[0.02] hover:bg-white/[0.01] transition-colors">
                     <td className="px-4 py-3 text-white/70">{req.username}</td>
-                    <td className="px-4 py-3 text-gold font-medium">{req.credits}</td>
+                    <td className="px-4 py-3 text-[#d4af37] font-medium">{req.credits}</td>
                     <td className="px-4 py-3 text-white/50">{req.price} &#3647;</td>
                     <td className="px-4 py-3 text-white/40 max-w-[160px] truncate">{req.paymentRef}</td>
                     <td className="px-4 py-3 text-white/30">{formatDate(req.createdAt)}</td>

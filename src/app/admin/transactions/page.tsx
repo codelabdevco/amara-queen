@@ -89,31 +89,31 @@ export default function AdminTransactionsPage() {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-[#2a1215] rounded-xl p-5">
+          <div className="bg-[#111111] rounded-xl p-5">
             <div className="text-white/30 text-xs uppercase tracking-wider mb-2">
               รายการสำเร็จ
             </div>
-            <div className="text-2xl font-semibold text-gold">
+            <div className="text-2xl font-semibold text-[#d4af37]">
               {loading ? "-" : successful.length.toLocaleString()}
             </div>
             <div className="text-white/20 text-xs mt-1">รายการ</div>
           </div>
 
-          <div className="bg-[#2a1215] rounded-xl p-5">
+          <div className="bg-[#111111] rounded-xl p-5">
             <div className="text-white/30 text-xs uppercase tracking-wider mb-2">
               ยอดรวม
             </div>
-            <div className="text-2xl font-semibold text-gold">
+            <div className="text-2xl font-semibold text-[#d4af37]">
               {loading ? "-" : formatAmount(totalRevenue)}
             </div>
             <div className="text-white/20 text-xs mt-1">THB</div>
           </div>
 
-          <div className="bg-[#2a1215] rounded-xl p-5">
+          <div className="bg-[#111111] rounded-xl p-5">
             <div className="text-white/30 text-xs uppercase tracking-wider mb-2">
               เครดิตที่เติม
             </div>
-            <div className="text-2xl font-semibold text-gold">
+            <div className="text-2xl font-semibold text-[#d4af37]">
               {loading ? "-" : totalCredits.toLocaleString()}
             </div>
             <div className="text-white/20 text-xs mt-1">เครดิต</div>
@@ -127,11 +127,11 @@ export default function AdminTransactionsPage() {
             กำลังโหลด...
           </div>
         ) : transactions.length === 0 ? (
-          <div className="bg-[#2a1215] rounded-xl p-10 text-center text-white/20 text-sm">
+          <div className="bg-[#111111] rounded-xl p-10 text-center text-white/20 text-sm">
             ยังไม่มีรายการชำระเงิน
           </div>
         ) : (
-          <div className="bg-[#2a1215] rounded-xl overflow-hidden">
+          <div className="bg-[#111111] rounded-xl overflow-hidden">
             {/* Header */}
             <div className="grid grid-cols-[1.2fr_1.5fr_1fr_1fr_0.8fr_0.8fr] gap-3 px-5 py-3 text-xs text-white/30 uppercase tracking-wider">
               <span>วันที่</span>
@@ -163,7 +163,7 @@ export default function AdminTransactionsPage() {
                     {formatAmount(t.amount)} ฿
                   </span>
                   <span className="text-right">
-                    <span className="inline-block bg-gold/10 text-gold text-xs font-mono px-2 py-0.5 rounded">
+                    <span className="inline-block bg-gold/10 text-[#d4af37] text-xs font-mono px-2 py-0.5 rounded">
                       {t.credits}
                     </span>
                   </span>

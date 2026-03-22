@@ -61,21 +61,21 @@ export default function AdminUsersPage() {
 
         {/* Summary */}
         <div className="grid grid-cols-4 gap-4 mb-6">
-          <div className="bg-[#2a1215] rounded-xl p-4">
+          <div className="bg-[#111111] rounded-xl p-4">
             <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">ผู้ใช้ทั้งหมด</p>
-            <p className="text-gold text-xl font-semibold mt-1">{users.length}</p>
+            <p className="text-[#d4af37] text-xl font-semibold mt-1">{users.length}</p>
           </div>
-          <div className="bg-[#2a1215] rounded-xl p-4">
+          <div className="bg-[#111111] rounded-xl p-4">
             <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">LINE Login</p>
             <p className="text-green-400 text-xl font-semibold mt-1">{lineUsers}</p>
           </div>
-          <div className="bg-[#2a1215] rounded-xl p-4">
+          <div className="bg-[#111111] rounded-xl p-4">
             <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">กรอกโปรไฟล์</p>
-            <p className="text-gold text-xl font-semibold mt-1">{withProfile}</p>
+            <p className="text-[#d4af37] text-xl font-semibold mt-1">{withProfile}</p>
           </div>
-          <div className="bg-[#2a1215] rounded-xl p-4">
+          <div className="bg-[#111111] rounded-xl p-4">
             <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">เครดิตรวม</p>
-            <p className="text-gold text-xl font-semibold mt-1">{totalCredits}</p>
+            <p className="text-[#d4af37] text-xl font-semibold mt-1">{totalCredits}</p>
           </div>
         </div>
 
@@ -85,9 +85,9 @@ export default function AdminUsersPage() {
             กำลังโหลด...
           </div>
         ) : users.length === 0 ? (
-          <div className="bg-[#2a1215] rounded-xl p-10 text-center text-white/20 text-sm">ยังไม่มีผู้ใช้</div>
+          <div className="bg-[#111111] rounded-xl p-10 text-center text-white/20 text-sm">ยังไม่มีผู้ใช้</div>
         ) : (
-          <div className="bg-[#2a1215] rounded-xl overflow-hidden">
+          <div className="bg-[#111111] rounded-xl overflow-hidden">
             <div className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] gap-3 px-5 py-3 text-xs text-white/30 uppercase tracking-wider">
               <span>ผู้ใช้</span>
               <span>สร้างเมื่อ</span>
@@ -106,7 +106,7 @@ export default function AdminUsersPage() {
                     {u.linePictureUrl ? (
                       <img src={u.linePictureUrl} alt="" className="w-7 h-7 rounded-full" />
                     ) : (
-                      <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center text-gold/50 text-xs">
+                      <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center text-[#d4af37]/50 text-xs">
                         {(u.username || "?").charAt(0).toUpperCase()}
                       </div>
                     )}
@@ -117,7 +117,7 @@ export default function AdminUsersPage() {
                   </div>
                   <span className="text-white/40 text-xs">{formatDate(u.createdAt)}</span>
                   <span className="text-center">
-                    <span className="inline-block bg-gold/10 text-gold text-xs font-mono px-2 py-0.5 rounded">{u.credits || 0}</span>
+                    <span className="inline-block bg-gold/10 text-[#d4af37] text-xs font-mono px-2 py-0.5 rounded">{u.credits || 0}</span>
                   </span>
                   <span className="text-center text-white/40 text-xs">{u.readingsToday}</span>
                   <span className="text-center">
@@ -154,7 +154,7 @@ export default function AdminUsersPage() {
 function Info({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-gold/25 text-[0.6rem] uppercase tracking-wider">{label}</p>
+      <p className="text-[#d4af37]/25 text-[0.6rem] uppercase tracking-wider">{label}</p>
       <p className="text-white/60 mt-0.5">{value}</p>
     </div>
   );
