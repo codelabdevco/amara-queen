@@ -26,15 +26,28 @@ export default function AnimatedBg() {
   }, []);
 
   return (
-    <div className="bg-scene">
-      <img
-        src="/bg-main.svg"
-        alt=""
-        className="bg-scene__img"
-        draggable={false}
-      />
-      <div className="bg-scene__overlay" />
-      <div ref={particlesRef} className="bg-scene__particles" />
-    </div>
+    <>
+      <div className="bg-scene">
+        <img
+          src="/bg-main.svg"
+          alt=""
+          className="bg-scene__img"
+          draggable={false}
+        />
+        <div className="bg-scene__overlay" />
+        <div ref={particlesRef} className="bg-scene__particles" />
+      </div>
+
+      {/* Foreground overlay — top layer, no pointer events */}
+      <div className="fixed inset-0 z-[99] pointer-events-none">
+        <img
+          src="/bg-card.svg"
+          alt=""
+          className="w-full h-full object-cover opacity-[0.07]"
+          style={{ mixBlendMode: "screen" }}
+          draggable={false}
+        />
+      </div>
+    </>
   );
 }
