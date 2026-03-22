@@ -42,7 +42,7 @@ export default function AdminLoginPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-6 space-y-5"
+          className="bg-[#2a1215] border border-gold/[0.02] rounded-xl p-6 space-y-5"
         >
           <div>
             <label className="block text-white/50 text-xs mb-2 uppercase tracking-wider">
@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="กรอกรหัสผ่าน..."
-              className="w-full bg-[#1e0c0c] border border-white/[0.06] rounded-lg px-3 py-2.5 text-white placeholder:text-white/20 focus:border-gold/30 outline-none transition-colors"
+              className="w-full bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2.5 text-white placeholder:text-white/20 focus:border-gold/10 outline-none transition-colors"
               autoFocus
             />
           </div>
@@ -67,7 +67,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading || !password}
-            className="w-full bg-gold/10 text-gold border border-gold/[0.1] rounded-lg py-2.5 text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="w-full bg-gold/10 text-gold border border-gold/[0.05] rounded-lg py-2.5 text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
           </button>

@@ -28,7 +28,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
       <DustParticles />
 
       <header
-        className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-4 py-3 border-b border-gold/[0.04]"
+        className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-4 py-3 border-b border-gold/[0.02]"
         style={{
           paddingTop: "max(12px, env(safe-area-inset-top))",
           background: "linear-gradient(180deg, #1a0a0a 0%, rgba(26,10,10,0.95) 100%)",

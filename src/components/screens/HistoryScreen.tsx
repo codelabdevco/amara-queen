@@ -83,7 +83,7 @@ export default function HistoryScreen({ onClose }: Props) {
               return (
                 <motion.div
                   key={r.id}
-                  className="rounded-xl border border-gold/[0.04] bg-[#2a1215]/90 overflow-hidden"
+                  className="rounded-xl border border-gold/[0.02] bg-[#2a1215]/90 overflow-hidden"
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.03, duration: 0.4, ease: EASE }}
@@ -127,12 +127,12 @@ export default function HistoryScreen({ onClose }: Props) {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <div className="px-4 pb-4 space-y-3 border-t border-gold/[0.03] pt-3">
+                        <div className="px-4 pb-4 space-y-3 border-t border-gold/[0.02] pt-3">
                           {r.reading.summary && (
                             <p className="text-xs text-white/60 leading-6">{r.reading.summary}</p>
                           )}
                           {r.reading.advice && (
-                            <div className="bg-gold/[0.04] border border-gold/[0.06] rounded-lg p-3">
+                            <div className="bg-gold/[0.04] border border-gold/[0.02] rounded-lg p-3">
                               <p className="text-[0.65rem] text-gold/40 mb-1 uppercase tracking-wider">คำแนะนำ</p>
                               <p className="text-xs text-white/55 leading-6">{r.reading.advice}</p>
                             </div>

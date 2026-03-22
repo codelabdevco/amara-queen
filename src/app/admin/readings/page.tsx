@@ -95,16 +95,16 @@ export default function AdminReadingsPage() {
 
         {loading && !data ? (
           <div className="flex items-center gap-3 text-white/30">
-            <div className="w-4 h-4 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-gold/10 border-t-gold rounded-full animate-spin" />
             กำลังโหลด...
           </div>
         ) : !data ? (
           <p className="text-white/40">ไม่สามารถโหลดข้อมูลได้</p>
         ) : (
           <>
-            <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl overflow-hidden">
+            <div className="bg-[#2a1215] border border-gold/[0.02] rounded-xl overflow-hidden">
               {/* Header */}
-              <div className="grid grid-cols-[160px_1fr_1fr_2fr_100px_120px_60px] gap-3 px-5 py-3 border-b border-gold/[0.04] text-xs text-white/30 uppercase tracking-wider">
+              <div className="grid grid-cols-[160px_1fr_1fr_2fr_100px_120px_60px] gap-3 px-5 py-3 border-b border-gold/[0.02] text-xs text-white/30 uppercase tracking-wider">
                 <span>วันที่</span>
                 <span>หัวข้อ</span>
                 <span>การ์ด</span>
@@ -121,7 +121,7 @@ export default function AdminReadingsPage() {
               {data.readings.map((r) => (
                 <div key={r._id}>
                   <div
-                    className="grid grid-cols-[160px_1fr_1fr_2fr_100px_120px_60px] gap-3 px-5 py-3 border-b border-gold/[0.03] text-sm hover:bg-gold/[0.02] cursor-pointer transition-colors items-center"
+                    className="grid grid-cols-[160px_1fr_1fr_2fr_100px_120px_60px] gap-3 px-5 py-3 border-b border-gold/[0.02] text-sm hover:bg-gold/[0.02] cursor-pointer transition-colors items-center"
                     onClick={() => setExpandedId(expandedId === r._id ? null : r._id)}
                   >
                     <span className="text-white/40 text-xs">{formatDate(r.createdAt)}</span>
@@ -144,7 +144,7 @@ export default function AdminReadingsPage() {
 
                   {/* Expanded detail */}
                   {expandedId === r._id && (
-                    <div className="px-5 py-4 border-b border-gold/[0.03] bg-white/[0.01] space-y-3">
+                    <div className="px-5 py-4 border-b border-gold/[0.02] bg-white/[0.01] space-y-3">
                       <div>
                         <p className="text-white/30 text-xs mb-1">คำถาม</p>
                         <p className="text-white/70 text-sm">{r.question}</p>
@@ -184,7 +184,7 @@ export default function AdminReadingsPage() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page <= 1}
-                  className="px-3 py-1.5 rounded-lg text-sm bg-gold/10 text-gold border border-gold/[0.1] hover:bg-gold/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 rounded-lg text-sm bg-gold/10 text-gold border border-gold/[0.05] hover:bg-gold/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   ก่อนหน้า
                 </button>
@@ -194,7 +194,7 @@ export default function AdminReadingsPage() {
                 <button
                   onClick={() => setPage((p) => Math.min(data.pages, p + 1))}
                   disabled={page >= data.pages}
-                  className="px-3 py-1.5 rounded-lg text-sm bg-gold/10 text-gold border border-gold/[0.1] hover:bg-gold/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="px-3 py-1.5 rounded-lg text-sm bg-gold/10 text-gold border border-gold/[0.05] hover:bg-gold/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   ถัดไป
                 </button>

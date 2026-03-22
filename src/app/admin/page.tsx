@@ -49,7 +49,7 @@ export default function AdminDashboardPage() {
 
         {loading ? (
           <div className="flex items-center gap-3 text-white/30">
-            <div className="w-4 h-4 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-gold/10 border-t-gold rounded-full animate-spin" />
             กำลังโหลด...
           </div>
         ) : !stats ? (
@@ -78,11 +78,11 @@ export default function AdminDashboardPage() {
 
             {/* Method Breakdown */}
             {stats.methodBreakdown && Object.keys(stats.methodBreakdown).length > 0 && (
-              <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-5 mb-8">
+              <div className="bg-[#2a1215] border border-gold/[0.02] rounded-xl p-5 mb-8">
                 <h3 className="text-sm text-white/50 mb-4">วิธีชำระเงิน</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {Object.entries(stats.methodBreakdown).map(([method, data]) => (
-                    <div key={method} className="bg-[#1e0c0c] border border-white/[0.06] rounded-lg p-4">
+                    <div key={method} className="bg-[#1e0c0c] border border-white/[0.03] rounded-lg p-4">
                       <p className="text-white/60 text-sm font-medium mb-2 capitalize">{method}</p>
                       <div className="flex items-baseline justify-between">
                         <span className="text-gold text-lg font-semibold">฿{data.amount.toLocaleString()}</span>
@@ -96,7 +96,7 @@ export default function AdminDashboardPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Bar Chart */}
-              <div className="lg:col-span-2 bg-[#2a1215] border border-gold/[0.04] rounded-xl p-5">
+              <div className="lg:col-span-2 bg-[#2a1215] border border-gold/[0.02] rounded-xl p-5">
                 <h3 className="text-sm text-white/50 mb-5">7 วันล่าสุด</h3>
                 <div className="flex items-end gap-3 h-40">
                   {(stats.last7 || []).map((day) => (
@@ -119,7 +119,7 @@ export default function AdminDashboardPage() {
 
               {/* Top Topics & Spreads */}
               <div className="space-y-6">
-                <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-5">
+                <div className="bg-[#2a1215] border border-gold/[0.02] rounded-xl p-5">
                   <h3 className="text-sm text-white/50 mb-4">หัวข้อยอดนิยม</h3>
                   <div className="space-y-3">
                     {(!stats.topTopics || stats.topTopics.length === 0) && (
@@ -134,7 +134,7 @@ export default function AdminDashboardPage() {
                   </div>
                 </div>
 
-                <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-5">
+                <div className="bg-[#2a1215] border border-gold/[0.02] rounded-xl p-5">
                   <h3 className="text-sm text-white/50 mb-4">Spread ยอดนิยม</h3>
                   <div className="space-y-3">
                     {(!stats.topSpreads || stats.topSpreads.length === 0) && (
@@ -159,7 +159,7 @@ export default function AdminDashboardPage() {
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-5">
+    <div className="bg-[#2a1215] border border-gold/[0.02] rounded-xl p-5">
       <p className="text-white/40 text-xs mb-2 uppercase tracking-wider">{label}</p>
       <p className="text-gold text-2xl font-semibold">{value}</p>
     </div>

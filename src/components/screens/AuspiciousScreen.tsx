@@ -226,7 +226,7 @@ export default function AuspiciousScreen() {
               {EVENT_TYPES.map((evt, idx) => (
                 <motion.button
                   key={evt.id}
-                  className="group relative overflow-hidden rounded-2xl border border-gold/[0.04] bg-[#2a1215]/90 text-left active:scale-[0.97] transition-transform"
+                  className="group relative overflow-hidden rounded-2xl border border-gold/[0.02] bg-[#2a1215]/90 text-left active:scale-[0.97] transition-transform"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.08 + idx * 0.05, duration: 0.5, ease: EASE }}
@@ -308,7 +308,7 @@ export default function AuspiciousScreen() {
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="w-full px-4 py-3.5 rounded-xl border text-sm text-white/80 outline-none focus:border-gold/40 transition-colors"
+                className="w-full px-4 py-3.5 rounded-xl border text-sm text-white/80 outline-none focus:border-gold/15 transition-colors"
                 style={{
                   colorScheme: "dark",
                   background: "rgba(12,13,20,0.9)",

@@ -20,7 +20,7 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-[100] backdrop-blur-md border-t border-gold/[0.04]"
+      className="fixed bottom-0 left-0 right-0 z-[100] backdrop-blur-md border-t border-gold/[0.02]"
       style={{ paddingBottom: "max(8px, env(safe-area-inset-bottom))", background: "linear-gradient(180deg, rgba(26,10,10,0.97), #1a0a0a)" }}
     >
       <div className="flex items-center justify-around px-2 pt-2">

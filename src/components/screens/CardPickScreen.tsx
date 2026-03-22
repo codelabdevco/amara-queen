@@ -551,7 +551,7 @@ export default function CardPickScreen() {
                     }}
                   >
                     {isPicked ? (
-                      <div className="w-full h-full rounded-md bg-gold/[0.04] border border-gold/[0.06] flex items-center justify-center">
+                      <div className="w-full h-full rounded-md bg-gold/[0.04] border border-gold/[0.02] flex items-center justify-center">
                         <span className="text-gold/20 text-lg">✦</span>
                       </div>
                     ) : (
@@ -597,7 +597,7 @@ export default function CardPickScreen() {
                       <div className="absolute inset-0 [backface-visibility:hidden] rounded-lg overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.4)]">
                         <MiniCardBack width={cardW} height={cardH} />
                       </div>
-                      <div className={`absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-lg border border-gold/30 overflow-hidden bg-[#1e0c0c] shadow-[0_2px_12px_rgba(0,0,0,0.4)] ${card.isReversed ? "rotate-180" : ""}`}>
+                      <div className={`absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-lg border border-gold/10 overflow-hidden bg-[#1e0c0c] shadow-[0_2px_12px_rgba(0,0,0,0.4)] ${card.isReversed ? "rotate-180" : ""}`}>
                         {card.image && <img src={card.image} alt={card.nameEn} className="absolute inset-0 w-full h-full object-cover" />}
                         <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-1">
                           <p className="text-[0.5rem] text-gold text-center truncate">{card.nameTh}</p>

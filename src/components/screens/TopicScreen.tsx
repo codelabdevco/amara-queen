@@ -47,7 +47,7 @@ export default function TopicScreen() {
         {topics.map((t, idx) => (
           <motion.button
             key={t.id}
-            className="group relative overflow-hidden rounded-2xl border border-gold/[0.04] bg-[#2a1215]/90 text-left active:scale-[0.97] transition-transform"
+            className="group relative overflow-hidden rounded-2xl border border-gold/[0.02] bg-[#2a1215]/90 text-left active:scale-[0.97] transition-transform"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.08 + idx * 0.04, duration: 0.5, ease: EASE }}

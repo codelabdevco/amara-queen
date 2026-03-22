@@ -114,7 +114,7 @@ export default function CreditBadge() {
   return (
     <>
       <button onClick={openTopUp}
-        className="flex items-center gap-1.5 bg-gold/10 border border-gold/[0.1] rounded-full px-2.5 py-1 hover:bg-gold/15 transition-colors"
+        className="flex items-center gap-1.5 bg-gold/10 border border-gold/[0.05] rounded-full px-2.5 py-1 hover:bg-gold/15 transition-colors"
       >
         <span className="text-gold text-[0.6rem]">&#9733;</span>
         <span className="text-gold text-xs font-medium">{info.credits}</span>
@@ -127,7 +127,7 @@ export default function CreditBadge() {
           >
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
             <motion.div
-              className="relative bg-[#2a1215] border border-white/[0.04] rounded-2xl p-6 w-full max-w-[380px]"
+              className="relative bg-[#2a1215] border border-white/[0.02] rounded-2xl p-6 w-full max-w-[380px]"
               initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -144,8 +144,8 @@ export default function CreditBadge() {
                       {info.packages.map((pkg, i) => (
                         <button key={i}
                           className={`rounded-xl p-3 border text-center transition-all ${selectedPkg === i
-                            ? "bg-gold/10 border-gold/30 shadow-[0_0_12px_rgba(232,212,139,0.08)]"
-                            : "bg-[#1e0c0c] border-gold/[0.04] hover:border-white/[0.06]"}`}
+                            ? "bg-gold/10 border-gold/10 shadow-[0_0_12px_rgba(232,212,139,0.08)]"
+                            : "bg-[#1e0c0c] border-gold/[0.02] hover:border-white/[0.03]"}`}
                           onClick={() => setSelectedPkg(i)}
                         >
                           <p className="text-gold font-semibold text-lg">{pkg.credits}</p>
@@ -166,7 +166,7 @@ export default function CreditBadge() {
 
                 {step === "processing" && (
                   <motion.div key="proc" className="text-center py-10" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                    <div className="w-10 h-10 border-2 border-gold/30 border-t-gold rounded-full animate-spin mx-auto mb-4" />
+                    <div className="w-10 h-10 border-2 border-gold/10 border-t-gold rounded-full animate-spin mx-auto mb-4" />
                     <p className="text-white/50 text-sm">กำลังสร้างรายการชำระเงิน...</p>
                   </motion.div>
                 )}
@@ -181,7 +181,7 @@ export default function CreditBadge() {
                       </div>
                     ) : (
                       <div className="bg-gold/5 rounded-xl w-48 h-48 mx-auto flex items-center justify-center">
-                        <div className="w-6 h-6 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
+                        <div className="w-6 h-6 border-2 border-gold/10 border-t-gold rounded-full animate-spin" />
                       </div>
                     )}
                     <div className="flex items-center justify-center gap-2">
@@ -199,7 +199,7 @@ export default function CreditBadge() {
                     <h3 className="text-gold text-lg font-semibold">ชำระเงินสำเร็จ!</h3>
                     <p className="text-white/40 text-sm">เพิ่ม <span className="text-gold font-semibold">{addedCredits}</span> เครดิต</p>
                     <button onClick={closeModal}
-                      className="w-full py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/[0.1] text-sm font-medium hover:bg-gold/20 transition-colors"
+                      className="w-full py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/[0.05] text-sm font-medium hover:bg-gold/20 transition-colors"
                     >ปิด</button>
                   </motion.div>
                 )}
@@ -211,7 +211,7 @@ export default function CreditBadge() {
                     </div>
                     <p className="text-white/60 text-sm">{errorMsg}</p>
                     <button onClick={() => setStep("packages")}
-                      className="w-full py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/[0.1] text-sm font-medium hover:bg-gold/20 transition-colors"
+                      className="w-full py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/[0.05] text-sm font-medium hover:bg-gold/20 transition-colors"
                     >ลองใหม่</button>
                   </motion.div>
                 )}

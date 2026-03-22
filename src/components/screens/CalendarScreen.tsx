@@ -117,7 +117,7 @@ export default function CalendarScreen() {
         transition={{ delay: 0.2, duration: 0.5 }}
       >
         <button
-          className="px-3 py-1.5 rounded-lg border border-white/[0.06] text-white/50 text-xs active:bg-gold/5"
+          className="px-3 py-1.5 rounded-lg border border-white/[0.03] text-white/50 text-xs active:bg-gold/5"
           onClick={() => { setWeekOffset((o) => o - 1); setSelectedIdx(null); }}
         >
           สัปดาห์ก่อน
@@ -128,7 +128,7 @@ export default function CalendarScreen() {
           {new Date(monday.getTime() + 6 * 86400000).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" })}
         </span>
         <button
-          className="px-3 py-1.5 rounded-lg border border-white/[0.06] text-white/50 text-xs active:bg-gold/5"
+          className="px-3 py-1.5 rounded-lg border border-white/[0.03] text-white/50 text-xs active:bg-gold/5"
           onClick={() => { setWeekOffset((o) => o + 1); setSelectedIdx(null); }}
         >
           สัปดาห์ถัดไป
@@ -146,10 +146,10 @@ export default function CalendarScreen() {
               key={day.date.toISOString()}
               className={`flex-shrink-0 w-[calc((100%-48px)/7)] min-w-[52px] rounded-xl p-2 flex flex-col items-center gap-1 border transition-colors ${
                 isSelected
-                  ? "border-gold/60 bg-gold/10"
+                  ? "border-gold/20 bg-gold/10"
                   : isToday
                   ? "border-white/20 bg-gold/5"
-                  : "border-gold/[0.04] bg-[#2a1215]/90"
+                  : "border-gold/[0.02] bg-[#2a1215]/90"
               }`}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -178,7 +178,7 @@ export default function CalendarScreen() {
         {selected && (
           <motion.div
             key={selected.date.toISOString()}
-            className="w-full max-w-md mt-4 rounded-2xl border border-white/[0.04] bg-[#2a1215]/95 p-5"
+            className="w-full max-w-md mt-4 rounded-2xl border border-white/[0.02] bg-[#2a1215]/95 p-5"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}

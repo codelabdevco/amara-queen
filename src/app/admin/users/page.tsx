@@ -61,19 +61,19 @@ export default function AdminUsersPage() {
 
         {/* Summary */}
         <div className="grid grid-cols-4 gap-4 mb-6">
-          <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-4">
+          <div className="bg-[#2a1215] border border-gold/[0.02] rounded-xl p-4">
             <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">ผู้ใช้ทั้งหมด</p>
             <p className="text-gold text-xl font-semibold mt-1">{users.length}</p>
           </div>
-          <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-4">
+          <div className="bg-[#2a1215] border border-gold/[0.02] rounded-xl p-4">
             <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">LINE Login</p>
             <p className="text-green-400 text-xl font-semibold mt-1">{lineUsers}</p>
           </div>
-          <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-4">
+          <div className="bg-[#2a1215] border border-gold/[0.02] rounded-xl p-4">
             <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">กรอกโปรไฟล์</p>
             <p className="text-gold text-xl font-semibold mt-1">{withProfile}</p>
           </div>
-          <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-4">
+          <div className="bg-[#2a1215] border border-gold/[0.02] rounded-xl p-4">
             <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">เครดิตรวม</p>
             <p className="text-gold text-xl font-semibold mt-1">{totalCredits}</p>
           </div>
@@ -81,14 +81,14 @@ export default function AdminUsersPage() {
 
         {loading ? (
           <div className="flex items-center gap-3 text-white/30">
-            <div className="w-4 h-4 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-gold/10 border-t-gold rounded-full animate-spin" />
             กำลังโหลด...
           </div>
         ) : users.length === 0 ? (
-          <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-10 text-center text-white/20 text-sm">ยังไม่มีผู้ใช้</div>
+          <div className="bg-[#2a1215] border border-gold/[0.02] rounded-xl p-10 text-center text-white/20 text-sm">ยังไม่มีผู้ใช้</div>
         ) : (
-          <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl overflow-hidden">
-            <div className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] gap-3 px-5 py-3 border-b border-gold/[0.04] text-xs text-white/30 uppercase tracking-wider">
+          <div className="bg-[#2a1215] border border-gold/[0.02] rounded-xl overflow-hidden">
+            <div className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] gap-3 px-5 py-3 border-b border-gold/[0.02] text-xs text-white/30 uppercase tracking-wider">
               <span>ผู้ใช้</span>
               <span>สร้างเมื่อ</span>
               <span className="text-center">เครดิต</span>
@@ -99,7 +99,7 @@ export default function AdminUsersPage() {
             {users.map((u) => (
               <div key={u.id}>
                 <button
-                  className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] gap-3 px-5 py-3 border-b border-gold/[0.03] text-sm hover:bg-gold/[0.02] transition-colors items-center w-full text-left"
+                  className="grid grid-cols-[2fr_1fr_1fr_1fr_80px] gap-3 px-5 py-3 border-b border-gold/[0.02] text-sm hover:bg-gold/[0.02] transition-colors items-center w-full text-left"
                   onClick={() => setExpanded(expanded === u.id ? null : u.id)}
                 >
                   <div className="flex items-center gap-2">
@@ -131,7 +131,7 @@ export default function AdminUsersPage() {
 
                 {/* Expanded profile details */}
                 {expanded === u.id && u.profile && (
-                  <div className="px-5 py-4 border-b border-gold/[0.03] bg-white/[0.01]">
+                  <div className="px-5 py-4 border-b border-gold/[0.02] bg-white/[0.01]">
                     <div className="grid grid-cols-3 gap-3 text-xs">
                       {u.profile.nickname && <Info label="ชื่อเล่น" value={u.profile.nickname} />}
                       {u.profile.firstName && <Info label="ชื่อจริง" value={`${u.profile.firstName} ${u.profile.lastName || ""}`} />}
