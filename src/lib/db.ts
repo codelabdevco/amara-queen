@@ -151,10 +151,23 @@ export function getOverviewStats() {
 }
 
 // ── USERS ──
+export interface UserProfile {
+  nickname: string;
+  birthdate: string; // YYYY-MM-DD
+  gender: "male" | "female" | "other" | "";
+  birthTime: string; // HH:mm or ""
+  relationshipStatus: "single" | "taken" | "complicated" | "";
+  occupation: string;
+}
+
 export interface User {
   id: string;
   username: string;
   passwordHash: string;
+  lineUserId?: string;
+  lineDisplayName?: string;
+  linePictureUrl?: string;
+  profile?: UserProfile;
   createdAt: number;
   readingsToday: number;
   lastReadingDate: string;
@@ -175,6 +188,44 @@ export function findUserByUsername(username: string): User | null {
 
 export function findUserById(id: string): User | null {
   return getUsers().find((u) => u.id === id) || null;
+}
+
+export function findUserByLineId(lineUserId: string): User | null {
+  return getUsers().find((u) => u.lineUserId === lineUserId) || null;
+}
+
+export function createLineUser(lineUserId: string, displayName: string, pictureUrl: string): User {
+  const users = getUsers();
+  const user: User = {
+    id: crypto.randomUUID(),
+    username: displayName,
+    passwordHash: "",
+    lineUserId,
+    lineDisplayName: displayName,
+    linePictureUrl: pictureUrl,
+    createdAt: Date.now(),
+    readingsToday: 0,
+    lastReadingDate: "",
+    credits: 0,
+  };
+  users.push(user);
+  saveUsers(users);
+  return user;
+}
+
+export function updateUserProfile(userId: string, profile: UserProfile): User | null {
+  const users = getUsers();
+  const user = users.find((u) => u.id === userId);
+  if (!user) return null;
+  user.profile = profile;
+  if (profile.nickname) user.username = profile.nickname;
+  saveUsers(users);
+  return user;
+}
+
+export function getUserProfile(userId: string): UserProfile | null {
+  const user = findUserById(userId);
+  return user?.profile || null;
 }
 
 export function createUser(username: string, passwordHash: string): User {

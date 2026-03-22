@@ -1,8 +1,9 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { getSettings, saveReading, checkGuestLimit, incrementUserReading } from "@/lib/db";
+import { getSettings, saveReading, checkGuestLimit, incrementUserReading, getUserProfile } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/admin-auth";
+import { calculateZodiac } from "@/lib/zodiac";
 
 const client = new Anthropic();
 
@@ -140,13 +141,37 @@ export async function POST(req: NextRequest) {
       )
       .join("\n");
 
+    // Build user context from profile
+    let userContext = "";
+    if (user) {
+      const profile = getUserProfile(user.userId);
+      if (profile?.birthdate) {
+        const zodiac = calculateZodiac(profile.birthdate);
+        const parts: string[] = [];
+        if (profile.nickname) parts.push(`ชื่อ: ${profile.nickname}`);
+        parts.push(`อายุ: ${zodiac.age} ปี`);
+        if (profile.gender) parts.push(`เพศ: ${profile.gender === "male" ? "ชาย" : profile.gender === "female" ? "หญิง" : "อื่นๆ"}`);
+        parts.push(`ราศี: ${zodiac.western.signTh} (ธาตุ${zodiac.western.elementTh})`);
+        parts.push(`ปีนักษัตร: ${zodiac.thai.signTh}`);
+        parts.push(`เลขนำโชค: ${zodiac.luckyNumber}`);
+        if (profile.birthTime) parts.push(`เวลาเกิด: ${profile.birthTime}`);
+        if (profile.relationshipStatus) {
+          const statusMap: Record<string, string> = { single: "โสด", taken: "มีคู่", complicated: "ซับซ้อน" };
+          parts.push(`สถานะ: ${statusMap[profile.relationshipStatus] || profile.relationshipStatus}`);
+        }
+        if (profile.occupation) parts.push(`อาชีพ: ${profile.occupation}`);
+        userContext = `\n\nข้อมูลผู้ถาม:\n${parts.join("\n")}`;
+      }
+    }
+
     // Build prompt from settings template
     const prompt = settings.promptTemplate
       .replace("{{topic}}", topic)
       .replace("{{question}}", question)
       .replace("{{spread}}", spread)
       .replace("{{cardDetails}}", cardDetails)
-      .replace("{{cardCount}}", String(cards.length));
+      .replace("{{cardCount}}", String(cards.length))
+      + userContext;
 
     const message = await client.messages.create({
       model: settings.model,
