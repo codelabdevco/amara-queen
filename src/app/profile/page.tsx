@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import AppShell from "@/components/AppShell";
 import ProfileSetup from "@/components/ui/ProfileSetup";
+import LaurelButton from "@/components/ui/LaurelButton";
 import { EASE } from "@/constants/animation";
 
 interface ProfileData {
@@ -152,18 +153,8 @@ export default function ProfilePage() {
 
             {/* Edit + Logout */}
             <div className="flex gap-3">
-              <button
-                onClick={() => setShowEdit(true)}
-                className="flex-1 py-2.5 rounded-xl bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors"
-              >
-                แก้ไขข้อมูล
-              </button>
-              <button
-                onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.href = "/"; }}
-                className="px-5 py-2.5 rounded-xl bg-red-500/5 text-red-400/50 border border-red-500/10 text-sm hover:text-red-400 hover:bg-red-500/10 transition-colors"
-              >
-                ออก
-              </button>
+              <LaurelButton variant="crimson" onClick={() => setShowEdit(true)} className="flex-1">แก้ไขข้อมูล</LaurelButton>
+              <LaurelButton variant="crimson" onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.href = "/"; }}>ออก</LaurelButton>
             </div>
 
             <ProfileSetup open={showEdit} onClose={() => { setShowEdit(false); fetchProfile(); }} />

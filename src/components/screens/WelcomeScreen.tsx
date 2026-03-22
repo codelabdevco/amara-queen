@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import CardBack from "@/components/ui/CardBack";
+import LaurelButton from "@/components/ui/LaurelButton";
 
 import { EASE } from "@/constants/animation";
 
@@ -63,11 +63,7 @@ export default function WelcomeScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.8, ease: EASE }}
       >
-        <Link href="/home"
-          className="px-10 py-3.5 rounded-full font-semibold text-sm tracking-wider bg-gradient-to-br from-[#e8d48b] to-[#c4a850] text-[#08090e] shadow-[0_4px_24px_rgba(232,212,139,.25)]"
-        >
-          เริ่มใช้งาน
-        </Link>
+        <LaurelButton variant="gold" href="/home">เริ่มใช้งาน</LaurelButton>
 
         <a
           href="/api/auth/line"

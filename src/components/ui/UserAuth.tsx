@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import LaurelButton from "@/components/ui/LaurelButton";
 import ProfileSetup from "@/components/ui/ProfileSetup";
 
 interface UserInfo {
@@ -152,13 +153,9 @@ export default function UserAuth() {
 
                 {error && <p className="text-red-400/80 text-xs text-center">{error}</p>}
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-2.5 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-50"
-                >
+                <LaurelButton variant="gold" className="w-full">
                   {loading ? "..." : isLogin ? "เข้าสู่ระบบ" : "สมัครสมาชิก"}
-                </button>
+                </LaurelButton>
               </form>
 
               <a

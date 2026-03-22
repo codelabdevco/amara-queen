@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import LaurelButton from "@/components/ui/LaurelButton";
 import DatePicker from "@/components/ui/DatePicker";
 import TimePicker from "@/components/ui/TimePicker";
 
@@ -164,19 +165,9 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                   </>
                 )}
 
-                <button
-                  onClick={onClose}
-                  className="w-full py-3 rounded-xl bg-gradient-to-br from-[#e8d48b] to-[#c4a850] text-[#08090e] text-sm font-semibold tracking-wide shadow-[0_4px_24px_rgba(232,212,139,.25)]"
-                >
-                  เริ่มดูดวง
-                </button>
+                <LaurelButton variant="gold" onClick={onClose} className="w-full">เริ่มดูดวง</LaurelButton>
 
-                <button
-                  onClick={() => setShowSummary(false)}
-                  className="w-full text-center text-white/20 text-xs hover:text-white/40"
-                >
-                  แก้ไขข้อมูล
-                </button>
+                <LaurelButton variant="crimson" onClick={() => setShowSummary(false)} className="w-full">แก้ไขข้อมูล</LaurelButton>
               </motion.div>
             ) : (
               /* ── Form Page (all fields) ── */
@@ -296,14 +287,8 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                 {error && <p className="text-red-400/80 text-xs text-center">{error}</p>}
 
                 <div className="flex gap-3">
-                  <button onClick={onClose} className="flex-1 py-2.5 rounded-lg text-white/30 text-sm hover:text-white/50">
-                    ข้าม
-                  </button>
-                  <button onClick={handleSave} disabled={saving}
-                    className="flex-1 py-2.5 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-30"
-                  >
-                    {saving ? "..." : "ดูผลวิเคราะห์"}
-                  </button>
+                  <LaurelButton variant="crimson" onClick={onClose} className="flex-1">ข้าม</LaurelButton>
+                  <LaurelButton variant="gold" onClick={handleSave} className="flex-1">{saving ? "..." : "ดูผลวิเคราะห์"}</LaurelButton>
                 </div>
               </motion.div>
             )}

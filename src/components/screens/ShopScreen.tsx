@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { EASE } from "@/constants/animation";
-import Button from "@/components/ui/Button";
+import LaurelButton from "@/components/ui/LaurelButton";
 import { PROVINCES } from "@/lib/thai-provinces";
 
 interface Product {
@@ -270,9 +270,7 @@ export default function ShopScreen() {
                             <span className="text-white/40 text-sm">รวม</span>
                             <span className="text-gold text-lg font-semibold">฿{cartTotal}</span>
                           </div>
-                          <button onClick={() => setStep("shipping")}
-                            className="w-full py-3 rounded-xl bg-gold text-[#1a0a0a] text-sm font-semibold"
-                          >ดำเนินการสั่งซื้อ</button>
+                          <LaurelButton variant="gold" onClick={() => setStep("shipping")} className="w-full">ดำเนินการสั่งซื้อ</LaurelButton>
                         </>
                       )}
                     </motion.div>
@@ -403,9 +401,8 @@ export default function ShopScreen() {
 
                       {errorMsg && <p className="text-red-400/80 text-xs">{errorMsg}</p>}
                       <div className="flex gap-3 pt-1">
-                        <button onClick={() => { setStep("browse"); setErrorMsg(""); }} className="flex-1 py-2.5 rounded-xl bg-[#1e0c0c] text-white/40 text-sm">ย้อนกลับ</button>
-                        <button onClick={() => { if (!shippingName || !shippingPhone || !shippingAddress || !shippingProvince) { setErrorMsg("กรุณากรอกข้อมูลที่มี * ให้ครบ"); return; } setErrorMsg(""); setStep("payment"); }}
-                          className="flex-1 py-2.5 rounded-xl bg-gold text-[#1a0a0a] text-sm font-semibold">ถัดไป</button>
+                        <LaurelButton variant="crimson" onClick={() => { setStep("browse"); setErrorMsg(""); }} className="flex-1">ย้อนกลับ</LaurelButton>
+                        <LaurelButton variant="gold" onClick={() => { if (!shippingName || !shippingPhone || !shippingAddress || !shippingProvince) { setErrorMsg("กรุณากรอกข้อมูลที่มี * ให้ครบ"); return; } setErrorMsg(""); setStep("payment"); }} className="flex-1">ถัดไป</LaurelButton>
                       </div>
                     </motion.div>
                   )}
@@ -470,11 +467,8 @@ export default function ShopScreen() {
                       {errorMsg && <p className="text-red-400/80 text-xs">{errorMsg}</p>}
 
                       <div className="flex gap-3 pt-2">
-                        <button onClick={() => { setStep("shipping"); setErrorMsg(""); }} className="flex-1 py-2.5 rounded-xl bg-[#1e0c0c] text-white/40 text-sm">ย้อนกลับ</button>
-                        <button onClick={handleCheckout}
-                          disabled={payMethod === "credit" && credits < cartTotal}
-                          className="flex-1 py-2.5 rounded-xl bg-gold text-[#1a0a0a] text-sm font-semibold disabled:opacity-30"
-                        >ยืนยันสั่งซื้อ ฿{cartTotal}</button>
+                        <LaurelButton variant="crimson" onClick={() => { setStep("shipping"); setErrorMsg(""); }} className="flex-1">ย้อนกลับ</LaurelButton>
+                        <LaurelButton variant="gold" onClick={handleCheckout} className="flex-1">ยืนยันสั่งซื้อ ฿{cartTotal}</LaurelButton>
                       </div>
                     </motion.div>
                   )}
@@ -516,7 +510,7 @@ export default function ShopScreen() {
                         <p className="text-green-400/60 text-xs">หักเครดิตเรียบร้อย</p>
                       )}
 
-                      <Button variant="outline" onClick={() => { setShowCart(false); setStep("browse"); }}>ปิด</Button>
+                      <LaurelButton variant="crimson" onClick={() => { setShowCart(false); setStep("browse"); }} className="w-full">ปิด</LaurelButton>
                     </motion.div>
                   )}
 
@@ -527,7 +521,7 @@ export default function ShopScreen() {
                         <span className="text-red-400 text-xl">&#10007;</span>
                       </div>
                       <p className="text-white/60 text-sm">{errorMsg}</p>
-                      <Button variant="outline" onClick={() => setStep("payment")}>ลองใหม่</Button>
+                      <LaurelButton variant="crimson" onClick={() => setStep("payment")} className="w-full">ลองใหม่</LaurelButton>
                     </motion.div>
                   )}
                 </AnimatePresence>

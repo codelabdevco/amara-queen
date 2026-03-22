@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import LaurelButton from "@/components/ui/LaurelButton";
 
 interface CreditInfo {
   credits: number;
@@ -155,11 +156,9 @@ export default function CreditBadge() {
                       ))}
                     </div>
 
-                    <button onClick={handlePay}
-                      className="w-full py-3 rounded-xl bg-gradient-to-br from-[#e8d48b] to-[#c4a850] text-[#08090e] text-sm font-semibold tracking-wide shadow-[0_4px_24px_rgba(232,212,139,.25)]"
-                    >
+                    <LaurelButton variant="gold" onClick={handlePay} className="w-full">
                       ชำระเงิน {info.packages[selectedPkg]?.price} &#3647;
-                    </button>
+                    </LaurelButton>
                     <p className="text-white/15 text-[0.55rem] text-center">PromptPay QR | เครดิตเข้าอัตโนมัติ</p>
                   </motion.div>
                 )}
@@ -198,9 +197,7 @@ export default function CreditBadge() {
                     </div>
                     <h3 className="text-gold text-lg font-semibold">ชำระเงินสำเร็จ!</h3>
                     <p className="text-white/40 text-sm">เพิ่ม <span className="text-gold font-semibold">{addedCredits}</span> เครดิต</p>
-                    <button onClick={closeModal}
-                      className="w-full py-2.5 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors"
-                    >ปิด</button>
+                    <LaurelButton variant="crimson" onClick={closeModal} className="w-full">ปิด</LaurelButton>
                   </motion.div>
                 )}
 
@@ -210,9 +207,7 @@ export default function CreditBadge() {
                       <span className="text-red-400 text-xl">&#10007;</span>
                     </div>
                     <p className="text-white/60 text-sm">{errorMsg}</p>
-                    <button onClick={() => setStep("packages")}
-                      className="w-full py-2.5 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors"
-                    >ลองใหม่</button>
+                    <LaurelButton variant="crimson" onClick={() => setStep("packages")} className="w-full">ลองใหม่</LaurelButton>
                   </motion.div>
                 )}
               </AnimatePresence>
