@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
 
 import { EASE } from "@/constants/animation";
-import Button from "@/components/ui/Button";
+import LaurelButton from "@/components/ui/LaurelButton";
 
 /* ── Types ── */
 interface Teller {
@@ -167,8 +167,17 @@ export default function BookingScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
       >
-        <h2 className="text-lg text-gold font-semibold tracking-wide">นัดหมอดู</h2>
-        <p className="text-gold/25 text-xs mt-1">จองคิวดูดวงกับหมอดูตัวจริง</p>
+        <h2
+          className="text-lg font-semibold tracking-[0.1em] mb-1"
+          style={{
+            background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
+            backgroundSize: "200% 200%",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            animation: "shimmer-text 4s ease-in-out infinite",
+          }}
+        >นัดหมอดู</h2>
+        <p className="text-[#8B7A4A]/50 text-xs mt-1">จองคิวดูดวงกับหมอดูตัวจริง</p>
       </motion.div>
 
       <AnimatePresence mode="wait">
@@ -183,33 +192,35 @@ export default function BookingScreen() {
             transition={{ duration: 0.35, ease: EASE }}
           >
             {TELLERS.map((teller, idx) => (
-              <motion.button
+              <motion.div
                 key={teller.id}
-                className="w-full rounded-2xl bg-[#2a1215]/90 p-4 text-left active:scale-[0.98] transition-transform"
-                style={{ borderColor: `${teller.color}20` }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + idx * 0.06, duration: 0.4, ease: EASE }}
-                onClick={() => setSelectedTeller(teller)}
+                className="flex flex-col items-center gap-2"
               >
-                <div className="flex items-center gap-3">
-                  {/* Avatar */}
-                  <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold flex-shrink-0"
-                    style={{ background: `${teller.color}18`, border: `2px solid ${teller.color}40`, color: teller.color }}
-                  >
-                    {teller.initials}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <p className="text-white/85 text-sm font-semibold">{teller.name}</p>
-                      <Stars count={teller.rating} />
+                <div className="w-full rounded-2xl bg-[#2a1215]/90 p-4">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold flex-shrink-0"
+                      style={{ background: `${teller.color}18`, border: `2px solid ${teller.color}40`, color: teller.color }}
+                    >
+                      {teller.initials}
                     </div>
-                    <p className="text-white/30 text-xs mt-0.5">{teller.specialty}</p>
-                    <p className="text-xs mt-1" style={{ color: teller.color }}>{teller.price}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <p className="text-white/85 text-sm font-semibold">{teller.name}</p>
+                        <Stars count={teller.rating} />
+                      </div>
+                      <p className="text-[#8B7A4A]/50 text-xs mt-0.5">{teller.specialty}</p>
+                      <p className="text-xs mt-1" style={{ color: teller.color }}>{teller.price}</p>
+                    </div>
                   </div>
                 </div>
-              </motion.button>
+                <LaurelButton variant="crimson" onClick={() => setSelectedTeller(teller)}>
+                  เลือก {teller.name}
+                </LaurelButton>
+              </motion.div>
             ))}
           </motion.div>
         )}
@@ -234,7 +245,7 @@ export default function BookingScreen() {
               </div>
               <div>
                 <p className="text-white/80 text-sm font-semibold">{selectedTeller.name}</p>
-                <p className="text-white/30 text-[0.65rem]">{selectedTeller.price}</p>
+                <p className="text-[#8B7A4A]/50 text-[0.65rem]">{selectedTeller.price}</p>
               </div>
             </div>
 
@@ -247,13 +258,13 @@ export default function BookingScreen() {
                   <button
                     key={idx}
                     className={`flex-shrink-0 w-14 rounded-xl p-2 flex flex-col items-center gap-0.5 border transition-colors ${
-                      isSel ? "border-gold/20 bg-gold/10" : "border-gold/[0.02] bg-[#2a1215]/90"
+                      isSel ? "border-gold/30 bg-gold/15 shadow-[0_0_10px_rgba(212,175,55,0.12)]" : "border-[#5a2030]/30 bg-[#2a1215]/90"
                     }`}
                     onClick={() => { setSelectedDate(day); setSelectedTime(null); }}
                   >
                     <span className="text-[0.6rem] text-white/35">{THAI_DAYS[day.getDay()]}</span>
                     <span className={`text-sm font-semibold ${isSel ? "text-gold" : "text-white/70"}`}>{day.getDate()}</span>
-                    <span className="text-[0.55rem] text-gold/25">
+                    <span className="text-[0.55rem] text-[#8B7A4A]/50">
                       {day.toLocaleDateString("th-TH", { month: "short" })}
                     </span>
                   </button>
@@ -277,8 +288,8 @@ export default function BookingScreen() {
                         key={slot}
                         className={`rounded-lg py-2 text-xs font-medium border transition-colors ${
                           isSel
-                            ? "border-gold/20 bg-gold/10 text-gold"
-                            : "border-gold/[0.02] bg-[#2a1215]/90 text-white/50 active:bg-gold/5"
+                            ? "border-gold/30 bg-gold/15 text-gold shadow-[0_0_10px_rgba(212,175,55,0.12)]"
+                            : "border-gold/10 bg-[#2a1215]/90 text-gold/60 active:bg-gold/10 hover:border-gold/20"
                         }`}
                         onClick={() => setSelectedTime(slot)}
                       >
@@ -298,7 +309,7 @@ export default function BookingScreen() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Button onClick={() => setShowConfirm(true)}>ยืนยันการจอง</Button>
+                <LaurelButton variant="gold" onClick={() => setShowConfirm(true)}>ยืนยันการจอง</LaurelButton>
               </motion.div>
             )}
           </motion.div>
@@ -336,8 +347,8 @@ export default function BookingScreen() {
               </div>
             </div>
             <div className="flex gap-3 justify-center">
-              <Button variant="outline" onClick={() => setShowConfirm(false)}>ยกเลิก</Button>
-              <Button onClick={handleConfirm}>ยืนยัน</Button>
+              <LaurelButton variant="crimson" onClick={() => setShowConfirm(false)}>ยกเลิก</LaurelButton>
+              <LaurelButton variant="gold" onClick={handleConfirm}>ยืนยัน</LaurelButton>
             </div>
           </motion.div>
         )}
@@ -359,7 +370,7 @@ export default function BookingScreen() {
             </div>
             <p className="text-gold text-sm font-semibold mb-1">จองสำเร็จ!</p>
             <p className="text-white/40 text-xs text-center mb-6">รอการยืนยันจากหมอดู</p>
-            <Button variant="outline" onClick={handleReset}>จองอีกครั้ง</Button>
+            <LaurelButton variant="crimson" onClick={handleReset}>จองอีกครั้ง</LaurelButton>
           </motion.div>
         )}
       </AnimatePresence>

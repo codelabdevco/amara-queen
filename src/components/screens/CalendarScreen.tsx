@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useMemo } from "react";
 
 import { EASE } from "@/constants/animation";
-import Button from "@/components/ui/Button";
 
 /* ── Types ── */
 interface DayFortune {
@@ -105,8 +104,17 @@ export default function CalendarScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
       >
-        <h2 className="text-lg text-gold font-semibold tracking-wide">วันดีวันร้าย</h2>
-        <p className="text-gold/25 text-xs mt-1">ปฏิทินดวงรายสัปดาห์</p>
+        <h2
+          className="text-lg font-semibold tracking-[0.1em] mb-1"
+          style={{
+            background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
+            backgroundSize: "200% 200%",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            animation: "shimmer-text 4s ease-in-out infinite",
+          }}
+        >วันดีวันร้าย</h2>
+        <p className="text-[#8B7A4A]/50 text-xs mt-1">ปฏิทินดวงรายสัปดาห์</p>
       </motion.div>
 
       {/* Week nav */}
@@ -117,18 +125,18 @@ export default function CalendarScreen() {
         transition={{ delay: 0.2, duration: 0.5 }}
       >
         <button
-          className="px-3 py-1.5 rounded-lg text-white/50 text-xs active:bg-gold/5"
+          className="px-3 py-1.5 rounded-lg text-gold/60 text-xs border border-gold/10 active:bg-gold/10 hover:bg-gold/5 transition-colors"
           onClick={() => { setWeekOffset((o) => o - 1); setSelectedIdx(null); }}
         >
           สัปดาห์ก่อน
         </button>
-        <span className="text-white/40 text-xs">
+        <span className="text-[#8B7A4A]/50 text-xs">
           {monday.toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
           {" - "}
           {new Date(monday.getTime() + 6 * 86400000).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" })}
         </span>
         <button
-          className="px-3 py-1.5 rounded-lg text-white/50 text-xs active:bg-gold/5"
+          className="px-3 py-1.5 rounded-lg text-gold/60 text-xs border border-gold/10 active:bg-gold/10 hover:bg-gold/5 transition-colors"
           onClick={() => { setWeekOffset((o) => o + 1); setSelectedIdx(null); }}
         >
           สัปดาห์ถัดไป
@@ -146,10 +154,10 @@ export default function CalendarScreen() {
               key={day.date.toISOString()}
               className={`flex-shrink-0 w-[calc((100%-48px)/7)] min-w-[52px] rounded-xl p-2 flex flex-col items-center gap-1 border transition-colors ${
                 isSelected
-                  ? "border-gold/20 bg-gold/10"
+                  ? "border-gold/30 bg-gold/15 shadow-[0_0_12px_rgba(212,175,55,0.15)]"
                   : isToday
-                  ? "border-gold/[0.08] bg-gold/5"
-                  : "border-gold/[0.02] bg-[#2a1215]/90"
+                  ? "border-gold/[0.08] bg-[#3a1520]/90"
+                  : "border-[#5a2030]/30 bg-[#2a1215]/90"
               }`}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -222,7 +230,7 @@ export default function CalendarScreen() {
         {(["good", "neutral", "caution"] as const).map((level) => (
           <div key={level} className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: LEVEL_COLOR[level] }} />
-            <span className="text-white/30 text-[0.6rem]">{LEVEL_TEXT[level]}</span>
+            <span className="text-[#8B7A4A]/50 text-[0.6rem]">{LEVEL_TEXT[level]}</span>
           </div>
         ))}
       </motion.div>

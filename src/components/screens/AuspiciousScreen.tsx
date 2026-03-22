@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useCallback } from "react";
 
 import { EASE } from "@/constants/animation";
-import Button from "@/components/ui/Button";
+import LaurelButton from "@/components/ui/LaurelButton";
 
 // ── Event types ──
 const EVENT_TYPES = [
@@ -198,8 +198,17 @@ export default function AuspiciousScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
       >
-        <h2 className="text-xl text-gold font-semibold tracking-[0.15em]">ฤกษ์ยามมงคล</h2>
-        <p className="text-gold/25 text-xs mt-1">ดูฤกษ์ดี วันมงคล สำหรับงานสำคัญ</p>
+        <h2
+          className="text-lg font-semibold tracking-[0.1em] mb-1"
+          style={{
+            background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
+            backgroundSize: "200% 200%",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            animation: "shimmer-text 4s ease-in-out infinite",
+          }}
+        >ฤกษ์ยามมงคล</h2>
+        <p className="text-[#8B7A4A]/50 text-xs mt-1">ดูฤกษ์ดี วันมงคล สำหรับงานสำคัญ</p>
       </motion.div>
 
       <AnimatePresence mode="wait">
@@ -224,38 +233,20 @@ export default function AuspiciousScreen() {
 
             <div className="grid grid-cols-2 gap-2.5">
               {EVENT_TYPES.map((evt, idx) => (
-                <motion.button
+                <motion.div
                   key={evt.id}
-                  className="group relative overflow-hidden rounded-2xl bg-[#2a1215]/90 text-left active:scale-[0.97] transition-transform"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.08 + idx * 0.05, duration: 0.5, ease: EASE }}
-                  onClick={() => handleSelectEvent(evt.id)}
                 >
-                  {/* Colored glow */}
-                  <div
-                    className="absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-[0.07] blur-2xl transition-opacity group-active:opacity-[0.15]"
-                    style={{ background: evt.color }}
-                  />
-
-                  <div className="relative p-3.5">
-                    <div className="flex items-center gap-2.5 mb-2">
-                      <div
-                        className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"
-                        style={{ background: `${evt.color}12`, border: `1px solid ${evt.color}25` }}
-                      >
-                        <span style={{ color: evt.color }}>{evt.icon}</span>
-                      </div>
-                      <p className="text-[0.8rem] text-white/85 font-medium leading-tight">{evt.name}</p>
-                    </div>
-                    <p className="text-[0.6rem] text-gold/25 leading-relaxed pl-[46px]">{evt.desc}</p>
-                  </div>
-
-                  <div
-                    className="h-[1px] mx-3 mb-0 opacity-[0.12]"
-                    style={{ background: `linear-gradient(90deg, transparent, ${evt.color}, transparent)` }}
-                  />
-                </motion.button>
+                  <LaurelButton
+                    variant="crimson"
+                    onClick={() => handleSelectEvent(evt.id)}
+                    className="w-full h-[56px]"
+                  >
+                    <span style={{ color: evt.color }}>{evt.icon}</span> {evt.name}
+                  </LaurelButton>
+                </motion.div>
               ))}
             </div>
           </motion.div>
@@ -290,7 +281,7 @@ export default function AuspiciousScreen() {
               </div>
               <div>
                 <p className="text-sm text-white/80 font-medium">{selectedEventObj.name}</p>
-                <p className="text-[0.6rem] text-white/30">{selectedEventObj.desc}</p>
+                <p className="text-[0.6rem] text-[#8B7A4A]/50">{selectedEventObj.desc}</p>
               </div>
             </motion.div>
 
@@ -311,7 +302,7 @@ export default function AuspiciousScreen() {
                 className="w-full px-4 py-3.5 rounded-xl border text-sm text-white/80 outline-none focus:border-gold/15 transition-colors"
                 style={{
                   colorScheme: "dark",
-                  background: "rgba(12,13,20,0.9)",
+                  background: "#2a1215",
                   borderColor: "rgba(232,212,139,0.15)",
                 }}
                 min={new Date().toISOString().split("T")[0]}
@@ -333,12 +324,13 @@ export default function AuspiciousScreen() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              <Button
+              <LaurelButton
+                variant="gold"
                 onClick={handleSubmit}
                 className={!selectedDate ? "opacity-40 pointer-events-none" : ""}
               >
-                ดูฤกษ์
-              </Button>
+                วิเคราะห์ฤกษ์
+              </LaurelButton>
             </motion.div>
           </motion.div>
         )}
@@ -400,7 +392,7 @@ export default function AuspiciousScreen() {
                 ))}
               </motion.div>
               <motion.p
-                className="text-xs text-white/30"
+                className="text-xs text-[#8B7A4A]/50"
                 animate={{ opacity: [0.3, 0.7, 0.3] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
@@ -512,7 +504,7 @@ export default function AuspiciousScreen() {
                     ))}
                   </div>
 
-                  <p className="relative text-[0.6rem] text-white/30 flex justify-between px-1">
+                  <p className="relative text-[0.6rem] text-[#8B7A4A]/50 flex justify-between px-1">
                     <span>ไม่ดี</span>
                     <span>กลาง</span>
                     <span>ดี</span>
@@ -625,12 +617,12 @@ export default function AuspiciousScreen() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7, duration: 0.5 }}
             >
-              <Button variant="outline" onClick={() => window.location.href = "/home"}>
+              <LaurelButton variant="crimson" onClick={() => window.location.href = "/home"}>
                 กลับหน้าหลัก
-              </Button>
-              <Button onClick={handleRetry}>
+              </LaurelButton>
+              <LaurelButton variant="gold" onClick={handleRetry}>
                 ดูฤกษ์อื่น
-              </Button>
+              </LaurelButton>
             </motion.div>
           </motion.div>
         )}

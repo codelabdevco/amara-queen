@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useCallback } from "react";
 
 import { EASE } from "@/constants/animation";
-import Button from "@/components/ui/Button";
+import LaurelButton from "@/components/ui/LaurelButton";
 
 // ── Fortune stick poems (mock data) ──
 const MOCK_POEMS: Record<string, { poem: string; luck: "great" | "good" | "fair" | "caution" }[]> = {
@@ -209,8 +209,17 @@ export default function SiamSiScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
       >
-        <h2 className="text-xl text-gold font-semibold tracking-[0.15em]">เซียมซี</h2>
-        <p className="text-gold/25 text-xs mt-1">เสี่ยงเซียมซี 1-100 พร้อม AI ตีความ</p>
+        <h2
+          className="text-lg font-semibold tracking-[0.1em] mb-1"
+          style={{
+            background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
+            backgroundSize: "200% 200%",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            animation: "shimmer-text 4s ease-in-out infinite",
+          }}
+        >เซียมซี</h2>
+        <p className="text-[#8B7A4A]/50 text-xs mt-1">เสี่ยงเซียมซี 1-100 พร้อม AI ตีความ</p>
       </motion.div>
 
       <AnimatePresence mode="wait">
@@ -267,20 +276,22 @@ export default function SiamSiScreen() {
 
             {/* Instruction text */}
             <motion.p
-              className="text-xs text-white/30 text-center"
+              className="text-xs text-[#8B7A4A]/50 text-center"
               animate={{ opacity: [0.3, 0.7, 0.3] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
               {state === "shaking" ? "กำลังเขย่า..." : "แตะปุ่มด้านล่างเพื่อเสี่ยงเซียมซี"}
             </motion.p>
 
+
             {/* Shake button */}
-            <Button
+            <LaurelButton
+              variant="gold"
               onClick={handleShake}
               className={state === "shaking" ? "opacity-50 pointer-events-none" : ""}
             >
               {state === "shaking" ? "กำลังเขย่า..." : "เสี่ยงเซียมซี"}
-            </Button>
+            </LaurelButton>
           </motion.div>
         )}
 
@@ -400,7 +411,7 @@ export default function SiamSiScreen() {
                 ))}
               </motion.div>
               <motion.p
-                className="text-xs text-white/30"
+                className="text-xs text-[#8B7A4A]/50"
                 animate={{ opacity: [0.3, 0.7, 0.3] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
@@ -436,7 +447,7 @@ export default function SiamSiScreen() {
                 }}
               >
                 <div className="text-center">
-                  <p className="text-[0.5rem] text-white/30 uppercase tracking-wider">เลขที่</p>
+                  <p className="text-[0.5rem] text-[#8B7A4A]/50 uppercase tracking-wider">เลขที่</p>
                   <p className="text-2xl font-bold" style={{ color: LUCK_CONFIG[fortune.luck].color }}>
                     {fortune.number}
                   </p>
@@ -460,7 +471,7 @@ export default function SiamSiScreen() {
                     {LUCK_CONFIG[fortune.luck].label}
                   </span>
                 </div>
-                <p className="text-[0.65rem] text-white/30">
+                <p className="text-[0.65rem] text-[#8B7A4A]/50">
                   {fortune.luck === "great" && "ดวงดี เลข 1-25"}
                   {fortune.luck === "good" && "กลางๆ เลข 26-50"}
                   {fortune.luck === "fair" && "ระวัง เลข 51-75"}
@@ -542,12 +553,12 @@ export default function SiamSiScreen() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.5 }}
             >
-              <Button variant="outline" onClick={() => window.location.href = "/home"}>
+              <LaurelButton variant="crimson" onClick={() => window.location.href = "/home"}>
                 กลับหน้าหลัก
-              </Button>
-              <Button onClick={handleRetry}>
+              </LaurelButton>
+              <LaurelButton variant="crimson" onClick={handleRetry}>
                 เสี่ยงใหม่
-              </Button>
+              </LaurelButton>
             </motion.div>
           </motion.div>
         )}
