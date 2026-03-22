@@ -23,15 +23,65 @@ html, body {
 
 body {
   background: var(--bg);
-  background-image: url('/bg-card.svg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
   color: #e8dcc8;
   min-height: 100dvh;
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
+  overflow: hidden;
+}
+
+/* ===== ANIMATED BACKGROUND ===== */
+.bg-scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.bg-scene__img {
+  position: absolute;
+  width: 115%;
+  height: 115%;
+  top: -7.5%;
+  left: -7.5%;
+  object-fit: cover;
+  animation: bgFloat 20s ease-in-out infinite;
+  will-change: transform;
+}
+.bg-scene__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(139,0,0,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 100%, rgba(26,10,10,0.95) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(26,10,10,0.2) 0%, rgba(26,10,10,0.5) 50%, rgba(26,10,10,0.85) 100%);
+}
+.bg-scene__particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.bg-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #d4af37;
+  opacity: 0;
+  animation: particleDrift linear infinite;
+}
+
+@keyframes bgFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(1.5%, -1%) scale(1.01); }
+  50% { transform: translate(-0.5%, 1.5%) scale(1.02); }
+  75% { transform: translate(-1%, -0.5%) scale(1.01); }
+}
+
+@keyframes particleDrift {
+  0% { opacity: 0; transform: translateY(100vh) translateX(0); }
+  10% { opacity: 0.3; }
+  90% { opacity: 0.1; }
+  100% { opacity: 0; transform: translateY(-10vh) translateX(30px); }
 }
 
 /* ===== GOLDEN MIST ===== */

@@ -2,9 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useTarotStore } from "@/store/useTarotStore";
-import Starfield from "@/components/canvas/Starfield";
-import GoldenMist from "@/components/effects/GoldenMist";
-import DustParticles from "@/components/effects/DustParticles";
+import AnimatedBg from "@/components/effects/AnimatedBg";
 import WelcomeScreen from "@/components/screens/WelcomeScreen";
 import HomeScreen from "@/components/screens/HomeScreen";
 import TarotFlow from "@/components/TarotFlow";
@@ -18,17 +16,7 @@ export default function TarotApp() {
 
   return (
     <>
-      {/* Custom background image (if configured) */}
-      {THEME.backgroundImage && (
-        <div className="fixed inset-0 z-0">
-          <img src={THEME.backgroundImage} alt="" className="absolute inset-0 w-full h-full object-cover" draggable={false} />
-          <div className="absolute inset-0 bg-black/40" />
-        </div>
-      )}
-
-      <Starfield />
-      <GoldenMist />
-      <DustParticles />
+      <AnimatedBg />
 
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-4 py-3 bg-[#1e0c0c]" style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}>

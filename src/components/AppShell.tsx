@@ -3,8 +3,7 @@
 import { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import GoldenMist from "@/components/effects/GoldenMist";
-import DustParticles from "@/components/effects/DustParticles";
+import AnimatedBg from "@/components/effects/AnimatedBg";
 import UserAuth from "@/components/ui/UserAuth";
 import CreditBadge from "@/components/ui/CreditBadge";
 import BottomNav from "@/components/ui/BottomNav";
@@ -24,8 +23,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <GoldenMist />
-      <DustParticles />
+      <AnimatedBg />
 
       {/* Header */}
       <header
