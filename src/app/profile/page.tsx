@@ -151,18 +151,18 @@ export default function ProfilePage() {
             </motion.div>
 
             {/* Edit + Logout */}
-            <div className="space-y-2">
+            <div className="flex gap-3">
               <button
                 onClick={() => setShowEdit(true)}
-                className="w-full py-2.5 rounded-xl bg-gold/10 text-gold border border-gold/20 text-sm font-medium hover:bg-gold/20 transition-colors"
+                className="flex-1 py-2.5 rounded-xl bg-gold/10 text-gold border border-gold/20 text-sm font-medium hover:bg-gold/20 transition-colors"
               >
                 แก้ไขข้อมูล
               </button>
               <button
                 onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.href = "/"; }}
-                className="w-full py-2.5 rounded-xl bg-red-500/5 text-red-400/60 border border-red-500/10 text-sm hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                className="px-5 py-2.5 rounded-xl bg-red-500/5 text-red-400/50 border border-red-500/10 text-sm hover:text-red-400 hover:bg-red-500/10 transition-colors"
               >
-                ออกจากระบบ
+                ออก
               </button>
             </div>
 
