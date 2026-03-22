@@ -56,47 +56,57 @@ export default function ProfilePage() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, ease: EASE }}
       >
-        <h2 className="text-lg text-gold font-semibold tracking-wide mb-4">โปรไฟล์</h2>
+        {/* Header */}
+        <motion.div className="text-center mb-4" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
+          <h2
+            className="text-base font-semibold tracking-[0.1em]"
+            style={{
+              background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
+              backgroundSize: "200% 200%",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              animation: "shimmer-text 4s ease-in-out infinite",
+            }}
+          >โปรไฟล์</h2>
+        </motion.div>
 
         {loading ? (
-          <div className="flex items-center gap-3 text-white/30 mt-10 justify-center">
-            <div className="w-4 h-4 border-2 border-gold/10 border-t-gold rounded-full animate-spin" />
+          <div className="flex items-center justify-center mt-10">
+            <div className="w-4 h-4 border-2 border-[#8B7A4A]/30 border-t-[#d4af37] rounded-full animate-spin" />
           </div>
         ) : !data?.profile ? (
           <div className="text-center mt-10 space-y-4">
-            <div className="w-20 h-20 rounded-full bg-gold/10 flex items-center justify-center mx-auto">
-              <span className="text-gold text-3xl">♦</span>
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto" style={{ background: "#3A0E0E", border: "1px solid #8B7A4A30" }}>
+              <span className="text-[#d4af37] text-3xl">♦</span>
             </div>
-            <p className="text-white/40 text-sm">ยังไม่ได้เข้าสู่ระบบ</p>
-            <a href="/api/auth/line" className="inline-block px-6 py-2.5 rounded-full text-sm font-semibold" style={{ background: "#06C755", color: "#fff" }}>
-              เข้าสู่ระบบด้วย LINE
-            </a>
+            <p className="text-[#8B7A4A]/50 text-sm">ยังไม่ได้เข้าสู่ระบบ</p>
+            <LaurelButton variant="gold" href="/api/auth/line">เข้าสู่ระบบ</LaurelButton>
           </div>
         ) : (
           <>
             {/* Avatar + Name */}
             <motion.div
-              className="flex items-center gap-4 mb-5"
+              className="flex items-center gap-4 mb-4"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
             >
               {data.linePictureUrl ? (
-                <img src={data.linePictureUrl} alt="" className="w-16 h-16 rounded-full border-2 border-gold/[0.05]" />
+                <img src={data.linePictureUrl} alt="" className="w-14 h-14 rounded-full" style={{ border: "1.5px solid #8B7A4A30" }} />
               ) : (
-                <div className="w-16 h-16 rounded-full bg-gold/10 border-2 border-gold/[0.05] flex items-center justify-center">
-                  <span className="text-gold text-2xl">{data.profile.nickname?.charAt(0) || "?"}</span>
+                <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: "#3A0E0E", border: "1.5px solid #8B7A4A30" }}>
+                  <span className="text-[#E2D4A0] text-xl">{data.profile.nickname?.charAt(0) || "?"}</span>
                 </div>
               )}
               <div>
-                <p className="text-white text-lg font-semibold">{data.profile.nickname}</p>
-                {data.profile.firstName && <p className="text-white/40 text-sm">{data.profile.firstName} {data.profile.lastName}</p>}
-                {data.zodiac && <p className="text-gold/60 text-xs mt-0.5">ราศี{data.zodiac.western.signTh} · วัน{data.zodiac.birthDay.nameTh}</p>}
+                <p className="text-[#E2D4A0] text-base font-semibold">{data.profile.nickname}</p>
+                {data.profile.firstName && <p className="text-[#8B7A4A]/50 text-xs">{data.profile.firstName} {data.profile.lastName}</p>}
+                {data.zodiac && <p className="text-[#d4af37]/50 text-[0.65rem] mt-0.5">ราศี{data.zodiac.western.signTh} · วัน{data.zodiac.birthDay.nameTh}</p>}
               </div>
             </motion.div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-2 mb-5">
+            <div className="grid grid-cols-3 gap-2 mb-4">
               <StatBox label="ดูดวงแล้ว" value={String(data.totalReadings)} />
               <StatBox label="เครดิต" value={String(data.credits)} />
               <StatBox label="อายุ" value={data.zodiac ? `${data.zodiac.age} ปี` : "-"} />
@@ -104,57 +114,47 @@ export default function ProfilePage() {
 
             {/* Zodiac Info */}
             {data.zodiac && (
-              <motion.div
-                className="space-y-2 mb-5"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-              >
-                <p className="text-white/30 text-[0.65rem] uppercase tracking-wider">ข้อมูลดวงชะตา</p>
-                <div className="grid grid-cols-2 gap-2">
-                  <InfoCard label="ราศี" value={data.zodiac.western.signTh} sub={data.zodiac.western.sign} />
+              <motion.div className="space-y-2 mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2, duration: 0.5 }}>
+                <p className="text-[#8B7A4A]/40 text-[0.6rem] uppercase tracking-[0.2em]">ข้อมูลดวงชะตา</p>
+                <div className="grid grid-cols-3 gap-1.5">
+                  <InfoCard label="ราศี" value={data.zodiac.western.signTh} />
                   <InfoCard label="ธาตุ" value={data.zodiac.western.elementTh} />
-                  <InfoCard label="ปีนักษัตร" value={data.zodiac.thai.signTh} />
+                  <InfoCard label="นักษัตร" value={data.zodiac.thai.signTh} />
                   <InfoCard label="เลขนำโชค" value={String(data.zodiac.luckyNumber)} />
-                  <InfoCard label="ดาวประจำวัน" value={data.zodiac.birthDay.planetTh} />
+                  <InfoCard label="ดาว" value={data.zodiac.birthDay.planetTh} />
                   <InfoCard label="สีนำโชค" value={data.zodiac.luckyColor} />
                 </div>
 
-                <div className="bg-[#2a1215] rounded-xl p-3.5">
-                  <p className="text-gold/50 text-[0.6rem] uppercase tracking-wider mb-1.5">บุคลิกภาพ</p>
-                  <p className="text-white/60 text-xs leading-5">{data.zodiac.personality}</p>
+                <div className="bg-[#2a1215] rounded-lg p-3" style={{ border: "0.5px solid #8B7A4A10" }}>
+                  <p className="text-[#8B7A4A]/40 text-[0.55rem] uppercase tracking-wider mb-1">บุคลิกภาพ</p>
+                  <p className="text-[#E2D4A0]/50 text-[0.7rem] leading-5">{data.zodiac.personality}</p>
                 </div>
 
-                <div className="bg-[#2a1215] rounded-xl p-3.5">
-                  <p className="text-white/30 text-[0.6rem] uppercase tracking-wider mb-1.5">ราศีที่เข้ากัน</p>
-                  <p className="text-gold/70 text-sm font-medium">{data.zodiac.compatibility}</p>
+                <div className="bg-[#2a1215] rounded-lg p-3" style={{ border: "0.5px solid #8B7A4A10" }}>
+                  <p className="text-[#8B7A4A]/40 text-[0.55rem] uppercase tracking-wider mb-1">ราศีที่เข้ากัน</p>
+                  <p className="text-[#d4af37]/60 text-xs font-medium">{data.zodiac.compatibility}</p>
                 </div>
               </motion.div>
             )}
 
             {/* Contact Info */}
-            <motion.div
-              className="space-y-2 mb-5"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-            >
-              <p className="text-white/30 text-[0.65rem] uppercase tracking-wider">ข้อมูลติดต่อ</p>
-              <div className="bg-[#2a1215] rounded-xl p-4 space-y-3">
+            <motion.div className="space-y-2 mb-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.5 }}>
+              <p className="text-[#8B7A4A]/40 text-[0.6rem] uppercase tracking-[0.2em]">ข้อมูลติดต่อ</p>
+              <div className="bg-[#2a1215] rounded-lg p-3 space-y-2.5" style={{ border: "0.5px solid #8B7A4A10" }}>
                 {data.profile.phone && <InfoRow label="เบอร์โทร" value={data.profile.phone} />}
                 {data.profile.email && <InfoRow label="อีเมล" value={data.profile.email} />}
                 {data.profile.occupation && <InfoRow label="อาชีพ" value={data.profile.occupation} />}
                 {data.profile.gender && <InfoRow label="เพศ" value={data.profile.gender === "male" ? "ชาย" : data.profile.gender === "female" ? "หญิง" : "อื่นๆ"} />}
                 {!data.profile.phone && !data.profile.email && !data.profile.occupation && (
-                  <p className="text-white/20 text-xs">ยังไม่ได้กรอกข้อมูลติดต่อ</p>
+                  <p className="text-[#8B7A4A]/30 text-xs">ยังไม่ได้กรอกข้อมูลติดต่อ</p>
                 )}
               </div>
             </motion.div>
 
-            {/* Edit + Logout */}
-            <div className="flex gap-3">
-              <LaurelButton variant="crimson" onClick={() => setShowEdit(true)} className="flex-1">แก้ไขข้อมูล</LaurelButton>
-              <LaurelButton variant="crimson" onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.href = "/"; }}>ออก</LaurelButton>
+            {/* Actions */}
+            <div className="flex gap-3 justify-center">
+              <LaurelButton variant="crimson" onClick={() => setShowEdit(true)}>แก้ไขข้อมูล</LaurelButton>
+              <LaurelButton variant="crimson" onClick={async () => { await fetch("/api/auth/logout", { method: "POST" }); window.location.href = "/"; }}>ออกจากระบบ</LaurelButton>
             </div>
 
             <ProfileSetup open={showEdit} onClose={() => { setShowEdit(false); fetchProfile(); }} />
@@ -167,19 +167,18 @@ export default function ProfilePage() {
 
 function StatBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-[#2a1215] rounded-xl p-3 text-center">
-      <p className="text-gold text-xl font-semibold">{value}</p>
-      <p className="text-gold/25 text-[0.6rem] mt-0.5">{label}</p>
+    <div className="bg-[#2a1215] rounded-lg p-2.5 text-center" style={{ border: "0.5px solid #8B7A4A10" }}>
+      <p className="text-[#d4af37] text-lg font-semibold">{value}</p>
+      <p className="text-[#8B7A4A]/40 text-[0.55rem]">{label}</p>
     </div>
   );
 }
 
-function InfoCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
+function InfoCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-[#2a1215] rounded-xl p-2.5 text-center">
-      <p className="text-gold/25 text-[0.55rem] uppercase tracking-wider">{label}</p>
-      <p className="text-gold text-sm font-semibold mt-0.5">{value}</p>
-      {sub && <p className="text-white/20 text-[0.55rem] mt-0.5">{sub}</p>}
+    <div className="bg-[#2a1215] rounded-lg p-2 text-center" style={{ border: "0.5px solid #8B7A4A10" }}>
+      <p className="text-[#8B7A4A]/35 text-[0.5rem] uppercase tracking-wider">{label}</p>
+      <p className="text-[#d4af37]/80 text-xs font-semibold mt-0.5">{value}</p>
     </div>
   );
 }
@@ -187,8 +186,8 @@ function InfoCard({ label, value, sub }: { label: string; value: string; sub?: s
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between items-center">
-      <span className="text-white/30 text-xs">{label}</span>
-      <span className="text-white/60 text-xs">{value}</span>
+      <span className="text-[#8B7A4A]/40 text-[0.7rem]">{label}</span>
+      <span className="text-[#E2D4A0]/60 text-[0.7rem]">{value}</span>
     </div>
   );
 }
