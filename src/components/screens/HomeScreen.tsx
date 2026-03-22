@@ -8,16 +8,16 @@ import LaurelButton from "@/components/ui/LaurelButton";
 interface UserInfo { nickname: string; zodiac: { western: { signTh: string } } | null }
 
 const FORTUNE_SERVICES = [
-  { href: "/tarot", icon: "☽", name: "ไพ่ทาโร่" },
-  { href: "/gypsy", icon: "♦", name: "ไพ่ยิปซี" },
-  { href: "/siamsi", icon: "☰", name: "เซียมซี" },
+  { href: "/tarot", icon: "☽", name: "ไพ่ทาโร่", cost: 1 },
+  { href: "/gypsy", icon: "♦", name: "ไพ่ยิปซี", cost: 1 },
+  { href: "/siamsi", icon: "☰", name: "เซียมซี", cost: 1 },
 ];
 
 const OTHER_SERVICES = [
-  { href: "/auspicious", icon: "☆", name: "ฤกษ์ยามมงคล" },
-  { href: "/calendar", icon: "☼", name: "วันดีวันร้าย" },
-  { href: "/booking", icon: "☷", name: "นัดหมอดู" },
-  { href: "/shop", icon: "❖", name: "ร้านค้ามงคล" },
+  { href: "/auspicious", icon: "☆", name: "ฤกษ์ยามมงคล", cost: 1 },
+  { href: "/calendar", icon: "☼", name: "วันดีวันร้าย", cost: 0 },
+  { href: "/booking", icon: "☷", name: "นัดหมอดู", cost: 0 },
+  { href: "/shop", icon: "❖", name: "ร้านค้ามงคล", cost: 0 },
 ];
 
 export default function HomeScreen() {
@@ -85,7 +85,11 @@ export default function HomeScreen() {
             transition={{ delay: 0.35 + idx * 0.1, duration: 0.5, ease: EASE }}
           >
             <LaurelButton variant="crimson" href={svc.href} className="w-[240px]">
-              <span className="mr-1 opacity-60">{svc.icon}</span> {svc.name}
+              <span className="flex items-center gap-2">
+                <span className="opacity-60">{svc.icon}</span>
+                <span>{svc.name}</span>
+                <span className="opacity-30 text-[0.55rem]">&#9733;{svc.cost}</span>
+              </span>
             </LaurelButton>
           </motion.div>
         ))}
@@ -118,9 +122,11 @@ export default function HomeScreen() {
               transition={{ delay: 0.75 + idx * 0.08, duration: 0.4, ease: EASE }}
             >
               <LaurelButton variant="crimson" href={svc.href} className="w-full h-[60px]">
-                <span className="flex flex-col items-center gap-1">
+                <span className="flex flex-col items-center gap-0.5">
                   <span className="opacity-70">{svc.icon}</span>
-                  <span>{svc.name}</span>
+                  <span className="text-[0.65rem]">{svc.name}</span>
+                  {svc.cost > 0 && <span className="opacity-25 text-[0.45rem]">&#9733;{svc.cost} เครดิต</span>}
+                  {svc.cost === 0 && <span className="opacity-20 text-[0.45rem]">ฟรี</span>}
                 </span>
               </LaurelButton>
             </motion.div>

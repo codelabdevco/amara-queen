@@ -6,6 +6,7 @@ import { SPREADS } from "@/types/tarot";
 import { GYPSY_SPREADS } from "@/types/gypsy";
 import { EASE } from "@/constants/animation";
 import LaurelButton from "@/components/ui/LaurelButton";
+import { useState, useEffect } from "react";
 
 export default function SpreadScreen() {
   const service = useTarotStore((s) => s.service);
@@ -14,6 +15,11 @@ export default function SpreadScreen() {
   const selectSpread = useTarotStore((s) => s.selectSpread);
   const setPhase = useTarotStore((s) => s.setPhase);
   const spreads = service === "gypsy" ? GYPSY_SPREADS : SPREADS;
+  const [credits, setCredits] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/credits/balance").then(r => r.json()).then(d => setCredits(d.credits ?? 0)).catch(() => {});
+  }, []);
 
   return (
     <motion.div
@@ -36,9 +42,14 @@ export default function SpreadScreen() {
       >
         เลือกรูปแบบการวาง
       </h2>
-      <p className="text-[#8B7A4A]/50 text-xs mb-1">
+      <p className="text-[#8B7A4A]/50 text-xs mb-0.5">
         แนะนำ: <span className="text-[#E2D4A0]/60">{selectedSpread?.nameTH}</span> สำหรับ {selectedTopic?.nameTH}
       </p>
+      {credits !== null && (
+        <p className="text-[#d4af37]/40 text-[0.6rem]">
+          &#9733; ใช้ 1 เครดิต/ครั้ง · คงเหลือ {credits} เครดิต
+        </p>
+      )}
       <motion.div
         className="w-16 h-[1px] mx-auto mb-3"
         style={{ background: "linear-gradient(90deg, transparent, #8B7A4A, transparent)" }}
