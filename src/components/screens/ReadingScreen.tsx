@@ -6,6 +6,7 @@ import { useTarotStore } from "@/store/useTarotStore";
 import { AIReading } from "@/store/useTarotStore";
 import { EASE } from "@/constants/animation";
 import Button from "@/components/ui/Button";
+import LaurelButton from "@/components/ui/LaurelButton";
 import { saveReading } from "@/lib/history";
 
 import Candle from "@/components/ui/Candle";
@@ -296,6 +297,8 @@ export default function ReadingScreen() {
   const setLoadingAI = useTarotStore((s) => s.setLoadingAI);
   const [viewCard, setViewCard] = useState<number | null>(null);
   const [hasError, setHasError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [errorType, setErrorType] = useState<"login" | "credit" | "server">("server");
   const reset = useTarotStore((s) => s.reset);
 
   // Fetch AI reading
@@ -325,12 +328,18 @@ export default function ReadingScreen() {
       const data = await res.json();
       if (data.error) {
         setHasError(true);
+        setErrorMsg(data.error);
+        if (data.needLogin) setErrorType("login");
+        else if (data.needCredits) setErrorType("credit");
+        else setErrorType("server");
         setLoadingAI(false);
       } else {
         setAiReading(data.reading as AIReading);
       }
     } catch {
       setHasError(true);
+      setErrorMsg("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาลองอีกครั้ง");
+      setErrorType("server");
       setLoadingAI(false);
     }
   }, [selectedTopic, selectedSpread, userQuestion, pickedCards, setAiReading, setLoadingAI]);
@@ -426,13 +435,37 @@ export default function ReadingScreen() {
         {/* ── Error with retry ── */}
         {hasError && !isLoadingAI && !aiReading && (
           <motion.div
-            className="bg-[#2a1215] border border-[#7a2020]/20 rounded-2xl p-6 text-center"
+            className="rounded-lg p-6 text-center max-w-[320px] mx-auto"
+            style={{ background: "#2a1215", border: "0.5px solid #8B7A4A10" }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: EASE }}
           >
-            <p className="text-[#E2D4A0]/60 text-sm mb-4">ไม่สามารถสร้างคำทำนายได้ กรุณาลองอีกครั้ง</p>
-            <Button variant="outline" onClick={fetchReading}>ลองใหม่</Button>
+            <div className="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center"
+              style={{ background: "#1e0c0c", border: "1px solid #8B7A4A15" }}
+            >
+              <span className="text-[#d4af37] text-lg">
+                {errorType === "login" ? "♦" : errorType === "credit" ? "★" : "!"}
+              </span>
+            </div>
+
+            <h3 className="text-[#E2D4A0] text-sm font-semibold mb-1">
+              {errorType === "login" ? "กรุณาเข้าสู่ระบบ" : errorType === "credit" ? "เครดิตไม่เพียงพอ" : "เกิดข้อผิดพลาด"}
+            </h3>
+            <p className="text-[#8B7A4A]/50 text-xs mb-4 leading-5">{errorMsg}</p>
+
+            <div className="flex gap-3 justify-center">
+              {errorType === "login" && (
+                <LaurelButton variant="gold" href="/api/auth/line">เข้าสู่ระบบ LINE</LaurelButton>
+              )}
+              {errorType === "credit" && (
+                <LaurelButton variant="gold" onClick={() => { /* CreditBadge will handle */ const btn = document.querySelector('[class*="bg-gold/10"]') as HTMLButtonElement; btn?.click(); }}>เติมเครดิต</LaurelButton>
+              )}
+              {errorType === "server" && (
+                <Button variant="outline" onClick={() => { setHasError(false); setErrorMsg(""); fetchReading(); }}>ลองใหม่</Button>
+              )}
+              <Button variant="outline" onClick={reset}>กลับหน้าหลัก</Button>
+            </div>
           </motion.div>
         )}
 
