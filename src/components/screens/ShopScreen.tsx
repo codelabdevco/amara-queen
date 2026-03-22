@@ -181,14 +181,30 @@ export default function ShopScreen() {
     >
       {/* Header */}
       <motion.div className="text-center mb-5" initial={{ opacity: 0, y: -15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.6, ease: EASE }}>
-        <h2 className="text-lg text-gold font-semibold tracking-wide">ร้านค้ามงคล</h2>
-        <p className="text-gold/25 text-xs mt-1">วัตถุมงคล เครื่องราง ของดี เสริมดวง</p>
+        <h2
+          className="text-lg font-semibold tracking-[0.1em] mb-1"
+          style={{
+            background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
+            backgroundSize: "200% 200%",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            animation: "shimmer-text 4s ease-in-out infinite",
+          }}
+        >ร้านค้ามงคล</h2>
+        <p className="text-[#8B7A4A]/50 text-xs mt-1">วัตถุมงคล เครื่องราง ของดี เสริมดวง</p>
+        <motion.div className="w-16 h-[1px] mx-auto mt-3" style={{ background: "linear-gradient(90deg, transparent, #8B7A4A, transparent)" }} initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.3, duration: 0.6 }} />
       </motion.div>
 
       {/* Cart floating button */}
       {cartCount > 0 && step === "browse" && (
         <motion.button
-          className="fixed bottom-24 left-4 right-4 z-[101] py-3 rounded-xl bg-gold text-[#1a0a0a] text-sm font-semibold shadow-[0_4px_20px_rgba(212,175,55,0.3)] text-center"
+          className="fixed bottom-24 left-4 right-4 z-[101] py-3 text-sm font-semibold text-center text-[#E2D4A0] tracking-wide"
+          style={{
+            background: "linear-gradient(135deg, #3A0E0E, #521515, #380D0D)",
+            border: "1px solid #8B7A4A60",
+            borderRadius: "4px",
+            boxShadow: "0 4px 20px rgba(139,0,0,0.2), 0 0 15px rgba(212,175,55,0.05)",
+          }}
           initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} whileTap={{ scale: 0.97 }}
           onClick={() => { setShowCart(true); setStep("browse"); }}
         >
@@ -204,16 +220,18 @@ export default function ShopScreen() {
             transition={{ delay: 0.1 + idx * 0.05, duration: 0.4, ease: EASE }}
             onClick={() => setViewProduct(product)}
           >
-            <div className="aspect-square bg-[#1e0c0c] flex items-center justify-center">
-              <span className="text-3xl text-gold/60">{product.icon}</span>
+            <div className="aspect-square bg-[#1e0c0c] flex items-center justify-center relative">
+              <span className="text-3xl text-[#8B7A4A]/40">{product.icon}</span>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#2a1215] via-transparent to-transparent" />
             </div>
             <div className="p-3">
-              <p className="text-white/80 text-xs font-medium leading-tight mb-0.5">{product.name}</p>
-              <p className="text-white/30 text-[0.55rem] leading-4 mb-2 line-clamp-2">{product.description}</p>
+              <p className="text-[#E2D4A0]/80 text-xs font-medium leading-tight mb-0.5">{product.name}</p>
+              <p className="text-[#8B7A4A]/40 text-[0.55rem] leading-4 mb-2 line-clamp-2">{product.description}</p>
               <div className="flex items-center justify-between">
-                <span className="text-gold text-sm font-semibold">฿{product.price}</span>
+                <span className="text-[#d4af37] text-sm font-semibold">฿{product.price}</span>
                 <motion.button
-                  className="px-2.5 py-1 rounded-lg bg-gold/10 text-gold text-[0.6rem] font-medium active:bg-gold/20"
+                  className="px-2.5 py-1 rounded bg-[#3A0E0E] text-[#E2D4A0]/70 text-[0.6rem] font-medium active:bg-[#521515] transition-colors"
+                  style={{ border: "0.5px solid #8B7A4A40" }}
                   whileTap={{ scale: 0.9 }}
                   onClick={(e) => { e.stopPropagation(); addToCart(product); }}
                 >
@@ -242,9 +260,10 @@ export default function ShopScreen() {
             >
               {/* Product image */}
               <div className="aspect-[4/3] bg-[#1e0c0c] flex items-center justify-center relative">
-                <span className="text-6xl text-gold/50">{viewProduct.icon}</span>
+                <span className="text-6xl text-[#8B7A4A]/30">{viewProduct.icon}</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#2a1215] via-transparent to-transparent" />
                 <button
-                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 flex items-center justify-center text-white/50 hover:text-white/80"
+                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#2a1215]/80 flex items-center justify-center text-[#E2D4A0]/50 hover:text-[#E2D4A0]"
                   onClick={() => setViewProduct(null)}
                 >
                   &#10005;
@@ -254,16 +273,16 @@ export default function ShopScreen() {
               {/* Product info */}
               <div className="p-5 space-y-3">
                 <div>
-                  <h3 className="text-gold text-base font-semibold">{viewProduct.name}</h3>
+                  <h3 className="text-[#E2D4A0] text-base font-semibold">{viewProduct.name}</h3>
                   {viewProduct.category && (
-                    <span className="text-[#8B7A4A]/60 text-[0.6rem] uppercase tracking-wider">{viewProduct.category}</span>
+                    <span className="text-[#8B7A4A]/50 text-[0.6rem] uppercase tracking-wider">{viewProduct.category}</span>
                   )}
                 </div>
 
-                <p className="text-white/50 text-xs leading-5">{viewProduct.description}</p>
+                <p className="text-[#E2D4A0]/40 text-xs leading-5">{viewProduct.description}</p>
 
                 <div className="flex items-center justify-between pt-2">
-                  <span className="text-gold text-xl font-semibold">฿{viewProduct.price}</span>
+                  <span className="text-[#d4af37] text-xl font-semibold">฿{viewProduct.price}</span>
                   <div className="flex gap-2">
                     {cart.find(i => i.id === viewProduct.id) ? (
                       <div className="flex items-center gap-2">
@@ -302,7 +321,7 @@ export default function ShopScreen() {
               transition={{ duration: 0.35, ease: EASE }}
             >
               <div className="p-5">
-                <div className="w-10 h-1 rounded-full bg-gold/15 mx-auto mb-4" />
+                <div className="w-10 h-[1px] mx-auto mb-4" style={{ background: "linear-gradient(90deg, transparent, #8B7A4A, transparent)" }} />
 
                 <AnimatePresence mode="wait">
                   {/* ── Cart Items ── */}
