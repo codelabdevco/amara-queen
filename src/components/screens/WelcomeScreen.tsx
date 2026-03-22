@@ -65,15 +65,25 @@ export default function WelcomeScreen() {
       </motion.p>
 
       <motion.div
+        className="flex flex-col items-center gap-3"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.8, ease: EASE }}
       >
         <Button onClick={() => setPhase("topic")}>เริ่มดูดวง</Button>
+
+        <a
+          href="/api/auth/line"
+          className="flex items-center justify-center gap-2 w-[220px] py-3 rounded-full text-sm font-semibold tracking-wide transition-all hover:brightness-110"
+          style={{ background: "#06C755", color: "#fff" }}
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.81 2 10.44c0 3.7 3.04 6.9 7.34 7.93-.1.38-.66 2.44-.68 2.6 0 0-.01.1.05.14.06.03.13.01.13.01.17-.02 2-1.3 2.32-1.53.61.09 1.24.14 1.84.14 5.52 0 10-3.81 10-8.44C22 5.81 17.52 2 12 2z"/></svg>
+          เข้าสู่ระบบด้วย LINE
+        </a>
       </motion.div>
 
       <motion.button
-        className="mt-4 text-xs text-white/25 hover:text-white/50 transition-colors tracking-wide"
+        className="mt-3 text-xs text-white/25 hover:text-white/50 transition-colors tracking-wide"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.8, ease: EASE }}
