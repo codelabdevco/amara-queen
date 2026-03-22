@@ -31,7 +31,7 @@ export default function HomeScreen() {
 
   return (
     <motion.div
-      className="flex flex-col items-center min-h-full px-4 pt-4 pb-6"
+      className="flex flex-col items-center justify-center h-full px-4"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, ease: EASE }}
     >
       {/* Hero */}
