@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import { EASE } from "@/constants/animation";
 import LaurelButton from "@/components/ui/LaurelButton";
@@ -109,8 +108,8 @@ export default function HomeScreen() {
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 0.7, duration: 0.5 }}
       >
-        <p className="text-[#8B7A4A] text-[0.6rem] uppercase tracking-[0.3em] text-center mb-2">บริการอื่นๆ</p>
-        <div className="grid grid-cols-2 gap-2">
+        <p className="text-[#8B7A4A] text-[0.6rem] uppercase tracking-[0.3em] text-center mb-3">บริการอื่นๆ</p>
+        <div className="grid grid-cols-2 gap-3">
           {OTHER_SERVICES.map((svc, idx) => (
             <motion.div
               key={svc.href}
@@ -118,13 +117,12 @@ export default function HomeScreen() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.75 + idx * 0.08, duration: 0.4, ease: EASE }}
             >
-              <Link
-                href={svc.href}
-                className="flex flex-col items-center gap-1.5 p-4 rounded-lg bg-[#2a1215]/60 hover:bg-[#2a1215] transition-colors active:scale-[0.96]"
-              >
-                <span className="text-xl" style={{ color: svc.color }}>{svc.icon}</span>
-                <span className="text-[#E2D4A0]/70 text-xs font-medium">{svc.name}</span>
-              </Link>
+              <LaurelButton variant="crimson" href={svc.href} className="w-full h-[60px]">
+                <span className="flex flex-col items-center gap-1">
+                  <span style={{ color: svc.color }}>{svc.icon}</span>
+                  <span>{svc.name}</span>
+                </span>
+              </LaurelButton>
             </motion.div>
           ))}
         </div>
