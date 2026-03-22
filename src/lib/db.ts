@@ -189,6 +189,7 @@ export interface User {
   createdAt: number;
   readingsToday: number;
   lastReadingDate: string;
+  lastFreeMonth: string;
   credits: number;
 }
 
@@ -214,6 +215,7 @@ export function findUserByLineId(lineUserId: string): User | null {
 
 export function createLineUser(lineUserId: string, displayName: string, pictureUrl: string): User {
   const users = getUsers();
+  const settings = getSettings();
   const user: User = {
     id: crypto.randomUUID(),
     username: displayName,
@@ -224,7 +226,8 @@ export function createLineUser(lineUserId: string, displayName: string, pictureU
     createdAt: Date.now(),
     readingsToday: 0,
     lastReadingDate: "",
-    credits: 0,
+    lastFreeMonth: "",
+    credits: settings.welcomeCredits,
   };
   users.push(user);
   saveUsers(users);
@@ -281,6 +284,7 @@ export function deleteAddress(userId: string, addressId: string): SavedAddress[]
 
 export function createUser(username: string, passwordHash: string): User {
   const users = getUsers();
+  const settings = getSettings();
   const user: User = {
     id: crypto.randomUUID(),
     username,
@@ -288,7 +292,8 @@ export function createUser(username: string, passwordHash: string): User {
     createdAt: Date.now(),
     readingsToday: 0,
     lastReadingDate: "",
-    credits: 0,
+    lastFreeMonth: "",
+    credits: settings.welcomeCredits,
   };
   users.push(user);
   saveUsers(users);
@@ -301,28 +306,22 @@ export function incrementUserReading(userId: string): { allowed: boolean; remain
   const user = users.find((u) => u.id === userId);
   if (!user) return { allowed: false, remaining: 0, useCredit: false };
 
-  const today = new Date().toISOString().slice(0, 10);
-  if (user.lastReadingDate !== today) {
-    user.readingsToday = 0;
-    user.lastReadingDate = today;
+  // Monthly free credits — give once per month
+  const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
+  if (user.lastFreeMonth !== currentMonth) {
+    user.credits += settings.monthlyFreeCredits;
+    user.lastFreeMonth = currentMonth;
   }
 
-  // Free daily readings first
-  if (user.readingsToday < settings.dailyFreeLimit) {
-    user.readingsToday++;
-    saveUsers(users);
-    return { allowed: true, remaining: settings.dailyFreeLimit - user.readingsToday, useCredit: false };
-  }
-
-  // Then use credits
+  // Use credits
   const cost = settings.creditCostPerReading;
-  if (user.credits >= cost) {
+  if ((user.credits || 0) >= cost) {
     user.credits -= cost;
-    user.readingsToday++;
     saveUsers(users);
     return { allowed: true, remaining: user.credits, useCredit: true };
   }
 
+  saveUsers(users);
   return { allowed: false, remaining: 0, useCredit: false };
 }
 
@@ -585,6 +584,8 @@ export interface AppSettings {
   dailyFreeLimit: number;
   rateLimitPerMinute: number;
   maintenanceMode: boolean;
+  welcomeCredits: number;
+  monthlyFreeCredits: number;
   creditCostPerReading: number;
   creditPackages: { credits: number; price: number; label: string }[];
   promptPayNumber: string;
@@ -622,6 +623,8 @@ const DEFAULT_SETTINGS: AppSettings = {
   dailyFreeLimit: 5,
   rateLimitPerMinute: 10,
   maintenanceMode: false,
+  welcomeCredits: 5,
+  monthlyFreeCredits: 3,
   creditCostPerReading: 1,
   creditPackages: [
     { credits: 10, price: 29, label: "10 เครดิต" },
