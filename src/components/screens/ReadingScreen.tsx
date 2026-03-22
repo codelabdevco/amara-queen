@@ -397,7 +397,7 @@ export default function ReadingScreen() {
       <div className="flex gap-1.5 flex-wrap justify-center mb-5 max-w-full">
         {pickedCards.map((card, i) => (
           <motion.button key={i}
-            className={`w-[46px] h-[69px] rounded-md border border-gold/20 overflow-hidden relative bg-[#1e0c0c] ${card.isReversed ? "rotate-180" : ""}`}
+            className={`w-[46px] h-[69px] rounded-md border border-gold/[0.1] overflow-hidden relative bg-[#1e0c0c] ${card.isReversed ? "rotate-180" : ""}`}
             initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.05, duration: 0.5, ease: EASE }}
             whileTap={{ scale: 0.9 }}
@@ -412,7 +412,7 @@ export default function ReadingScreen() {
         {/* ── Loading ── */}
         {isLoadingAI && (
           <motion.div
-            className="bg-gradient-to-br from-gold/[0.06] to-transparent border border-gold/20 rounded-2xl p-5"
+            className="bg-gradient-to-br from-gold/[0.06] to-transparent border border-gold/[0.1] rounded-2xl p-5"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6, ease: EASE }}

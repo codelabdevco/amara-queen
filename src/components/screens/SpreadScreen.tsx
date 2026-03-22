@@ -36,7 +36,7 @@ export default function SpreadScreen() {
             <motion.button
               key={s.id}
               className={`w-full flex items-center gap-3 p-3.5 rounded-xl border text-left active:bg-gold/5
-                ${isDefault ? "border-gold/40 bg-gold/5" : "border-white/10 bg-[#2a1215]/80"}`}
+                ${isDefault ? "border-gold/40 bg-gold/5" : "border-white/[0.06] bg-[#2a1215]/80"}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.05 + idx * 0.04, duration: 0.4, ease: EASE }}

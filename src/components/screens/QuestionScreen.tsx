@@ -24,7 +24,7 @@ export default function QuestionScreen() {
       <p className="text-white/30 text-xs mb-6">พิมพ์คำถามของคุณ หรือข้ามไปเลยก็ได้</p>
 
       <textarea
-        className="w-full max-w-[340px] h-[100px] bg-[#2a1215] border border-gold/20 rounded-xl px-4 py-3 text-sm text-white/80 placeholder-white/20 resize-none focus:outline-none focus:border-gold/40"
+        className="w-full max-w-[340px] h-[100px] bg-[#2a1215] border border-gold/[0.1] rounded-xl px-4 py-3 text-sm text-white/80 placeholder-white/20 resize-none focus:outline-none focus:border-gold/40"
         placeholder="พิมพ์คำถามของคุณ... (ไม่บังคับ)"
         value={userQuestion}
         onChange={(e) => setQuestion(e.target.value)}

@@ -89,7 +89,7 @@ export default function AdminTransactionsPage() {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
+          <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-5">
             <div className="text-white/30 text-xs uppercase tracking-wider mb-2">
               รายการสำเร็จ
             </div>
@@ -99,7 +99,7 @@ export default function AdminTransactionsPage() {
             <div className="text-white/20 text-xs mt-1">รายการ</div>
           </div>
 
-          <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
+          <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-5">
             <div className="text-white/30 text-xs uppercase tracking-wider mb-2">
               ยอดรวม
             </div>
@@ -109,7 +109,7 @@ export default function AdminTransactionsPage() {
             <div className="text-white/20 text-xs mt-1">THB</div>
           </div>
 
-          <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-5">
+          <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-5">
             <div className="text-white/30 text-xs uppercase tracking-wider mb-2">
               เครดิตที่เติม
             </div>
@@ -127,13 +127,13 @@ export default function AdminTransactionsPage() {
             กำลังโหลด...
           </div>
         ) : transactions.length === 0 ? (
-          <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl p-10 text-center text-white/20 text-sm">
+          <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl p-10 text-center text-white/20 text-sm">
             ยังไม่มีรายการชำระเงิน
           </div>
         ) : (
-          <div className="bg-[#2a1215] border border-gold/[0.08] rounded-xl overflow-hidden">
+          <div className="bg-[#2a1215] border border-gold/[0.04] rounded-xl overflow-hidden">
             {/* Header */}
-            <div className="grid grid-cols-[1.2fr_1.5fr_1fr_1fr_0.8fr_0.8fr] gap-3 px-5 py-3 border-b border-gold/[0.08] text-xs text-white/30 uppercase tracking-wider">
+            <div className="grid grid-cols-[1.2fr_1.5fr_1fr_1fr_0.8fr_0.8fr] gap-3 px-5 py-3 border-b border-gold/[0.04] text-xs text-white/30 uppercase tracking-wider">
               <span>วันที่</span>
               <span>ผู้ใช้</span>
               <span>วิธีชำระ</span>
@@ -148,7 +148,7 @@ export default function AdminTransactionsPage() {
               return (
                 <div
                   key={t.id}
-                  className="grid grid-cols-[1.2fr_1.5fr_1fr_1fr_0.8fr_0.8fr] gap-3 px-5 py-3 border-b border-gold/[0.06] text-sm hover:bg-gold/[0.02] transition-colors items-center"
+                  className="grid grid-cols-[1.2fr_1.5fr_1fr_1fr_0.8fr_0.8fr] gap-3 px-5 py-3 border-b border-gold/[0.03] text-sm hover:bg-gold/[0.02] transition-colors items-center"
                 >
                   <span className="text-white/40 text-xs">
                     {formatDate(t.createdAt)}

@@ -115,7 +115,7 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
       >
         <div className="absolute inset-0 bg-black/85 backdrop-blur-sm" />
         <motion.div
-          className="relative bg-[#2a1215] border border-white/[0.08] rounded-2xl p-6 w-full max-w-[400px] max-h-[90vh] overflow-y-auto"
+          className="relative bg-[#2a1215] border border-white/[0.04] rounded-2xl p-6 w-full max-w-[400px] max-h-[90vh] overflow-y-auto"
           initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
         >
           <AnimatePresence mode="wait">
@@ -123,7 +123,7 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
               /* ── Summary Page ── */
               <motion.div key="summary" className="space-y-4" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}>
                 <div className="text-center">
-                  <div className="w-14 h-14 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-3">
+                  <div className="w-14 h-14 rounded-full bg-gold/10 border border-gold/[0.1] flex items-center justify-center mx-auto mb-3">
                     <span className="text-gold text-xl">&#10022;</span>
                   </div>
                   <h3 className="text-gold text-lg font-semibold">สวัสดี {form.nickname}</h3>
@@ -151,13 +151,13 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                     </div>
 
                     {/* Personality */}
-                    <div className="bg-[#1e0c0c] border border-gold/10 rounded-xl p-3.5">
+                    <div className="bg-[#1e0c0c] border border-gold/[0.06] rounded-xl p-3.5">
                       <p className="text-gold/50 text-[0.6rem] uppercase tracking-wider mb-1.5">บุคลิกภาพ</p>
                       <p className="text-white/70 text-xs leading-5">{zodiac.personality}</p>
                     </div>
 
                     {/* Compatibility */}
-                    <div className="bg-[#1e0c0c] border border-gold/[0.08] rounded-xl p-3.5">
+                    <div className="bg-[#1e0c0c] border border-gold/[0.04] rounded-xl p-3.5">
                       <p className="text-white/30 text-[0.6rem] uppercase tracking-wider mb-1.5">ราศีที่เข้ากันได้ดี</p>
                       <p className="text-gold/80 text-sm font-medium">{zodiac.compatibility}</p>
                     </div>
@@ -191,7 +191,7 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                   <label className="block text-white/40 text-xs mb-1.5">ชื่อเล่น *</label>
                   <input type="text" placeholder="เช่น มายด์, เบส, แพร" value={form.nickname}
                     onChange={e => update("nickname", e.target.value)}
-                    className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
+                    className="w-full bg-[#1e0c0c] border border-white/[0.06] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
                     autoFocus
                   />
                 </div>
@@ -202,14 +202,14 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                     <label className="block text-white/40 text-xs mb-1.5">ชื่อจริง</label>
                     <input type="text" placeholder="ชื่อ" value={form.firstName}
                       onChange={e => update("firstName", e.target.value)}
-                      className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
+                      className="w-full bg-[#1e0c0c] border border-white/[0.06] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
                     />
                   </div>
                   <div>
                     <label className="block text-white/40 text-xs mb-1.5">นามสกุล</label>
                     <input type="text" placeholder="นามสกุล" value={form.lastName}
                       onChange={e => update("lastName", e.target.value)}
-                      className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
+                      className="w-full bg-[#1e0c0c] border border-white/[0.06] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
                     />
                   </div>
                 </div>
@@ -236,7 +236,7 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                         className={`py-2 rounded-lg border text-sm transition-all ${
                           form.gender === g.value
                             ? "bg-gold/10 border-gold/30 text-gold"
-                            : "bg-[#1e0c0c] border-gold/[0.08] text-white/40 hover:border-white/10"
+                            : "bg-[#1e0c0c] border-gold/[0.04] text-white/40 hover:border-white/[0.06]"
                         }`}
                       >
                         <span className="mr-1">{g.icon}</span> {g.label}
@@ -251,14 +251,14 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                     <label className="block text-white/40 text-xs mb-1.5">เบอร์โทร</label>
                     <input type="tel" inputMode="numeric" placeholder="0812345678" value={form.phone}
                       onChange={e => update("phone", e.target.value)}
-                      className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none font-mono tracking-wider"
+                      className="w-full bg-[#1e0c0c] border border-white/[0.06] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none font-mono tracking-wider"
                     />
                   </div>
                   <div>
                     <label className="block text-white/40 text-xs mb-1.5">อีเมล</label>
                     <input type="email" inputMode="email" placeholder="email@mail.com" value={form.email}
                       onChange={e => update("email", e.target.value.trim())}
-                      className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
+                      className="w-full bg-[#1e0c0c] border border-white/[0.06] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
                     />
                   </div>
                 </div>
@@ -273,7 +273,7 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                         className={`py-2 rounded-lg border text-xs transition-all ${
                           form.relationshipStatus === s.value
                             ? "bg-gold/10 border-gold/30 text-gold"
-                            : "bg-[#1e0c0c] border-gold/[0.08] text-white/40 hover:border-white/10"
+                            : "bg-[#1e0c0c] border-gold/[0.04] text-white/40 hover:border-white/[0.06]"
                         }`}
                       >
                         {s.label}
@@ -287,7 +287,7 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                   <label className="block text-white/40 text-xs mb-1.5">อาชีพ</label>
                   <input type="text" placeholder="เช่น พนักงานบริษัท, นักศึกษา" value={form.occupation}
                     onChange={e => update("occupation", e.target.value)}
-                    className="w-full bg-[#1e0c0c] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
+                    className="w-full bg-[#1e0c0c] border border-white/[0.06] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
                   />
                 </div>
 
@@ -296,11 +296,11 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                 {error && <p className="text-red-400/80 text-xs text-center">{error}</p>}
 
                 <div className="flex gap-3">
-                  <button onClick={onClose} className="flex-1 py-2.5 rounded-lg border border-gold/[0.08] text-white/30 text-sm hover:text-white/50">
+                  <button onClick={onClose} className="flex-1 py-2.5 rounded-lg border border-gold/[0.04] text-white/30 text-sm hover:text-white/50">
                     ข้าม
                   </button>
                   <button onClick={handleSave} disabled={saving}
-                    className="flex-1 py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/20 text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-30"
+                    className="flex-1 py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/[0.1] text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-30"
                   >
                     {saving ? "..." : "ดูผลวิเคราะห์"}
                   </button>
@@ -316,7 +316,7 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
 
 function InfoCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="bg-[#1e0c0c] border border-gold/[0.08] rounded-xl p-2.5 text-center">
+    <div className="bg-[#1e0c0c] border border-gold/[0.04] rounded-xl p-2.5 text-center">
       <p className="text-gold/25 text-[0.55rem] uppercase tracking-wider">{label}</p>
       <p className="text-gold text-sm font-semibold mt-0.5">{value}</p>
       {sub && <p className="text-white/20 text-[0.55rem] mt-0.5">{sub}</p>}
