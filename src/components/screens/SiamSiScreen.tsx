@@ -202,21 +202,6 @@ export default function SiamSiScreen() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6, ease: EASE }}
     >
-      {/* Back button */}
-      <motion.button
-        className="fixed top-3 left-3 z-[110] w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 active:bg-white/10 backdrop-blur-sm"
-        style={{ top: "max(12px, env(safe-area-inset-top))" }}
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.3, duration: 0.3 }}
-        whileTap={{ scale: 0.85 }}
-        onClick={() => window.location.href = "/home"}
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
-      </motion.button>
-
       {/* Title */}
       <motion.div
         className="text-center mb-6"

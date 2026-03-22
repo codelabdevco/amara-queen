@@ -1,28 +1,33 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useTarotStore } from "@/store/useTarotStore";
 import type { Phase } from "@/types/tarot";
 
-const PHASE_BACK: Partial<Record<Phase, Phase>> = {
-  topic: "home",
+const PHASE_BACK: Partial<Record<Phase, Phase | "navigate:/home">> = {
+  topic: "navigate:/home",
   spread: "topic",
   question: "spread",
   fan: "question",
   reading: "fan",
-  siamsi: "home",
-  auspicious: "home",
-  calendar: "home",
-  booking: "home",
-  shop: "home",
 };
 
 export default function BackButton() {
   const phase = useTarotStore((s) => s.phase);
   const setPhase = useTarotStore((s) => s.setPhase);
+  const router = useRouter();
   const target = PHASE_BACK[phase];
 
   if (!target) return null;
+
+  function handleBack() {
+    if (typeof target === "string" && target.startsWith("navigate:")) {
+      router.push(target.replace("navigate:", ""));
+    } else if (target) {
+      setPhase(target as Phase);
+    }
+  }
 
   return (
     <motion.button
@@ -31,7 +36,7 @@ export default function BackButton() {
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.1, duration: 0.3 }}
       whileTap={{ scale: 0.9 }}
-      onClick={() => setPhase(target)}
+      onClick={handleBack}
     >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M15 18l-6-6 6-6" />
