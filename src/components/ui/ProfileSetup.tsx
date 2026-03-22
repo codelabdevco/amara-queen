@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import DatePicker from "@/components/ui/DatePicker";
+import TimePicker from "@/components/ui/TimePicker";
 
 interface ProfileData {
   nickname: string;
@@ -203,22 +205,16 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                   </div>
                 </div>
 
-                {/* Birthdate + Time */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-white/40 text-xs mb-1.5">วันเกิด *</label>
-                    <input type="date" value={form.birthdate}
-                      onChange={e => update("birthdate", e.target.value)}
-                      className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:border-gold/30 outline-none [color-scheme:dark]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-white/40 text-xs mb-1.5">เวลาเกิด</label>
-                    <input type="time" value={form.birthTime}
-                      onChange={e => update("birthTime", e.target.value)}
-                      className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:border-gold/30 outline-none [color-scheme:dark]"
-                    />
-                  </div>
+                {/* Birthdate */}
+                <div>
+                  <label className="block text-white/40 text-xs mb-1.5">วันเกิด *</label>
+                  <DatePicker value={form.birthdate} onChange={v => update("birthdate", v)} />
+                </div>
+
+                {/* Birth Time */}
+                <div>
+                  <label className="block text-white/40 text-xs mb-1.5">เวลาเกิด</label>
+                  <TimePicker value={form.birthTime} onChange={v => update("birthTime", v)} />
                 </div>
 
                 {/* Gender */}
