@@ -12,8 +12,6 @@ import BottomNav from "@/components/ui/BottomNav";
 import { THEME } from "@/constants/theme";
 
 const BACK_MAP: Record<string, string> = {
-  "/tarot": "/home",
-  "/gypsy": "/home",
   "/siamsi": "/home",
   "/auspicious": "/home",
   "/calendar": "/home",
