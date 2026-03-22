@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  amara-queen:
+    build: .
+    container_name: amara-queen
+    restart: unless-stopped
+    ports:
+      - "3504:3000"
+    volumes:
+      - amara-data:/app/data
+    environment:
+      - NODE_ENV=production
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      - JWT_SECRET=${JWT_SECRET:-amara-jwt-secret-2024}
+      - DATA_DIR=/app/data
+
+volumes:
+  amara-data:
