@@ -27,7 +27,8 @@ export default function ShopScreen() {
   const [errorMsg, setErrorMsg] = useState("");
   const [credits, setCredits] = useState(0);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [payMethod, setPayMethod] = useState<"credit" | "transfer">("credit");
+  const [payMethod, setPayMethod] = useState<"credit" | "transfer">("transfer");
+  const [promptPayInfo, setPromptPayInfo] = useState({ number: "", name: "" });
 
   // Shipping form
   const [shippingName, setShippingName] = useState("");
@@ -82,6 +83,7 @@ export default function ShopScreen() {
         return;
       }
       setOrderId(data.order?.id || "");
+      if (data.promptPayNumber) setPromptPayInfo({ number: data.promptPayNumber, name: data.promptPayName || "" });
       setCart([]);
       setStep("success");
     } catch {
@@ -187,7 +189,7 @@ export default function ShopScreen() {
                             <span className="text-white/40 text-sm">รวม</span>
                             <span className="text-gold text-lg font-semibold">฿{cartTotal}</span>
                           </div>
-                          <button onClick={() => setStep(loggedIn ? "shipping" : "login")}
+                          <button onClick={() => setStep("shipping")}
                             className="w-full py-3 rounded-xl bg-gold text-[#1a0a0a] text-sm font-semibold"
                           >ดำเนินการสั่งซื้อ</button>
                         </>
@@ -272,16 +274,6 @@ export default function ShopScreen() {
                       <div className="bg-[#1e0c0c] rounded-xl p-4 space-y-3">
                         <p className="text-gold/50 text-[0.6rem] uppercase tracking-wider">เลือกวิธีชำระ</p>
 
-                        <button onClick={() => setPayMethod("credit")}
-                          className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${payMethod === "credit" ? "bg-gold/10 ring-1 ring-gold/20" : "bg-[#2a1215]"}`}
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="text-gold">&#9733;</span>
-                            <span className="text-white/70 text-sm">ใช้เครดิต</span>
-                          </div>
-                          <span className={`text-xs font-mono ${credits >= cartTotal ? "text-green-400" : "text-red-400"}`}>{credits} เครดิต</span>
-                        </button>
-
                         <button onClick={() => setPayMethod("transfer")}
                           className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${payMethod === "transfer" ? "bg-gold/10 ring-1 ring-gold/20" : "bg-[#2a1215]"}`}
                         >
@@ -289,8 +281,20 @@ export default function ShopScreen() {
                             <span className="text-gold">฿</span>
                             <span className="text-white/70 text-sm">โอนเงิน / PromptPay</span>
                           </div>
-                          <span className="text-white/30 text-xs">฿{cartTotal}</span>
+                          <span className="text-gold text-sm font-semibold">฿{cartTotal}</span>
                         </button>
+
+                        {loggedIn && (
+                          <button onClick={() => setPayMethod("credit")}
+                            className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${payMethod === "credit" ? "bg-gold/10 ring-1 ring-gold/20" : "bg-[#2a1215]"}`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <span className="text-gold">&#9733;</span>
+                              <span className="text-white/70 text-sm">ใช้เครดิต</span>
+                            </div>
+                            <span className={`text-xs font-mono ${credits >= cartTotal ? "text-green-400" : "text-red-400"}`}>{credits} เครดิต</span>
+                          </button>
+                        )}
                       </div>
 
                       {payMethod === "credit" && credits < cartTotal && (
@@ -325,7 +329,27 @@ export default function ShopScreen() {
                       </div>
                       <h3 className="text-gold text-lg font-semibold">สั่งซื้อสำเร็จ!</h3>
                       <p className="text-white/40 text-xs">หมายเลขออเดอร์: {orderId.slice(0, 8)}</p>
-                      <p className="text-white/30 text-xs">ติดตามสถานะได้ที่โปรไฟล์</p>
+
+                      {payMethod === "transfer" && (
+                        <div className="bg-[#1e0c0c] rounded-xl p-4 text-left space-y-2 mt-2">
+                          <p className="text-gold/60 text-[0.65rem] uppercase tracking-wider text-center">กรุณาโอนเงินมาที่</p>
+                          {promptPayInfo.number ? (
+                            <>
+                              <p className="text-gold font-mono text-lg text-center tracking-wider">{promptPayInfo.number}</p>
+                              {promptPayInfo.name && <p className="text-white/40 text-xs text-center">{promptPayInfo.name}</p>}
+                            </>
+                          ) : (
+                            <p className="text-white/40 text-xs text-center">ติดต่อแอดมินเพื่อรับข้อมูลการโอนเงิน</p>
+                          )}
+                          <p className="text-gold text-center font-semibold">฿{cartTotal || "—"}</p>
+                          <p className="text-white/25 text-[0.6rem] text-center">โอนแล้วแจ้งแอดมิน ออเดอร์จะถูกยืนยันอัตโนมัติ</p>
+                        </div>
+                      )}
+
+                      {payMethod === "credit" && (
+                        <p className="text-green-400/60 text-xs">หักเครดิตเรียบร้อย</p>
+                      )}
+
                       <Button variant="outline" onClick={() => { setShowCart(false); setStep("browse"); }}>ปิด</Button>
                     </motion.div>
                   )}
