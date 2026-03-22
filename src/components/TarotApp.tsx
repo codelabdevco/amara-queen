@@ -10,8 +10,6 @@ import HomeScreen from "@/components/screens/HomeScreen";
 import TarotFlow from "@/components/TarotFlow";
 import UserAuth from "@/components/ui/UserAuth";
 import CreditBadge from "@/components/ui/CreditBadge";
-import BackButton from "@/components/ui/BackButton";
-
 import { EASE } from "@/constants/animation";
 import { THEME } from "@/constants/theme";
 
@@ -34,12 +32,9 @@ export default function TarotApp() {
 
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-4 py-3 bg-gradient-to-b from-[#08090e] via-[#08090e]/90 to-transparent" style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}>
-        <div className="flex items-center gap-2">
-          <BackButton />
-          <span className="text-sm text-gold/70 tracking-[0.2em] font-medium">
-            Amara Queen
-          </span>
-        </div>
+        <span className="text-sm text-gold/70 tracking-[0.2em] font-medium">
+          Amara Queen
+        </span>
         <div className="flex gap-3 items-center">
           <CreditBadge />
           <UserAuth />

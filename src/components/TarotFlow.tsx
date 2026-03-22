@@ -13,11 +13,16 @@ const AuspiciousScreen = dynamic(() => import("@/components/screens/AuspiciousSc
 const CalendarScreen = dynamic(() => import("@/components/screens/CalendarScreen"));
 const BookingScreen = dynamic(() => import("@/components/screens/BookingScreen"));
 const ShopScreen = dynamic(() => import("@/components/screens/ShopScreen"));
+import BackButton from "@/components/ui/BackButton";
+
 export default function TarotFlow() {
   const phase = useTarotStore((s) => s.phase);
 
   return (
     <div className="fixed inset-0 z-10 pt-[56px] pb-8 overflow-y-auto">
+      <div className="px-4 pt-2 pb-1">
+        <BackButton />
+      </div>
       <AnimatePresence mode="wait">
         {phase === "topic" && <TopicScreen />}
         {phase === "spread" && <SpreadScreen />}
