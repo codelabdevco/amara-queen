@@ -1,27 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchAddressByProvince, searchAddressByAmphoe } from "thai-address-database";
 
-// GET /api/address-lookup?province=xxx or ?amphoe=xxx&province=xxx
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const province = url.searchParams.get("province") || "";
   const amphoe = url.searchParams.get("amphoe") || "";
 
   if (amphoe && province) {
-    // Get sub-districts for a specific amphoe in province
-    const results = searchAddressByAmphoe(amphoe) as { district: string; amphoe: string; province: string; zipcode: string }[];
+    const results = searchAddressByAmphoe(amphoe);
     const filtered = results.filter(r => r.province === province);
-    const subDistricts = [...new Set(filtered.map(r => r.district))].sort();
+    const subDistrictSet: Record<string, boolean> = {};
     const zipcodes: Record<string, string> = {};
-    filtered.forEach(r => { zipcodes[r.district] = String(r.zipcode); });
-    return NextResponse.json({ subDistricts, zipcodes });
+    filtered.forEach(r => {
+      subDistrictSet[r.district] = true;
+      zipcodes[r.district] = String(r.zipcode);
+    });
+    return NextResponse.json({ subDistricts: Object.keys(subDistrictSet).sort(), zipcodes });
   }
 
   if (province) {
-    // Get amphoes for a province
-    const results = searchAddressByProvince(province) as { district: string; amphoe: string; province: string; zipcode: string }[];
-    const amphoes = [...new Set(results.map(r => r.amphoe))].sort();
-    return NextResponse.json({ amphoes });
+    const results = searchAddressByProvince(province);
+    const amphoeSet: Record<string, boolean> = {};
+    results.forEach(r => { amphoeSet[r.amphoe] = true; });
+    return NextResponse.json({ amphoes: Object.keys(amphoeSet).sort() });
   }
 
   return NextResponse.json({ error: "ต้องระบุ province" }, { status: 400 });
