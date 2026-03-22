@@ -70,7 +70,7 @@ export default function WelcomeScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.8, ease: EASE }}
       >
-        <Button onClick={() => setPhase("topic")}>เริ่มดูดวง</Button>
+        <Button onClick={() => setPhase("home")}>เริ่มใช้งาน</Button>
 
         <a
           href="/api/auth/line"

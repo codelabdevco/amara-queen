@@ -1,5 +1,7 @@
 // ===== PHASES =====
-export type Phase = "landing" | "topic" | "spread" | "question" | "shuffle" | "fan" | "layout" | "flip" | "reading";
+export type Phase = "landing" | "home" | "topic" | "spread" | "question" | "shuffle" | "fan" | "layout" | "flip" | "reading" | "siamsi" | "auspicious" | "calendar" | "booking" | "shop";
+
+export type ServiceType = "tarot" | "gypsy" | "siamsi" | "auspicious" | "calendar" | "booking" | "shop";
 
 // ===== TOPICS =====
 export interface Topic {

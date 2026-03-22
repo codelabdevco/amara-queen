@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Phase, Topic, Spread, TarotCard, PickedCard, SPREADS, TOPIC_DEFAULT_SPREAD } from "@/types/tarot";
+import { Phase, ServiceType, Topic, Spread, TarotCard, PickedCard, SPREADS, TOPIC_DEFAULT_SPREAD } from "@/types/tarot";
 
 export interface AIReading {
   trend: "very_positive" | "positive" | "neutral" | "caution" | "challenging";
@@ -12,8 +12,10 @@ import { allTarotCards } from "@/data/tarot";
 import { shuffleArray } from "@/lib/utils";
 
 interface TarotState {
+  service: ServiceType;
   phase: Phase;
   selectedTopic: Topic | null;
+  setService: (s: ServiceType) => void;
   selectedSpread: Spread | null;
   userQuestion: string;
   shuffledDeck: TarotCard[];
@@ -36,7 +38,9 @@ interface TarotState {
 }
 
 export const useTarotStore = create<TarotState>((set, get) => ({
+  service: "tarot" as ServiceType,
   phase: "landing",
+  setService: (s) => set({ service: s }),
   selectedTopic: null,
   selectedSpread: null,
   userQuestion: "",
@@ -110,7 +114,8 @@ export const useTarotStore = create<TarotState>((set, get) => ({
   setLoadingAI: (l) => set({ isLoadingAI: l }),
 
   reset: () => set({
-    phase: "landing",
+    service: "tarot" as ServiceType,
+    phase: "home",
     selectedTopic: null,
     selectedSpread: null,
     userQuestion: "",

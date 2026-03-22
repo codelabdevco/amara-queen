@@ -6,6 +6,7 @@ import Starfield from "@/components/canvas/Starfield";
 import GoldenMist from "@/components/effects/GoldenMist";
 import DustParticles from "@/components/effects/DustParticles";
 import WelcomeScreen from "@/components/screens/WelcomeScreen";
+import HomeScreen from "@/components/screens/HomeScreen";
 import TarotFlow from "@/components/TarotFlow";
 import UserAuth from "@/components/ui/UserAuth";
 import CreditBadge from "@/components/ui/CreditBadge";
@@ -54,8 +55,22 @@ export default function TarotApp() {
         )}
       </AnimatePresence>
 
+      {/* Home menu */}
+      <AnimatePresence>
+        {phase === "home" && (
+          <motion.div
+            className="fixed inset-0 z-10 pt-[56px] pb-8 overflow-y-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.3 } }}
+          >
+            <HomeScreen />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Main flow */}
-      {phase !== "landing" && <TarotFlow />}
+      {phase !== "landing" && phase !== "home" && <TarotFlow />}
     </>
   );
 }

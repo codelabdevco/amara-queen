@@ -10,5 +10,17 @@
     "readingsToday": 0,
     "lastReadingDate": "",
     "credits": 0
+  },
+  {
+    "id": "d34f490a-05cc-42a7-8073-56b63b994a01",
+    "username": "LINE User",
+    "passwordHash": "",
+    "lineUserId": "line_demo_0ea79329",
+    "lineDisplayName": "LINE User",
+    "linePictureUrl": "",
+    "createdAt": 1774168779990,
+    "readingsToday": 0,
+    "lastReadingDate": "",
+    "credits": 0
   }
 ]
