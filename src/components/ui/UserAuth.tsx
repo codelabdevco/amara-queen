@@ -158,13 +158,6 @@ export default function UserAuth() {
                 </LaurelButton>
               </form>
 
-              <a
-                href="/api/auth/line"
-                className="block w-full text-center py-2 rounded-lg text-gold/40 text-xs hover:text-gold/70 transition-colors"
-              >
-                Demo — ทดลองใช้งาน
-              </a>
-
               <p className="text-center text-[0.65rem] text-white/30">
                 {isLogin ? "ยังไม่มีบัญชี?" : "มีบัญชีแล้ว?"}{" "}
                 <button

@@ -74,12 +74,6 @@ export default function WelcomeScreen() {
           เข้าสู่ระบบด้วย LINE
         </a>
 
-        <a
-          href="/api/auth/line"
-          className="text-xs text-gold/40 hover:text-gold/70 transition-colors tracking-wide underline underline-offset-4 decoration-gold/20"
-        >
-          Demo — เข้าสู่ระบบทดลอง
-        </a>
       </motion.div>
     </motion.div>
   );

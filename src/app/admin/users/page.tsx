@@ -17,12 +17,14 @@ interface UserProfile {
 interface User {
   id: string;
   username: string;
+  lineUserId?: string;
   lineDisplayName?: string;
   linePictureUrl?: string;
   profile?: UserProfile;
   credits: number;
   createdAt: number;
   readingsToday: number;
+  lastFreeMonth?: string;
 }
 
 export default function AdminUsersPage() {
@@ -130,16 +132,30 @@ export default function AdminUsersPage() {
                 </button>
 
                 {/* Expanded profile details */}
-                {expanded === u.id && u.profile && (
+                {expanded === u.id && (
                   <div className="px-5 py-4 bg-white/[0.01]">
-                    <div className="grid grid-cols-3 gap-3 text-xs">
-                      {u.profile.nickname && <Info label="ชื่อเล่น" value={u.profile.nickname} />}
-                      {u.profile.firstName && <Info label="ชื่อจริง" value={`${u.profile.firstName} ${u.profile.lastName || ""}`} />}
-                      {u.profile.birthdate && <Info label="วันเกิด" value={u.profile.birthdate} />}
-                      {u.profile.gender && <Info label="เพศ" value={u.profile.gender === "male" ? "ชาย" : u.profile.gender === "female" ? "หญิง" : "อื่นๆ"} />}
-                      {u.profile.phone && <Info label="เบอร์โทร" value={u.profile.phone} />}
-                      {u.profile.email && <Info label="อีเมล" value={u.profile.email} />}
+                    {/* LINE info */}
+                    <div className="flex items-center gap-3 mb-3">
+                      {u.linePictureUrl && <img src={u.linePictureUrl} alt="" className="w-10 h-10 rounded-full" />}
+                      <div className="text-xs">
+                        {u.lineDisplayName && <Info label="LINE ชื่อ" value={u.lineDisplayName} />}
+                        {u.lineUserId && <Info label="LINE ID" value={u.lineUserId} />}
+                      </div>
                     </div>
+                    {/* Profile info */}
+                    {u.profile && (
+                      <div className="grid grid-cols-3 gap-3 text-xs">
+                        {u.profile.nickname && <Info label="ชื่อเล่น" value={u.profile.nickname} />}
+                        {u.profile.firstName && <Info label="ชื่อจริง" value={`${u.profile.firstName} ${u.profile.lastName || ""}`} />}
+                        {u.profile.birthdate && <Info label="วันเกิด" value={u.profile.birthdate} />}
+                        {u.profile.gender && <Info label="เพศ" value={u.profile.gender === "male" ? "ชาย" : u.profile.gender === "female" ? "หญิง" : "อื่นๆ"} />}
+                        {u.profile.phone && <Info label="เบอร์โทร" value={u.profile.phone} />}
+                        {u.profile.email && <Info label="อีเมล" value={u.profile.email} />}
+                      </div>
+                    )}
+                    {!u.profile && !u.lineDisplayName && (
+                      <p className="text-white/20 text-xs">ยังไม่มีข้อมูลเพิ่มเติม</p>
+                    )}
                   </div>
                 )}
               </div>
