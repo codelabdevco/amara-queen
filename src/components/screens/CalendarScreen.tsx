@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useMemo } from "react";
-
 import { EASE } from "@/constants/animation";
 
 /* ── Types ── */
@@ -17,9 +16,11 @@ interface DayFortune {
 }
 
 /* ── Helpers ── */
+const THAI_DAYS_SHORT = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
 const THAI_DAYS = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
-const LEVEL_COLOR: Record<DayFortune["level"], string> = { good: "#4ade80", neutral: "#e8d48b", caution: "#ef4444" };
+const LEVEL_COLOR: Record<DayFortune["level"], string> = { good: "#d4af37", neutral: "#8B7A4A", caution: "#7a2020" };
 const LEVEL_TEXT: Record<DayFortune["level"], string> = { good: "ดี", neutral: "กลาง", caution: "ระวัง" };
+const LEVEL_ICON: Record<DayFortune["level"], string> = { good: "☆", neutral: "◇", caution: "△" };
 
 function getMonday(d: Date): Date {
   const date = new Date(d);
@@ -44,8 +45,7 @@ function generateWeek(monday: Date): DayFortune[] {
     const r = seededRandom(seed);
     const level: DayFortune["level"] = r < 0.4 ? "good" : r < 0.75 ? "neutral" : "caution";
     week.push({
-      date,
-      level,
+      date, level,
       overall: Math.ceil(seededRandom(seed + 1) * 5),
       love: Math.ceil(seededRandom(seed + 2) * 5),
       career: Math.ceil(seededRandom(seed + 3) * 5),
@@ -56,19 +56,26 @@ function generateWeek(monday: Date): DayFortune[] {
   return week;
 }
 
-function Stars({ count, max = 5 }: { count: number; max?: number }) {
+function RatingBar({ value, max = 5 }: { value: number; max?: number }) {
   return (
-    <span className="inline-flex gap-0.5">
+    <div className="flex gap-0.5">
       {Array.from({ length: max }, (_, i) => (
-        <span key={i} className={i < count ? "text-gold" : "text-white/15"}>&#9733;</span>
+        <div key={i} className="w-5 h-1.5 rounded-full" style={{ background: i < value ? "#d4af37" : "#3A0E0E" }} />
       ))}
-    </span>
+    </div>
   );
 }
 
+const CATEGORIES = [
+  { key: "overall" as const, label: "ดวงรวม", icon: "☆" },
+  { key: "love" as const, label: "ความรัก", icon: "♥" },
+  { key: "career" as const, label: "การงาน", icon: "⚙" },
+  { key: "money" as const, label: "การเงิน", icon: "✦" },
+  { key: "health" as const, label: "สุขภาพ", icon: "✚" },
+];
+
 /* ── Component ── */
 export default function CalendarScreen() {
-  
   const [weekOffset, setWeekOffset] = useState(0);
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
 
@@ -81,31 +88,16 @@ export default function CalendarScreen() {
   const week = useMemo(() => generateWeek(monday), [monday]);
   const selected = selectedIdx !== null ? week[selectedIdx] : null;
 
-  const CATEGORIES = [
-    { key: "overall" as const, label: "ดวงรวม" },
-    { key: "love" as const, label: "ความรัก" },
-    { key: "career" as const, label: "การงาน" },
-    { key: "money" as const, label: "การเงิน" },
-    { key: "health" as const, label: "สุขภาพ" },
-  ];
-
   return (
     <motion.div
-      className="flex flex-col items-center min-h-full px-4 pt-2 pb-10"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      className="flex flex-col items-center h-full px-4 pt-2"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.5, ease: EASE }}
     >
       {/* Header */}
-      <motion.div
-        className="text-center mb-5"
-        initial={{ opacity: 0, y: -15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
-      >
+      <motion.div className="text-center mb-3" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
         <h2
-          className="text-lg font-semibold tracking-[0.1em] mb-1"
+          className="text-base font-semibold tracking-[0.1em] mb-0.5"
           style={{
             background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
             backgroundSize: "200% 200%",
@@ -114,69 +106,57 @@ export default function CalendarScreen() {
             animation: "shimmer-text 4s ease-in-out infinite",
           }}
         >วันดีวันร้าย</h2>
-        <p className="text-[#8B7A4A]/50 text-xs mt-1">ปฏิทินดวงรายสัปดาห์</p>
+        <p className="text-[#8B7A4A]/50 text-[0.65rem]">ปฏิทินดวงรายสัปดาห์</p>
       </motion.div>
 
       {/* Week nav */}
-      <motion.div
-        className="flex items-center justify-between w-full max-w-md mb-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-      >
+      <div className="flex items-center justify-between w-full max-w-md mb-3">
         <button
-          className="px-3 py-1.5 rounded-lg text-gold/60 text-xs border border-gold/10 active:bg-gold/10 hover:bg-gold/5 transition-colors"
-          onClick={() => { setWeekOffset((o) => o - 1); setSelectedIdx(null); }}
+          className="px-2.5 py-1.5 rounded text-[#E2D4A0]/40 text-[0.65rem] active:text-[#d4af37] transition-colors"
+          style={{ background: "#3A0E0E", border: "0.5px solid #8B7A4A15" }}
+          onClick={() => { setWeekOffset(o => o - 1); setSelectedIdx(null); }}
         >
-          สัปดาห์ก่อน
+          ◂ ก่อน
         </button>
-        <span className="text-[#8B7A4A]/50 text-xs">
+        <span className="text-[#8B7A4A]/50 text-[0.65rem]">
           {monday.toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
-          {" - "}
-          {new Date(monday.getTime() + 6 * 86400000).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" })}
+          {" — "}
+          {new Date(monday.getTime() + 6 * 86400000).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
         </span>
         <button
-          className="px-3 py-1.5 rounded-lg text-gold/60 text-xs border border-gold/10 active:bg-gold/10 hover:bg-gold/5 transition-colors"
-          onClick={() => { setWeekOffset((o) => o + 1); setSelectedIdx(null); }}
+          className="px-2.5 py-1.5 rounded text-[#E2D4A0]/40 text-[0.65rem] active:text-[#d4af37] transition-colors"
+          style={{ background: "#3A0E0E", border: "0.5px solid #8B7A4A15" }}
+          onClick={() => { setWeekOffset(o => o + 1); setSelectedIdx(null); }}
         >
-          สัปดาห์ถัดไป
+          ถัดไป ▸
         </button>
-      </motion.div>
+      </div>
 
-      {/* Day cards row */}
-      <div className="flex gap-2 w-full max-w-md overflow-x-auto pb-2 scrollbar-hide">
+      {/* Day cards */}
+      <div className="flex gap-1.5 w-full max-w-md">
         {week.map((day, idx) => {
           const isSelected = selectedIdx === idx;
-          const isToday =
-            day.date.toDateString() === new Date().toDateString();
+          const isToday = day.date.toDateString() === new Date().toDateString();
           return (
-            <motion.button
+            <button
               key={day.date.toISOString()}
-              className={`flex-shrink-0 w-[calc((100%-48px)/7)] min-w-[52px] rounded-xl p-2 flex flex-col items-center gap-1 border transition-colors ${
-                isSelected
-                  ? "border-gold/30 bg-gold/15 shadow-[0_0_12px_rgba(212,175,55,0.15)]"
-                  : isToday
-                  ? "border-gold/[0.08] bg-[#3a1520]/90"
-                  : "border-[#5a2030]/30 bg-[#2a1215]/90"
+              className={`flex-1 rounded-lg p-1.5 flex flex-col items-center gap-0.5 transition-all ${
+                isSelected ? "shadow-[0_0_10px_rgba(212,175,55,0.1)]" : ""
               }`}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 + idx * 0.04, duration: 0.4, ease: EASE }}
-              whileTap={{ scale: 0.93 }}
+              style={{
+                background: isSelected ? "#3A0E0E" : isToday ? "#2a1215" : "#1e0c0c",
+                border: isSelected ? "1px solid #8B7A4A40" : isToday ? "1px solid #8B7A4A15" : "0.5px solid #8B7A4A08",
+              }}
               onClick={() => setSelectedIdx(isSelected ? null : idx)}
             >
-              <span className="text-[0.6rem] text-white/35">{THAI_DAYS[day.date.getDay()]}</span>
-              <span className={`text-sm font-semibold ${isSelected ? "text-gold" : "text-white/80"}`}>
+              <span className="text-[0.5rem] text-[#8B7A4A]/40">{THAI_DAYS_SHORT[day.date.getDay()]}</span>
+              <span className={`text-sm font-semibold ${isSelected ? "text-[#d4af37]" : isToday ? "text-[#E2D4A0]" : "text-[#E2D4A0]/50"}`}>
                 {day.date.getDate()}
               </span>
-              <span
-                className="w-2.5 h-2.5 rounded-full"
-                style={{ backgroundColor: LEVEL_COLOR[day.level] }}
-              />
-              <span className="text-[0.55rem]" style={{ color: LEVEL_COLOR[day.level] }}>
-                {LEVEL_TEXT[day.level]}
+              <span className="text-[0.6rem]" style={{ color: LEVEL_COLOR[day.level] }}>
+                {LEVEL_ICON[day.level]}
               </span>
-            </motion.button>
+            </button>
           );
         })}
       </div>
@@ -186,33 +166,30 @@ export default function CalendarScreen() {
         {selected && (
           <motion.div
             key={selected.date.toISOString()}
-            className="w-full max-w-md mt-4 rounded-2xl bg-[#2a1215]/95 p-5"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.35, ease: EASE }}
+            className="w-full max-w-md mt-3 rounded-lg p-4"
+            style={{ background: "#2a1215", border: "0.5px solid #8B7A4A15" }}
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 5 }}
+            transition={{ duration: 0.3, ease: EASE }}
           >
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <div>
-                <p className="text-white/80 text-sm font-semibold">
+                <p className="text-[#E2D4A0] text-sm font-semibold">
                   {THAI_DAYS[selected.date.getDay()]}ที่ {selected.date.getDate()}{" "}
                   {selected.date.toLocaleDateString("th-TH", { month: "long" })}
                 </p>
-                <p className="text-xs mt-0.5" style={{ color: LEVEL_COLOR[selected.level] }}>
-                  ดวงวันนี้: {LEVEL_TEXT[selected.level]}
+                <p className="text-[0.65rem] mt-0.5" style={{ color: LEVEL_COLOR[selected.level] }}>
+                  {LEVEL_ICON[selected.level]} ดวงวันนี้: {LEVEL_TEXT[selected.level]}
                 </p>
               </div>
-              <span
-                className="w-4 h-4 rounded-full"
-                style={{ backgroundColor: LEVEL_COLOR[selected.level], boxShadow: `0 0 12px ${LEVEL_COLOR[selected.level]}40` }}
-              />
             </div>
 
-            <div className="space-y-2.5">
+            <div className="space-y-2">
               {CATEGORIES.map((cat) => (
                 <div key={cat.key} className="flex items-center justify-between">
-                  <span className="text-white/50 text-xs w-16">{cat.label}</span>
-                  <Stars count={selected[cat.key]} />
+                  <span className="text-[#8B7A4A]/50 text-[0.7rem] flex items-center gap-1.5">
+                    <span className="opacity-50">{cat.icon}</span> {cat.label}
+                  </span>
+                  <RatingBar value={selected[cat.key]} />
                 </div>
               ))}
             </div>
@@ -221,19 +198,14 @@ export default function CalendarScreen() {
       </AnimatePresence>
 
       {/* Legend */}
-      <motion.div
-        className="flex items-center gap-4 mt-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
-      >
+      <div className="flex items-center gap-4 mt-3">
         {(["good", "neutral", "caution"] as const).map((level) => (
-          <div key={level} className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: LEVEL_COLOR[level] }} />
-            <span className="text-[#8B7A4A]/50 text-[0.6rem]">{LEVEL_TEXT[level]}</span>
+          <div key={level} className="flex items-center gap-1">
+            <span className="text-[0.6rem]" style={{ color: LEVEL_COLOR[level] }}>{LEVEL_ICON[level]}</span>
+            <span className="text-[#8B7A4A]/40 text-[0.55rem]">{LEVEL_TEXT[level]}</span>
           </div>
         ))}
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
