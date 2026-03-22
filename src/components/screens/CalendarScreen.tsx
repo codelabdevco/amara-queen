@@ -117,7 +117,7 @@ export default function CalendarScreen() {
         transition={{ delay: 0.2, duration: 0.5 }}
       >
         <button
-          className="px-3 py-1.5 rounded-lg border border-gold/[0.02] text-white/50 text-xs active:bg-gold/5"
+          className="px-3 py-1.5 rounded-lg text-white/50 text-xs active:bg-gold/5"
           onClick={() => { setWeekOffset((o) => o - 1); setSelectedIdx(null); }}
         >
           สัปดาห์ก่อน
@@ -128,7 +128,7 @@ export default function CalendarScreen() {
           {new Date(monday.getTime() + 6 * 86400000).toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" })}
         </span>
         <button
-          className="px-3 py-1.5 rounded-lg border border-gold/[0.02] text-white/50 text-xs active:bg-gold/5"
+          className="px-3 py-1.5 rounded-lg text-white/50 text-xs active:bg-gold/5"
           onClick={() => { setWeekOffset((o) => o + 1); setSelectedIdx(null); }}
         >
           สัปดาห์ถัดไป
@@ -178,7 +178,7 @@ export default function CalendarScreen() {
         {selected && (
           <motion.div
             key={selected.date.toISOString()}
-            className="w-full max-w-md mt-4 rounded-2xl border border-gold/[0.02] bg-[#2a1215]/95 p-5"
+            className="w-full max-w-md mt-4 rounded-2xl bg-[#2a1215]/95 p-5"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}

@@ -226,7 +226,7 @@ export default function AuspiciousScreen() {
               {EVENT_TYPES.map((evt, idx) => (
                 <motion.button
                   key={evt.id}
-                  className="group relative overflow-hidden rounded-2xl border border-gold/[0.02] bg-[#2a1215]/90 text-left active:scale-[0.97] transition-transform"
+                  className="group relative overflow-hidden rounded-2xl bg-[#2a1215]/90 text-left active:scale-[0.97] transition-transform"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.08 + idx * 0.05, duration: 0.5, ease: EASE }}

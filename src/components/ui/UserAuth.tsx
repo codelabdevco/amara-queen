@@ -73,7 +73,7 @@ export default function UserAuth() {
           onClick={() => setShowProfile(true)}
           className="flex items-center gap-2"
         >
-          <div className="w-7 h-7 rounded-full bg-gold/10 border border-gold/[0.05] flex items-center justify-center">
+          <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center">
             <span className="text-gold/60 text-xs">
               {user.username?.charAt(0).toUpperCase() || "A"}
             </span>
@@ -108,7 +108,7 @@ export default function UserAuth() {
           >
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
             <motion.div
-              className="relative bg-[#2a1215] border border-gold/[0.02] rounded-2xl p-6 w-full max-w-[320px] space-y-4"
+              className="relative bg-[#2a1215] rounded-2xl p-6 w-full max-w-[320px] space-y-4"
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
@@ -140,14 +140,14 @@ export default function UserAuth() {
                   placeholder="ชื่อผู้ใช้"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-gold/10 outline-none"
+                  className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-gold/10 outline-none"
                 />
                 <input
                   type="password"
                   placeholder="รหัสผ่าน"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-gold/10 outline-none"
+                  className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-gold/10 outline-none"
                 />
 
                 {error && <p className="text-red-400/80 text-xs text-center">{error}</p>}
@@ -155,7 +155,7 @@ export default function UserAuth() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/[0.05] text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-50"
+                  className="w-full py-2.5 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-50"
                 >
                   {loading ? "..." : isLogin ? "เข้าสู่ระบบ" : "สมัครสมาชิก"}
                 </button>

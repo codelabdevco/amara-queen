@@ -551,7 +551,7 @@ export default function CardPickScreen() {
                     }}
                   >
                     {isPicked ? (
-                      <div className="w-full h-full rounded-md bg-gold/[0.04] border border-gold/[0.02] flex items-center justify-center">
+                      <div className="w-full h-full rounded-md bg-gold/[0.04] flex items-center justify-center">
                         <span className="text-gold/20 text-lg">✦</span>
                       </div>
                     ) : (

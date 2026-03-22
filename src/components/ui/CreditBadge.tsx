@@ -114,7 +114,7 @@ export default function CreditBadge() {
   return (
     <>
       <button onClick={openTopUp}
-        className="flex items-center gap-1.5 bg-gold/10 border border-gold/[0.05] rounded-full px-2.5 py-1 hover:bg-gold/15 transition-colors"
+        className="flex items-center gap-1.5 bg-gold/10 rounded-full px-2.5 py-1 hover:bg-gold/15 transition-colors"
       >
         <span className="text-gold text-[0.6rem]">&#9733;</span>
         <span className="text-gold text-xs font-medium">{info.credits}</span>
@@ -127,7 +127,7 @@ export default function CreditBadge() {
           >
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
             <motion.div
-              className="relative bg-[#2a1215] border border-gold/[0.02] rounded-2xl p-6 w-full max-w-[380px]"
+              className="relative bg-[#2a1215] rounded-2xl p-6 w-full max-w-[380px]"
               initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -199,7 +199,7 @@ export default function CreditBadge() {
                     <h3 className="text-gold text-lg font-semibold">ชำระเงินสำเร็จ!</h3>
                     <p className="text-white/40 text-sm">เพิ่ม <span className="text-gold font-semibold">{addedCredits}</span> เครดิต</p>
                     <button onClick={closeModal}
-                      className="w-full py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/[0.05] text-sm font-medium hover:bg-gold/20 transition-colors"
+                      className="w-full py-2.5 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors"
                     >ปิด</button>
                   </motion.div>
                 )}
@@ -211,7 +211,7 @@ export default function CreditBadge() {
                     </div>
                     <p className="text-white/60 text-sm">{errorMsg}</p>
                     <button onClick={() => setStep("packages")}
-                      className="w-full py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/[0.05] text-sm font-medium hover:bg-gold/20 transition-colors"
+                      className="w-full py-2.5 rounded-lg bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-colors"
                     >ลองใหม่</button>
                   </motion.div>
                 )}

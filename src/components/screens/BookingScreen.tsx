@@ -121,7 +121,7 @@ export default function BookingScreen() {
       {/* Profile Card */}
       {profileData?.profile && (
         <motion.div
-          className="w-full max-w-full mb-5 bg-[#2a1215] border border-gold/[0.02] rounded-2xl p-4"
+          className="w-full max-w-full mb-5 bg-[#2a1215] rounded-2xl p-4"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: EASE }}
@@ -130,7 +130,7 @@ export default function BookingScreen() {
             {profileData.linePictureUrl ? (
               <img src={profileData.linePictureUrl} alt="" className="w-12 h-12 rounded-full" />
             ) : (
-              <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/[0.05] flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center">
                 <span className="text-gold text-lg">{profileData.profile.nickname?.charAt(0) || "?"}</span>
               </div>
             )}
@@ -185,7 +185,7 @@ export default function BookingScreen() {
             {TELLERS.map((teller, idx) => (
               <motion.button
                 key={teller.id}
-                className="w-full rounded-2xl border border-gold/[0.02] bg-[#2a1215]/90 p-4 text-left active:scale-[0.98] transition-transform"
+                className="w-full rounded-2xl bg-[#2a1215]/90 p-4 text-left active:scale-[0.98] transition-transform"
                 style={{ borderColor: `${teller.color}20` }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -225,7 +225,7 @@ export default function BookingScreen() {
             transition={{ duration: 0.35, ease: EASE }}
           >
             {/* Selected teller info */}
-            <div className="flex items-center gap-3 mb-5 p-3 rounded-xl border border-gold/[0.02] bg-[#2a1215]/90">
+            <div className="flex items-center gap-3 mb-5 p-3 rounded-xl bg-[#2a1215]/90">
               <div
                 className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0"
                 style={{ background: `${selectedTeller.color}18`, border: `2px solid ${selectedTeller.color}40`, color: selectedTeller.color }}
@@ -308,7 +308,7 @@ export default function BookingScreen() {
         {step === "confirm" && selectedTeller && selectedDate && selectedTime && (
           <motion.div
             key="confirm"
-            className="w-full max-w-md rounded-2xl border border-gold/[0.02] bg-[#2a1215]/95 p-6"
+            className="w-full max-w-md rounded-2xl bg-[#2a1215]/95 p-6"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}

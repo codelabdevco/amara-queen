@@ -77,7 +77,7 @@ export default function HomeScreen() {
           >
             <Link
               href={svc.href}
-              className="group relative overflow-hidden rounded-2xl border border-gold/[0.02] bg-[#2a1215] block w-[140px] active:scale-[0.96] transition-transform"
+              className="group relative overflow-hidden rounded-2xl bg-[#2a1215] block w-[140px] active:scale-[0.96] transition-transform"
             >
               <div
                 className="absolute -top-6 -right-6 w-20 h-20 rounded-full opacity-[0.1] blur-2xl"
@@ -118,7 +118,7 @@ export default function HomeScreen() {
           >
             <Link
               href={svc.href}
-              className="group flex items-center gap-3 p-3.5 rounded-xl border border-gold/[0.02] bg-[#2a1215]/80 active:scale-[0.98] transition-transform"
+              className="group flex items-center gap-3 p-3.5 rounded-xl bg-[#2a1215]/80 active:scale-[0.98] transition-transform"
             >
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"
