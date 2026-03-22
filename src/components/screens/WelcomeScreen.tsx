@@ -80,6 +80,13 @@ export default function WelcomeScreen() {
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.81 2 10.44c0 3.7 3.04 6.9 7.34 7.93-.1.38-.66 2.44-.68 2.6 0 0-.01.1.05.14.06.03.13.01.13.01.17-.02 2-1.3 2.32-1.53.61.09 1.24.14 1.84.14 5.52 0 10-3.81 10-8.44C22 5.81 17.52 2 12 2z"/></svg>
           เข้าสู่ระบบด้วย LINE
         </a>
+
+        <a
+          href="/api/auth/line"
+          className="text-xs text-gold/40 hover:text-gold/70 transition-colors tracking-wide underline underline-offset-4 decoration-gold/20"
+        >
+          Demo — เข้าสู่ระบบทดลอง
+        </a>
       </motion.div>
 
       <motion.button
