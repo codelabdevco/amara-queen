@@ -5,7 +5,7 @@ import { useTarotStore } from "@/store/useTarotStore";
 import { SPREADS } from "@/types/tarot";
 import { GYPSY_SPREADS } from "@/types/gypsy";
 import { EASE } from "@/constants/animation";
-import MiniCardBack from "@/components/ui/MiniCardBack";
+import LaurelButton from "@/components/ui/LaurelButton";
 
 export default function SpreadScreen() {
   const service = useTarotStore((s) => s.service);
@@ -24,41 +24,51 @@ export default function SpreadScreen() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5, ease: EASE }}
     >
-      <p className="text-lg text-gold font-semibold mb-1 tracking-wide">เลือกรูปแบบการวาง</p>
-      <p className="text-white/30 text-xs mb-5">
-        แนะนำ: <span className="text-gold/60">{selectedSpread?.nameTH}</span> สำหรับ {selectedTopic?.nameTH}
+      <h2
+        className="text-lg font-semibold tracking-[0.1em] mb-1"
+        style={{
+          background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
+          backgroundSize: "200% 200%",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          animation: "shimmer-text 4s ease-in-out infinite",
+        }}
+      >
+        เลือกรูปแบบการวาง
+      </h2>
+      <p className="text-[#8B7A4A]/50 text-xs mb-1">
+        แนะนำ: <span className="text-[#E2D4A0]/60">{selectedSpread?.nameTH}</span> สำหรับ {selectedTopic?.nameTH}
       </p>
+      <motion.div
+        className="w-16 h-[1px] mx-auto mb-5"
+        style={{ background: "linear-gradient(90deg, transparent, #8B7A4A, transparent)" }}
+        initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+      />
 
-      <div className="w-full max-w-full space-y-2.5">
+      <div className="w-full max-w-[300px] flex flex-col items-center gap-3">
         {spreads.map((s, idx) => {
           const isDefault = s.id === selectedSpread?.id;
           return (
-            <motion.button
+            <motion.div
               key={s.id}
-              className={`w-full flex items-center gap-3 p-3.5 rounded-xl border text-left active:bg-gold/5
-                ${isDefault ? "border-gold/15 bg-gold/5" : "border-gold/[0.02] bg-[#2a1215]/80"}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 + idx * 0.04, duration: 0.4, ease: EASE }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => { selectSpread(s); setPhase("question"); }}
+              transition={{ delay: 0.05 + idx * 0.06, duration: 0.4, ease: EASE }}
+              className="w-full"
             >
-              <div className="flex-shrink-0 flex items-end gap-[1px]">
-                {Array.from({ length: Math.min(s.cardCount, 4) }, (_, i) => (
-                  <div key={i} style={{ transform: `rotate(${(i - 1) * 6}deg)`, opacity: 0.6 }}>
-                    <MiniCardBack width={18} height={29} />
-                  </div>
-                ))}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-white/90 font-medium">{s.nameTH}</span>
-                  <span className="text-[0.6rem] text-gold/25">{s.cardCount} ใบ</span>
-                  {isDefault && <span className="text-[0.55rem] text-gold/60 ml-auto">แนะนำ</span>}
-                </div>
-                <p className="text-[0.65rem] text-white/30 mt-0.5">{s.desc}</p>
-              </div>
-            </motion.button>
+              <LaurelButton
+                variant={isDefault ? "gold" : "crimson"}
+                onClick={() => { selectSpread(s); setPhase("question"); }}
+                className="w-full h-[52px]"
+              >
+                <span className="flex items-center gap-2">
+                  <span className="opacity-50 text-xs">{s.cardCount} ใบ</span>
+                  <span>{s.nameTH}</span>
+                  {isDefault && <span className="opacity-40 text-[0.6rem]">&#10022;</span>}
+                </span>
+              </LaurelButton>
+            </motion.div>
           );
         })}
       </div>

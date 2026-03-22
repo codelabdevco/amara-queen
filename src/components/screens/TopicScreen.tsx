@@ -5,6 +5,7 @@ import { useTarotStore } from "@/store/useTarotStore";
 import { TOPICS } from "@/types/tarot";
 import { GYPSY_TOPICS } from "@/types/gypsy";
 import { EASE } from "@/constants/animation";
+import LaurelButton from "@/components/ui/LaurelButton";
 
 export default function TopicScreen() {
   const service = useTarotStore((s) => s.service);
@@ -20,74 +21,54 @@ export default function TopicScreen() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5, ease: EASE }}
     >
-      {/* Header with mystic symbol */}
+      {/* Header */}
       <motion.div
-        className="relative mb-4"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
+        className="text-center mb-6"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: EASE }}
       >
-        <div className="w-12 h-12 rounded-full border border-gold/25 flex items-center justify-center mx-auto mb-3">
-          <motion.span
-            className="text-lg text-gold/70"
-            animate={{ rotateY: [0, 360] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-          >
-            &#10022;
-          </motion.span>
-        </div>
-        <h2 className="text-lg text-gold font-semibold tracking-wide text-center">
+        <h2
+          className="text-lg font-semibold tracking-[0.1em] mb-1"
+          style={{
+            background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
+            backgroundSize: "200% 200%",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            animation: "shimmer-text 4s ease-in-out infinite",
+          }}
+        >
           คุณอยากถามเรื่องอะไร
         </h2>
-        <p className="text-gold/25 text-xs mt-1 text-center">เลือกหมวดที่ตรงกับคำถามในใจ</p>
+        <p className="text-[#8B7A4A]/50 text-xs">เลือกหมวดที่ตรงกับคำถามในใจ</p>
+        <motion.div
+          className="w-16 h-[1px] mx-auto mt-3"
+          style={{ background: "linear-gradient(90deg, transparent, #8B7A4A, transparent)" }}
+          initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+        />
       </motion.div>
 
-      {/* Topic grid */}
-      <div className="grid grid-cols-2 gap-2.5 w-full max-w-full">
+      {/* Topic grid — Laurel Buttons */}
+      <div className="grid grid-cols-2 gap-3 w-full max-w-[320px]">
         {topics.map((t, idx) => (
-          <motion.button
+          <motion.div
             key={t.id}
-            className="group relative overflow-hidden rounded-2xl bg-[#2a1215]/90 text-left active:scale-[0.97] transition-transform"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.08 + idx * 0.04, duration: 0.5, ease: EASE }}
-            onClick={() => selectTopic(t)}
+            transition={{ delay: 0.1 + idx * 0.04, duration: 0.5, ease: EASE }}
           >
-            {/* Colored glow background */}
-            <div
-              className="absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-[0.07] blur-2xl transition-opacity group-active:opacity-[0.15]"
-              style={{ background: t.color }}
-            />
-
-            <div className="relative p-3.5">
-              {/* Icon + Name row */}
-              <div className="flex items-center gap-2.5 mb-2">
-                <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"
-                  style={{
-                    background: `${t.color}12`,
-                    border: `1px solid ${t.color}25`,
-                  }}
-                >
-                  <span style={{ color: t.color }}>{t.icon}</span>
-                </div>
-                <p className="text-[0.8rem] text-white/85 font-medium leading-tight">
-                  {t.nameTH}
-                </p>
-              </div>
-
-              {/* Description */}
-              <p className="text-[0.6rem] text-gold/25 leading-relaxed pl-[46px]">
-                {t.desc}
-              </p>
-            </div>
-
-            {/* Bottom accent line */}
-            <div
-              className="h-[1px] mx-3 mb-0 opacity-[0.12]"
-              style={{ background: `linear-gradient(90deg, transparent, ${t.color}, transparent)` }}
-            />
-          </motion.button>
+            <LaurelButton
+              variant="crimson"
+              onClick={() => selectTopic(t)}
+              className="w-full h-[56px]"
+            >
+              <span className="flex flex-col items-center gap-0.5">
+                <span className="opacity-60 text-sm">{t.icon}</span>
+                <span className="text-[0.7rem]">{t.nameTH}</span>
+              </span>
+            </LaurelButton>
+          </motion.div>
         ))}
       </div>
     </motion.div>
