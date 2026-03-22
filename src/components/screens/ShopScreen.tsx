@@ -213,6 +213,12 @@ export default function ShopScreen() {
       )}
 
       {/* Product grid */}
+      {products.length === 0 && (
+        <div className="text-center py-10">
+          <p className="text-[#E2D4A0]/40 text-sm mb-1">ยังไม่มีสินค้า</p>
+          <p className="text-[#8B7A4A]/30 text-xs">กำลังเตรียมสินค้ามงคลสำหรับคุณ</p>
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-2.5 w-full max-w-md">
         {products.map((product, idx) => (
           <motion.div key={product.id} className="rounded-2xl bg-[#2a1215]/90 overflow-hidden cursor-pointer active:scale-[0.97] transition-transform"

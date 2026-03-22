@@ -476,14 +476,7 @@ export interface ShopProduct {
   active: boolean;
 }
 
-const DEFAULT_PRODUCTS: ShopProduct[] = [
-  { id: "amulet", name: "พระเครื่อง หลวงพ่อโต", description: "พระเครื่องเสริมบารมี ป้องกันภัย", price: 199, icon: "☸", image: "", category: "พระเครื่อง", stock: 50, active: true },
-  { id: "necklace", name: "สร้อยนพเก้า เสริมดวง", description: "สร้อยคอนพเก้า 9 สี เสริมดวงชะตา", price: 299, icon: "◈", image: "", category: "เครื่องประดับ", stock: 30, active: true },
-  { id: "yantra", name: "ยันต์ห้าแถว กันภัย", description: "ผ้ายันต์ห้าแถว ป้องกันอันตราย", price: 149, icon: "⬡", image: "", category: "ยันต์", stock: 100, active: true },
-  { id: "holywater", name: "น้ำมนต์ เสริมโชค", description: "น้ำมนต์จากพระอาจารย์ดัง เสริมโชคลาภ", price: 99, icon: "❈", image: "", category: "น้ำมนต์", stock: 200, active: true },
-  { id: "bag", name: "ถุงเงินถุงทอง", description: "ถุงมงคล ดึงดูดเงินทอง", price: 129, icon: "✦", image: "", category: "ของมงคล", stock: 80, active: true },
-  { id: "candle", name: "เทียนชัยมงคล", description: "เทียนชัย จุดเสริมสิริมงคล", price: 79, icon: "♦", image: "", category: "เทียน", stock: 150, active: true },
-];
+const DEFAULT_PRODUCTS: ShopProduct[] = [];
 
 export function getProducts(): ShopProduct[] {
   const products = readJSON<ShopProduct[]>("products.json", []);
