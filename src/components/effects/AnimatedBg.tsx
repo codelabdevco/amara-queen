@@ -9,7 +9,6 @@ export default function AnimatedBg() {
     const container = particlesRef.current;
     if (!container) return;
 
-    // Create floating gold particles
     for (let i = 0; i < 15; i++) {
       const p = document.createElement("div");
       p.className = "bg-particle";
@@ -26,27 +25,8 @@ export default function AnimatedBg() {
   }, []);
 
   return (
-    <>
-      <div className="bg-scene">
-        <img
-          src="/bg-main.svg"
-          alt=""
-          className="bg-scene__img"
-          draggable={false}
-        />
-        <div className="bg-scene__overlay" />
-        <div ref={particlesRef} className="bg-scene__particles" />
-      </div>
-
-      {/* Foreground curtain — top layer */}
-      <div className="fixed inset-0 z-[999] pointer-events-none">
-        <img
-          src="/bg-main.svg"
-          alt=""
-          className="w-full h-full object-cover opacity-[0.35]"
-          draggable={false}
-        />
-      </div>
-    </>
+    <div className="fixed inset-0 z-0 pointer-events-none">
+      <div ref={particlesRef} />
+    </div>
   );
 }
