@@ -46,7 +46,7 @@ export default function AnimatedBg() {
         <img
           src="/curtain.svg"
           alt=""
-          className="w-full h-full object-cover opacity-[0.35]"
+          className="w-full h-full object-cover"
           draggable={false}
         />
       </div>
