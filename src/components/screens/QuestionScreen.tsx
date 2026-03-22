@@ -14,7 +14,7 @@ export default function QuestionScreen() {
   return (
     <motion.div
       key="question"
-      className="flex flex-col items-center justify-center min-h-full px-5"
+      className="flex flex-col items-center justify-center h-full px-5"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.2 } }}

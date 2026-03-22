@@ -18,14 +18,14 @@ export default function SpreadScreen() {
   return (
     <motion.div
       key="spread"
-      className="flex flex-col items-center min-h-full px-4 pt-4 pb-10"
+      className="flex flex-col items-center justify-center h-full px-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5, ease: EASE }}
     >
       <h2
-        className="text-lg font-semibold tracking-[0.1em] mb-1"
+        className="text-base font-semibold tracking-[0.1em] mb-0.5"
         style={{
           background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
           backgroundSize: "200% 200%",
@@ -40,13 +40,13 @@ export default function SpreadScreen() {
         แนะนำ: <span className="text-[#E2D4A0]/60">{selectedSpread?.nameTH}</span> สำหรับ {selectedTopic?.nameTH}
       </p>
       <motion.div
-        className="w-16 h-[1px] mx-auto mb-5"
+        className="w-16 h-[1px] mx-auto mb-3"
         style={{ background: "linear-gradient(90deg, transparent, #8B7A4A, transparent)" }}
         initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
         transition={{ delay: 0.2, duration: 0.6 }}
       />
 
-      <div className="w-full max-w-[300px] flex flex-col items-center gap-3">
+      <div className="w-full max-w-[280px] flex flex-col items-center gap-2">
         {spreads.map((s, idx) => {
           const isDefault = s.id === selectedSpread?.id;
           return (
@@ -60,7 +60,7 @@ export default function SpreadScreen() {
               <LaurelButton
                 variant={isDefault ? "gold" : "crimson"}
                 onClick={() => { selectSpread(s); setPhase("question"); }}
-                className="w-full h-[52px]"
+                className="w-full h-[46px]"
               >
                 <span className="flex items-center gap-2">
                   <span className="opacity-50 text-xs">{s.cardCount} ใบ</span>

@@ -12,19 +12,22 @@ const ReadingScreen = dynamic(() => import("@/components/screens/ReadingScreen")
 
 export default function TarotFlow() {
   const phase = useTarotStore((s) => s.phase);
+  const needsScroll = phase === "reading";
 
   return (
-    <>
-      <div className="px-4 pt-2 pb-1">
+    <div className={`flex flex-col ${needsScroll ? "" : "h-full overflow-hidden"}`}>
+      <div className="px-4 pt-2 pb-1 flex-shrink-0">
         <BackButton />
       </div>
-      <AnimatePresence mode="wait">
-        {phase === "topic" && <TopicScreen />}
-        {phase === "spread" && <SpreadScreen />}
-        {phase === "question" && <QuestionScreen />}
-        {phase === "fan" && <CardPickScreen />}
-        {phase === "reading" && <ReadingScreen />}
-      </AnimatePresence>
-    </>
+      <div className={`flex-1 ${needsScroll ? "" : "overflow-hidden"}`}>
+        <AnimatePresence mode="wait">
+          {phase === "topic" && <TopicScreen />}
+          {phase === "spread" && <SpreadScreen />}
+          {phase === "question" && <QuestionScreen />}
+          {phase === "fan" && <CardPickScreen />}
+          {phase === "reading" && <ReadingScreen />}
+        </AnimatePresence>
+      </div>
+    </div>
   );
 }
