@@ -8,16 +8,16 @@ import LaurelButton from "@/components/ui/LaurelButton";
 interface UserInfo { nickname: string; zodiac: { western: { signTh: string } } | null }
 
 const FORTUNE_SERVICES = [
-  { href: "/tarot", icon: "☽", name: "ไพ่ทาโร่", sub: "78 ใบ · AI ทำนาย" },
-  { href: "/gypsy", icon: "♦", name: "ไพ่ยิปซี", sub: "36 ใบ · Lenormand" },
-  { href: "/siamsi", icon: "☰", name: "เซียมซี", sub: "เสี่ยง 1-100" },
+  { href: "/tarot", icon: "☽", name: "ไพ่ทาโร่" },
+  { href: "/gypsy", icon: "♦", name: "ไพ่ยิปซี" },
+  { href: "/siamsi", icon: "☰", name: "เซียมซี" },
 ];
 
 const OTHER_SERVICES = [
-  { href: "/auspicious", icon: "✦", name: "ฤกษ์ยามมงคล", color: "#4a9e6e" },
-  { href: "/calendar", icon: "☀", name: "วันดีวันร้าย", color: "#378add" },
-  { href: "/booking", icon: "☎", name: "นัดหมอดู", color: "#c44a5a" },
-  { href: "/shop", icon: "✧", name: "ร้านค้ามงคล", color: "#d85a30" },
+  { href: "/auspicious", icon: "☆", name: "ฤกษ์ยามมงคล" },
+  { href: "/calendar", icon: "☼", name: "วันดีวันร้าย" },
+  { href: "/booking", icon: "☷", name: "นัดหมอดู" },
+  { href: "/shop", icon: "❖", name: "ร้านค้ามงคล" },
 ];
 
 export default function HomeScreen() {
@@ -119,7 +119,7 @@ export default function HomeScreen() {
             >
               <LaurelButton variant="crimson" href={svc.href} className="w-full h-[60px]">
                 <span className="flex flex-col items-center gap-1">
-                  <span style={{ color: svc.color }}>{svc.icon}</span>
+                  <span className="opacity-70">{svc.icon}</span>
                   <span>{svc.name}</span>
                 </span>
               </LaurelButton>
