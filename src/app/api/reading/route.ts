@@ -1,9 +1,10 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { getSettings, saveReading, checkGuestLimit, incrementUserReading, getUserProfile } from "@/lib/db";
+import { getSettings, saveReading, getUserProfile } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/admin-auth";
 import { calculateZodiac } from "@/lib/zodiac";
+import { requireCredits } from "@/lib/credit-check";
 
 const client = new Anthropic();
 
@@ -111,26 +112,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const user = getUserFromRequest(req);
+    // Credit check
+    const creditError = requireCredits(req);
+    if (creditError) return creditError;
 
-    // Daily usage limit + credit check
-    if (user) {
-        const usageCheck = incrementUserReading(user.userId);
-        if (!usageCheck.allowed) {
-          return NextResponse.json(
-            { error: "เครดิตหมดแล้ว กรุณาเติมเครดิตเพื่อใช้งานต่อ", needCredits: true, remaining: 0 },
-            { status: 429 }
-          );
-        }
-      } else {
-        const guestCheck = checkGuestLimit(ip);
-        if (!guestCheck.allowed) {
-          return NextResponse.json(
-            { error: `ใช้ครบ ${settings.dailyFreeLimit} ครั้งต่อวันแล้ว สมัครสมาชิกเพื่อเติมเครดิตใช้ต่อ`, needCredits: true, remaining: 0 },
-            { status: 429 }
-          );
-        }
-    }
+    const user = getUserFromRequest(req);
 
     const { topic, topicIcon, spread, question, cards } = (await req.json()) as ReadingRequest;
 

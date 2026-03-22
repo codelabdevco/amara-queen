@@ -4,11 +4,16 @@ import { getSettings } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/admin-auth";
 import { getUserProfile } from "@/lib/db";
 import { calculateZodiac } from "@/lib/zodiac";
+import { requireCredits } from "@/lib/credit-check";
 
 const client = new Anthropic();
 
 export async function POST(req: NextRequest) {
   try {
+    // Credit check
+    const creditError = requireCredits(req);
+    if (creditError) return creditError;
+
     const settings = getSettings();
     const { event, date } = await req.json();
 
