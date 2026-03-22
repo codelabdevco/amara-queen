@@ -417,6 +417,108 @@ export function getAllTransactions(limit = 50, offset = 0): { transactions: Paym
   return { transactions: txns.slice(offset, offset + limit), total: txns.length };
 }
 
+// ── SHOP PRODUCTS ──
+export interface ShopProduct {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  icon: string;
+  image: string;
+  category: string;
+  stock: number;
+  active: boolean;
+}
+
+const DEFAULT_PRODUCTS: ShopProduct[] = [
+  { id: "amulet", name: "พระเครื่อง หลวงพ่อโต", description: "พระเครื่องเสริมบารมี ป้องกันภัย", price: 199, icon: "☸", image: "", category: "พระเครื่อง", stock: 50, active: true },
+  { id: "necklace", name: "สร้อยนพเก้า เสริมดวง", description: "สร้อยคอนพเก้า 9 สี เสริมดวงชะตา", price: 299, icon: "◈", image: "", category: "เครื่องประดับ", stock: 30, active: true },
+  { id: "yantra", name: "ยันต์ห้าแถว กันภัย", description: "ผ้ายันต์ห้าแถว ป้องกันอันตราย", price: 149, icon: "⬡", image: "", category: "ยันต์", stock: 100, active: true },
+  { id: "holywater", name: "น้ำมนต์ เสริมโชค", description: "น้ำมนต์จากพระอาจารย์ดัง เสริมโชคลาภ", price: 99, icon: "❈", image: "", category: "น้ำมนต์", stock: 200, active: true },
+  { id: "bag", name: "ถุงเงินถุงทอง", description: "ถุงมงคล ดึงดูดเงินทอง", price: 129, icon: "✦", image: "", category: "ของมงคล", stock: 80, active: true },
+  { id: "candle", name: "เทียนชัยมงคล", description: "เทียนชัย จุดเสริมสิริมงคล", price: 79, icon: "♦", image: "", category: "เทียน", stock: 150, active: true },
+];
+
+export function getProducts(): ShopProduct[] {
+  const products = readJSON<ShopProduct[]>("products.json", []);
+  return products.length > 0 ? products.filter(p => p.active) : DEFAULT_PRODUCTS;
+}
+
+export function getAllProducts(): ShopProduct[] {
+  const products = readJSON<ShopProduct[]>("products.json", []);
+  return products.length > 0 ? products : DEFAULT_PRODUCTS;
+}
+
+export function saveProduct(product: ShopProduct): void {
+  const products = getAllProducts();
+  const idx = products.findIndex(p => p.id === product.id);
+  if (idx >= 0) products[idx] = product;
+  else products.push(product);
+  writeJSON("products.json", products);
+}
+
+export function deleteProduct(id: string): void {
+  const products = getAllProducts().filter(p => p.id !== id);
+  writeJSON("products.json", products);
+}
+
+// ── ORDERS ──
+export interface OrderItem {
+  productId: string;
+  name: string;
+  price: number;
+  qty: number;
+}
+
+export interface Order {
+  id: string;
+  userId: string;
+  username: string;
+  items: OrderItem[];
+  total: number;
+  paymentMethod: "credit" | "omise";
+  paymentStatus: "pending" | "paid" | "failed";
+  shippingName: string;
+  shippingPhone: string;
+  shippingAddress: string;
+  status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
+  trackingNumber: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+function getOrders(): Order[] {
+  return readJSON("orders.json", []);
+}
+
+function saveOrders(orders: Order[]): void {
+  writeJSON("orders.json", orders);
+}
+
+export function createOrder(order: Order): void {
+  const orders = getOrders();
+  orders.push(order);
+  saveOrders(orders);
+}
+
+export function getUserOrders(userId: string): Order[] {
+  return getOrders().filter(o => o.userId === userId).sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export function getAllOrders(limit = 50, offset = 0): { orders: Order[]; total: number } {
+  const orders = getOrders().sort((a, b) => b.createdAt - a.createdAt);
+  return { orders: orders.slice(offset, offset + limit), total: orders.length };
+}
+
+export function updateOrder(orderId: string, updates: Partial<Order>): Order | null {
+  const orders = getOrders();
+  const order = orders.find(o => o.id === orderId);
+  if (!order) return null;
+  Object.assign(order, updates, { updatedAt: Date.now() });
+  saveOrders(orders);
+  return order;
+}
+
 export function getUserCount(): number {
   return getUsers().length;
 }

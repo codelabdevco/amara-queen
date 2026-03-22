@@ -8,6 +8,8 @@ const NAV = [
   { href: "/admin/users", label: "ผู้ใช้", icon: "♦" },
   { href: "/admin/credits", label: "เครดิต", icon: "★" },
   { href: "/admin/transactions", label: "ธุรกรรม", icon: "฿" },
+  { href: "/admin/orders", label: "คำสั่งซื้อ", icon: "☰" },
+  { href: "/admin/products", label: "สินค้า", icon: "✧" },
   { href: "/admin/settings", label: "ตั้งค่า", icon: "⚙" },
 ];
 
