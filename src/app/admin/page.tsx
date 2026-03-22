@@ -82,7 +82,7 @@ export default function AdminDashboardPage() {
                 <h3 className="text-sm text-white/50 mb-4">วิธีชำระเงิน</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {Object.entries(stats.methodBreakdown).map(([method, data]) => (
-                    <div key={method} className="bg-[#1e0c0c] border border-white/[0.03] rounded-lg p-4">
+                    <div key={method} className="bg-[#1e0c0c] border border-gold/[0.02] rounded-lg p-4">
                       <p className="text-white/60 text-sm font-medium mb-2 capitalize">{method}</p>
                       <div className="flex items-baseline justify-between">
                         <span className="text-gold text-lg font-semibold">฿{data.amount.toLocaleString()}</span>

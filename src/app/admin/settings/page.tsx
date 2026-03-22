@@ -106,7 +106,7 @@ export default function AdminSettingsPage() {
                 value={settings.promptTemplate}
                 onChange={(e) => update("promptTemplate", e.target.value)}
                 rows={10}
-                className="w-full bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2.5 text-white text-sm font-mono leading-relaxed focus:border-gold/10 outline-none transition-colors resize-y"
+                className="w-full bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2.5 text-white text-sm font-mono leading-relaxed focus:border-gold/10 outline-none transition-colors resize-y"
               />
             </div>
 
@@ -120,7 +120,7 @@ export default function AdminSettingsPage() {
                   type="text"
                   value={settings.model}
                   onChange={(e) => update("model", e.target.value)}
-                  className="w-full bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
                 />
               </div>
               <div className="bg-[#2a1215] border border-gold/[0.02] rounded-xl p-5">
@@ -131,7 +131,7 @@ export default function AdminSettingsPage() {
                   type="number"
                   value={settings.maxTokens}
                   onChange={(e) => update("maxTokens", Number(e.target.value))}
-                  className="w-full bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
                 />
               </div>
             </div>
@@ -146,7 +146,7 @@ export default function AdminSettingsPage() {
                   type="number"
                   value={settings.dailyFreeLimit}
                   onChange={(e) => update("dailyFreeLimit", Number(e.target.value))}
-                  className="w-full bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
                 />
                 <p className="text-white/20 text-xs mt-1.5">จำนวนครั้งต่อวันที่ใช้ฟรี</p>
               </div>
@@ -158,7 +158,7 @@ export default function AdminSettingsPage() {
                   type="number"
                   value={settings.rateLimitPerMinute}
                   onChange={(e) => update("rateLimitPerMinute", Number(e.target.value))}
-                  className="w-full bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
                 />
                 <p className="text-white/20 text-xs mt-1.5">จำกัดต่อนาที</p>
               </div>
@@ -174,7 +174,7 @@ export default function AdminSettingsPage() {
                   type="number"
                   value={settings.creditCostPerReading}
                   onChange={(e) => update("creditCostPerReading", Number(e.target.value))}
-                  className="w-full bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
                 />
                 <p className="text-white/20 text-xs mt-1.5">จำนวนเครดิตที่หักต่อการดูดวง</p>
               </div>
@@ -186,7 +186,7 @@ export default function AdminSettingsPage() {
                   type="text"
                   value={settings.promptPayNumber}
                   onChange={(e) => update("promptPayNumber", e.target.value)}
-                  className="w-full bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
                   placeholder="0812345678"
                 />
               </div>
@@ -198,7 +198,7 @@ export default function AdminSettingsPage() {
                   type="text"
                   value={settings.promptPayName}
                   onChange={(e) => update("promptPayName", e.target.value)}
-                  className="w-full bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
+                  className="w-full bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2 text-white text-sm focus:border-gold/10 outline-none transition-colors"
                   placeholder="ชื่อบัญชี"
                 />
               </div>
@@ -235,7 +235,7 @@ export default function AdminSettingsPage() {
                   <label className="block text-white/40 text-xs mb-1 uppercase tracking-wider">
                     Public Key
                   </label>
-                  <p className="text-white/60 text-sm font-mono bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2">
+                  <p className="text-white/60 text-sm font-mono bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2">
                     {settings.omisePublicKey.slice(0, 10)}*****
                   </p>
                 </div>
@@ -245,7 +245,7 @@ export default function AdminSettingsPage() {
                   <label className="block text-white/40 text-xs mb-1 uppercase tracking-wider">
                     Secret Key
                   </label>
-                  <p className="text-white/60 text-sm font-mono bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2">
+                  <p className="text-white/60 text-sm font-mono bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2">
                     {settings.omiseSecretKey.slice(0, 10)}*****
                   </p>
                 </div>
@@ -255,7 +255,7 @@ export default function AdminSettingsPage() {
                   Webhook URL
                 </label>
                 <div
-                  className="flex items-center gap-2 bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2 cursor-pointer hover:border-gold/10 transition-colors"
+                  className="flex items-center gap-2 bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2 cursor-pointer hover:border-gold/10 transition-colors"
                   onClick={() => {
                     navigator.clipboard.writeText("/api/payment/webhook");
                   }}
@@ -275,7 +275,7 @@ export default function AdminSettingsPage() {
                   {settings.creditPackages.map((pkg, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-4 py-3"
+                      className="flex items-center justify-between bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-4 py-3"
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-gold font-semibold">{pkg.credits}</span>

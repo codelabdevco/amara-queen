@@ -23,7 +23,7 @@ export default function TimePicker({ value, onChange }: Props) {
     }
   }
 
-  const selectClass = "bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-2 py-2.5 text-sm text-white focus:border-gold/10 outline-none appearance-none cursor-pointer transition-colors hover:border-white/20 [color-scheme:dark]";
+  const selectClass = "bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-2 py-2.5 text-sm text-white focus:border-gold/10 outline-none appearance-none cursor-pointer transition-colors hover:border-gold/[0.08] [color-scheme:dark]";
 
   return (
     <div className="grid grid-cols-2 gap-2">

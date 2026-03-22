@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="กรอกรหัสผ่าน..."
-              className="w-full bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2.5 text-white placeholder:text-white/20 focus:border-gold/10 outline-none transition-colors"
+              className="w-full bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2.5 text-white placeholder:text-white/20 focus:border-gold/10 outline-none transition-colors"
               autoFocus
             />
           </div>

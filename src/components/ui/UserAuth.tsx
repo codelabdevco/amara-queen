@@ -108,7 +108,7 @@ export default function UserAuth() {
           >
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
             <motion.div
-              className="relative bg-[#2a1215] border border-white/[0.02] rounded-2xl p-6 w-full max-w-[320px] space-y-4"
+              className="relative bg-[#2a1215] border border-gold/[0.02] rounded-2xl p-6 w-full max-w-[320px] space-y-4"
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
@@ -140,14 +140,14 @@ export default function UserAuth() {
                   placeholder="ชื่อผู้ใช้"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-gold/10 outline-none"
+                  className="w-full bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-gold/10 outline-none"
                 />
                 <input
                   type="password"
                   placeholder="รหัสผ่าน"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-gold/10 outline-none"
+                  className="w-full bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-gold/10 outline-none"
                 />
 
                 {error && <p className="text-red-400/80 text-xs text-center">{error}</p>}

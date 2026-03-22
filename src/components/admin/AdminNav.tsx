@@ -14,7 +14,7 @@ const NAV = [
 export default function AdminNav() {
   const pathname = usePathname();
   return (
-    <nav className="fixed left-0 top-0 bottom-0 w-56 bg-[#0c0d14] border-r border-white/[0.03] flex flex-col p-4 pt-6 z-50">
+    <nav className="fixed left-0 top-0 bottom-0 w-56 bg-[#2a1215] border-r border-gold/[0.02] flex flex-col p-4 pt-6 z-50">
       <h1 className="text-gold text-lg font-semibold mb-1 tracking-wide">Amara Queen</h1>
       <p className="text-white/25 text-xs mb-8">Admin Panel</p>
       <div className="space-y-1 flex-1">

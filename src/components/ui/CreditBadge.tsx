@@ -127,7 +127,7 @@ export default function CreditBadge() {
           >
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
             <motion.div
-              className="relative bg-[#2a1215] border border-white/[0.02] rounded-2xl p-6 w-full max-w-[380px]"
+              className="relative bg-[#2a1215] border border-gold/[0.02] rounded-2xl p-6 w-full max-w-[380px]"
               initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -145,7 +145,7 @@ export default function CreditBadge() {
                         <button key={i}
                           className={`rounded-xl p-3 border text-center transition-all ${selectedPkg === i
                             ? "bg-gold/10 border-gold/10 shadow-[0_0_12px_rgba(232,212,139,0.08)]"
-                            : "bg-[#1e0c0c] border-gold/[0.02] hover:border-white/[0.03]"}`}
+                            : "bg-[#1e0c0c] border-gold/[0.02] hover:border-gold/[0.02]"}`}
                           onClick={() => setSelectedPkg(i)}
                         >
                           <p className="text-gold font-semibold text-lg">{pkg.credits}</p>

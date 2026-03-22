@@ -31,7 +31,7 @@ export default function TarotApp() {
       <DustParticles />
 
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-4 py-3 bg-[#08090e] border-b border-white/[0.02]" style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}>
+      <header className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-4 py-3 bg-[#1e0c0c] border-b border-gold/[0.02]" style={{ paddingTop: "max(12px, env(safe-area-inset-top))" }}>
         <span className="text-sm text-gold/70 tracking-[0.2em] font-medium">
           Amara Queen
         </span>

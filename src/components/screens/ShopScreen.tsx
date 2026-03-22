@@ -72,7 +72,7 @@ export default function ShopScreen() {
     >
       {/* Cart button */}
       <motion.button
-        className="fixed top-3 right-3 z-[110] w-8 h-8 rounded-full bg-gold/5 border border-white/[0.03] flex items-center justify-center text-white/40 active:bg-white/10 backdrop-blur-sm"
+        className="fixed top-3 right-3 z-[110] w-8 h-8 rounded-full bg-gold/5 border border-gold/[0.02] flex items-center justify-center text-white/40 active:bg-white/10 backdrop-blur-sm"
         style={{ top: "max(12px, env(safe-area-inset-top))" }}
         initial={{ opacity: 0, x: 10 }}
         animate={{ opacity: 1, x: 0 }}
@@ -155,7 +155,7 @@ export default function ShopScreen() {
 
             {/* Panel */}
             <motion.div
-              className="fixed bottom-0 left-0 right-0 z-[130] bg-[#2a1215]/98 border-t border-white/[0.03] rounded-t-3xl max-h-[70vh] overflow-y-auto backdrop-blur-xl"
+              className="fixed bottom-0 left-0 right-0 z-[130] bg-[#2a1215]/98 border-t border-gold/[0.02] rounded-t-3xl max-h-[70vh] overflow-y-auto backdrop-blur-xl"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
@@ -183,14 +183,14 @@ export default function ShopScreen() {
                           </div>
                           <div className="flex items-center gap-2">
                             <button
-                              className="w-6 h-6 rounded-full border border-white/15 text-white/40 text-xs flex items-center justify-center active:bg-white/10"
+                              className="w-6 h-6 rounded-full border border-gold/[0.06] text-white/40 text-xs flex items-center justify-center active:bg-white/10"
                               onClick={() => updateQty(item.id, -1)}
                             >
                               -
                             </button>
                             <span className="text-white/70 text-xs w-4 text-center">{item.qty}</span>
                             <button
-                              className="w-6 h-6 rounded-full border border-white/15 text-white/40 text-xs flex items-center justify-center active:bg-white/10"
+                              className="w-6 h-6 rounded-full border border-gold/[0.06] text-white/40 text-xs flex items-center justify-center active:bg-white/10"
                               onClick={() => updateQty(item.id, 1)}
                             >
                               +
@@ -227,7 +227,7 @@ export default function ShopScreen() {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="bg-[#2a1215] border border-white/[0.03] rounded-2xl p-8 flex flex-col items-center max-w-xs mx-4"
+              className="bg-[#2a1215] border border-gold/[0.02] rounded-2xl p-8 flex flex-col items-center max-w-xs mx-4"
               initial={{ scale: 0.85, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}

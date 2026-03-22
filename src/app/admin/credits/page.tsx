@@ -149,14 +149,14 @@ export default function AdminCreditsPage() {
               placeholder="ชื่อผู้ใช้ หรือ User ID"
               value={manualUser}
               onChange={(e) => setManualUser(e.target.value)}
-              className="flex-1 bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none"
+              className="flex-1 bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none"
             />
             <input
               type="number"
               placeholder="จำนวน"
               value={manualAmount}
               onChange={(e) => setManualAmount(e.target.value)}
-              className="w-24 bg-[#1e0c0c] border border-white/[0.03] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none"
+              className="w-24 bg-[#1e0c0c] border border-gold/[0.02] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none"
             />
             <button
               onClick={handleManualAdd}
@@ -214,7 +214,7 @@ export default function AdminCreditsPage() {
               </thead>
               <tbody>
                 {requests.map((req) => (
-                  <tr key={req._id} className="border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors">
+                  <tr key={req._id} className="border-b border-gold/[0.02] hover:bg-white/[0.01] transition-colors">
                     <td className="px-4 py-3 text-white/70">{req.username}</td>
                     <td className="px-4 py-3 text-gold font-medium">{req.credits}</td>
                     <td className="px-4 py-3 text-white/50">{req.price} &#3647;</td>

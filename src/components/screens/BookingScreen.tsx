@@ -308,7 +308,7 @@ export default function BookingScreen() {
         {step === "confirm" && selectedTeller && selectedDate && selectedTime && (
           <motion.div
             key="confirm"
-            className="w-full max-w-md rounded-2xl border border-white/[0.02] bg-[#2a1215]/95 p-6"
+            className="w-full max-w-md rounded-2xl border border-gold/[0.02] bg-[#2a1215]/95 p-6"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
