@@ -205,7 +205,7 @@ export default function ShopScreen() {
             borderRadius: "4px",
             boxShadow: "0 4px 20px rgba(139,0,0,0.2), 0 0 15px rgba(212,175,55,0.05)",
           }}
-          initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} whileTap={{ scale: 0.97 }}
+          whileTap={{ scale: 0.97 }}
           onClick={() => { setShowCart(true); setStep("browse"); }}
         >
           ตะกร้า ({cartCount} ชิ้น) — ฿{cartTotal} · สั่งซื้อ
@@ -216,8 +216,8 @@ export default function ShopScreen() {
       <div className="grid grid-cols-2 gap-2.5 w-full max-w-md">
         {products.map((product, idx) => (
           <motion.div key={product.id} className="rounded-2xl bg-[#2a1215]/90 overflow-hidden cursor-pointer active:scale-[0.97] transition-transform"
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 + idx * 0.05, duration: 0.4, ease: EASE }}
+            initial={false} animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
             onClick={() => setViewProduct(product)}
           >
             <div className="aspect-square bg-[#1e0c0c] flex items-center justify-center relative">
