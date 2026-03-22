@@ -514,14 +514,14 @@ export default function CardPickScreen() {
               </motion.div>
             </div>
 
-            {/* Candles — below deck, large, 2 sides */}
+            {/* Candles — below deck, wide apart */}
             <motion.div
-              className="flex items-end gap-16 sm:gap-32 mt-3 pointer-events-none"
+              className="flex items-end justify-between w-full px-4 sm:px-8 mt-2 pointer-events-none"
               animate={stage === "meditate" ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 0.4 }}
             >
-              <Candle scale={0.9} />
-              <Candle scale={0.9} />
+              <Candle scale={0.75} />
+              <Candle scale={0.75} />
             </motion.div>
           </motion.div>
 
