@@ -1,0 +1,24 @@
+{
+  "name": "Amara Queen — ราชินีแห่งดวงดาว",
+  "short_name": "Amara Queen",
+  "description": "เปิดไพ่เพื่อค้นหาคำตอบจากจักรวาล",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#08090e",
+  "theme_color": "#08090e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

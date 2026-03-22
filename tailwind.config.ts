@@ -2,18 +2,24 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        gold: "var(--gold)",
+        "gold-light": "var(--gold-light)",
+        "gold-dim": "var(--gold-dim)",
+        bg: "var(--bg)",
+        surface: "var(--surface)",
+        "card-bg": "var(--card-bg)",
+      },
+      fontFamily: {
+        noto: ["var(--font-noto)", "Noto Sans Thai", "sans-serif"],
       },
     },
   },
   plugins: [],
 };
+
 export default config;

@@ -1,0 +1,195 @@
+import Anthropic from "@anthropic-ai/sdk";
+import { NextRequest, NextResponse } from "next/server";
+import { checkRateLimit } from "@/lib/rate-limit";
+import { getSettings, saveReading, checkGuestLimit, incrementUserReading } from "@/lib/db";
+import { getUserFromRequest } from "@/lib/admin-auth";
+
+const client = new Anthropic();
+
+interface ReadingResult {
+  trend: string;
+  trendText: string;
+  summary: string;
+  advice: string;
+  cardInsights: string[];
+}
+
+const FALLBACK: ReadingResult = {
+  trend: "neutral",
+  trendText: "",
+  summary: "",
+  advice: "",
+  cardInsights: [],
+};
+
+function extractJSON(raw: string): ReadingResult {
+  try {
+    return validateReading(JSON.parse(raw));
+  } catch { /* continue */ }
+
+  try {
+    const stripped = raw
+      .replace(/^[\s\S]*?```(?:json)?[\s\n]*/i, "")
+      .replace(/[\s\n]*```[\s\S]*$/, "")
+      .trim();
+    return validateReading(JSON.parse(stripped));
+  } catch { /* continue */ }
+
+  try {
+    const start = raw.indexOf("{");
+    const end = raw.lastIndexOf("}");
+    if (start !== -1 && end > start) {
+      return validateReading(JSON.parse(raw.slice(start, end + 1)));
+    }
+  } catch { /* continue */ }
+
+  try {
+    const start = raw.indexOf("{");
+    if (start !== -1) {
+      let truncated = raw.slice(start);
+      const openQuotes = (truncated.match(/"/g) || []).length;
+      if (openQuotes % 2 !== 0) truncated += '"';
+      const openBrackets = (truncated.match(/\[/g) || []).length - (truncated.match(/\]/g) || []).length;
+      for (let i = 0; i < openBrackets; i++) truncated += "]";
+      const openBraces = (truncated.match(/\{/g) || []).length - (truncated.match(/\}/g) || []).length;
+      for (let i = 0; i < openBraces; i++) truncated += "}";
+      return validateReading(JSON.parse(truncated));
+    }
+  } catch { /* continue */ }
+
+  console.error("JSON extraction failed, raw:", raw.slice(0, 200));
+  return { ...FALLBACK, summary: raw.replace(/```(?:json)?/gi, "").replace(/```/g, "").trim() };
+}
+
+function validateReading(obj: Record<string, unknown>): ReadingResult {
+  return {
+    trend: typeof obj.trend === "string" ? obj.trend : "neutral",
+    trendText: typeof obj.trendText === "string" ? obj.trendText : "",
+    summary: typeof obj.summary === "string" ? obj.summary : "",
+    advice: typeof obj.advice === "string" ? obj.advice : "",
+    cardInsights: Array.isArray(obj.cardInsights)
+      ? obj.cardInsights.map((s) => (typeof s === "string" ? s : ""))
+      : [],
+  };
+}
+
+interface CardInfo {
+  nameTh: string;
+  nameEn: string;
+  meaningTh?: string;
+  meaning: string;
+  isReversed: boolean;
+  positionName: string;
+}
+
+interface ReadingRequest {
+  topic: string;
+  topicIcon?: string;
+  spread: string;
+  question: string;
+  cards: CardInfo[];
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const settings = getSettings();
+
+    // Maintenance mode
+    if (settings.maintenanceMode) {
+      return NextResponse.json({ error: "ระบบกำลังปรับปรุง กรุณากลับมาใหม่ภายหลัง" }, { status: 503 });
+    }
+
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+
+    // Rate limit (per minute)
+    const rateCheck = checkRateLimit(ip, settings.rateLimitPerMinute);
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        { error: "คุณส่งคำขอบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่" },
+        { status: 429 }
+      );
+    }
+
+    const user = getUserFromRequest(req);
+
+    // Daily usage limit + credit check
+    if (user) {
+        const usageCheck = incrementUserReading(user.userId);
+        if (!usageCheck.allowed) {
+          return NextResponse.json(
+            { error: "เครดิตหมดแล้ว กรุณาเติมเครดิตเพื่อใช้งานต่อ", needCredits: true, remaining: 0 },
+            { status: 429 }
+          );
+        }
+      } else {
+        const guestCheck = checkGuestLimit(ip);
+        if (!guestCheck.allowed) {
+          return NextResponse.json(
+            { error: `ใช้ครบ ${settings.dailyFreeLimit} ครั้งต่อวันแล้ว สมัครสมาชิกเพื่อเติมเครดิตใช้ต่อ`, needCredits: true, remaining: 0 },
+            { status: 429 }
+          );
+        }
+    }
+
+    const { topic, topicIcon, spread, question, cards } = (await req.json()) as ReadingRequest;
+
+    const cardDetails = cards
+      .map(
+        (c, i) =>
+          `${i + 1}. ตำแหน่ง "${c.positionName}" — ${c.nameTh} (${c.nameEn})${c.isReversed ? " [กลับหัว]" : ""}\n   ความหมาย: ${c.meaningTh || c.meaning}`
+      )
+      .join("\n");
+
+    // Build prompt from settings template
+    const prompt = settings.promptTemplate
+      .replace("{{topic}}", topic)
+      .replace("{{question}}", question)
+      .replace("{{spread}}", spread)
+      .replace("{{cardDetails}}", cardDetails)
+      .replace("{{cardCount}}", String(cards.length));
+
+    const message = await client.messages.create({
+      model: settings.model,
+      max_tokens: settings.maxTokens,
+      messages: [{ role: "user", content: prompt }],
+    });
+
+    const text = message.content[0].type === "text" ? message.content[0].text : "";
+    const tokensUsed = (message.usage?.input_tokens || 0) + (message.usage?.output_tokens || 0);
+
+    const parsed = extractJSON(text);
+
+    // Save to DB
+    saveReading({
+      id: crypto.randomUUID(),
+      timestamp: Date.now(),
+      userId: user?.userId || null,
+      ip,
+      topic,
+      topicIcon: topicIcon || "",
+      spread,
+      question,
+      cards: cards.map((c) => ({
+        nameTh: c.nameTh,
+        nameEn: c.nameEn,
+        isReversed: c.isReversed,
+        positionName: c.positionName,
+      })),
+      trend: parsed.trend,
+      trendText: parsed.trendText,
+      summary: parsed.summary,
+      advice: parsed.advice,
+      cardInsights: parsed.cardInsights,
+      modelUsed: settings.model,
+      tokensUsed,
+    });
+
+    return NextResponse.json({ reading: parsed });
+  } catch (error) {
+    console.error("Reading API error:", error);
+    return NextResponse.json(
+      { error: "ไม่สามารถสร้างคำทำนายได้" },
+      { status: 500 }
+    );
+  }
+}
