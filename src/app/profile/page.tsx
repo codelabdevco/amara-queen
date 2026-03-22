@@ -51,13 +51,13 @@ export default function ProfilePage() {
   return (
     <AppShell>
       <motion.div
-        className="flex flex-col min-h-full px-4 pt-3 pb-6"
+        className="flex flex-col h-full px-4 pt-2 pb-2 overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, ease: EASE }}
       >
         {/* Header */}
-        <motion.div className="text-center mb-4" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
+        <motion.div className="text-center mb-2" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
           <h2
             className="text-base font-semibold tracking-[0.1em]"
             style={{
@@ -86,7 +86,7 @@ export default function ProfilePage() {
           <>
             {/* Avatar + Name */}
             <motion.div
-              className="flex items-center gap-4 mb-4"
+              className="flex items-center gap-3 mb-3"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
@@ -106,7 +106,7 @@ export default function ProfilePage() {
             </motion.div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-2 mb-4">
+            <div className="grid grid-cols-3 gap-1.5 mb-3">
               <StatBox label="ดูดวงแล้ว" value={String(data.totalReadings)} />
               <StatBox label="เครดิต" value={String(data.credits)} />
               <StatBox label="อายุ" value={data.zodiac ? `${data.zodiac.age} ปี` : "-"} />
@@ -114,7 +114,7 @@ export default function ProfilePage() {
 
             {/* Zodiac Info */}
             {data.zodiac && (
-              <motion.div className="space-y-2 mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2, duration: 0.5 }}>
+              <motion.div className="space-y-1.5 mb-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2, duration: 0.5 }}>
                 <p className="text-[#8B7A4A]/40 text-[0.6rem] uppercase tracking-[0.2em]">ข้อมูลดวงชะตา</p>
                 <div className="grid grid-cols-3 gap-1.5">
                   <InfoCard label="ราศี" value={data.zodiac.western.signTh} />
@@ -138,7 +138,7 @@ export default function ProfilePage() {
             )}
 
             {/* Contact Info */}
-            <motion.div className="space-y-2 mb-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.5 }}>
+            <motion.div className="space-y-1.5 mb-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.5 }}>
               <p className="text-[#8B7A4A]/40 text-[0.6rem] uppercase tracking-[0.2em]">ข้อมูลติดต่อ</p>
               <div className="bg-[#2a1215] rounded-lg p-3 space-y-2.5" style={{ border: "0.5px solid #8B7A4A10" }}>
                 {data.profile.phone && <InfoRow label="เบอร์โทร" value={data.profile.phone} />}
