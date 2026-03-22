@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AdminNav from "@/components/admin/AdminNav";
 
+interface CreditPackage {
+  credits: number;
+  price: number;
+  label?: string;
+}
+
 interface Settings {
   promptTemplate: string;
   model: string;
@@ -14,6 +20,9 @@ interface Settings {
   creditCostPerReading: number;
   promptPayNumber: string;
   promptPayName: string;
+  omisePublicKey: string;
+  omiseSecretKey: string;
+  creditPackages?: CreditPackage[];
 }
 
 export default function AdminSettingsPage() {
@@ -194,6 +203,93 @@ export default function AdminSettingsPage() {
                 />
               </div>
             </div>
+
+            {/* Payment Gateway (Omise) */}
+            <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">
+              <h3 className="text-white/80 text-sm font-medium mb-4">Payment Gateway (Omise)</h3>
+              <div className="flex items-center gap-2 mb-4">
+                <span
+                  className={`inline-block w-2 h-2 rounded-full ${
+                    settings.omisePublicKey && settings.omiseSecretKey
+                      ? "bg-green-400"
+                      : "bg-yellow-400"
+                  }`}
+                />
+                <span
+                  className={`text-sm ${
+                    settings.omisePublicKey && settings.omiseSecretKey
+                      ? "text-green-400"
+                      : "text-yellow-400"
+                  }`}
+                >
+                  {settings.omisePublicKey && settings.omiseSecretKey
+                    ? "เชื่อมต่อแล้ว"
+                    : "ยังไม่ได้ตั้งค่า"}
+                </span>
+              </div>
+              <p className="text-white/20 text-xs mb-4">
+                ตั้งค่า OMISE_PUBLIC_KEY และ OMISE_SECRET_KEY ใน .env บน VPS
+              </p>
+              {settings.omisePublicKey && (
+                <div className="mb-3">
+                  <label className="block text-white/40 text-xs mb-1 uppercase tracking-wider">
+                    Public Key
+                  </label>
+                  <p className="text-white/60 text-sm font-mono bg-[#08090e] border border-white/10 rounded-lg px-3 py-2">
+                    {settings.omisePublicKey.slice(0, 10)}*****
+                  </p>
+                </div>
+              )}
+              {settings.omiseSecretKey && (
+                <div className="mb-3">
+                  <label className="block text-white/40 text-xs mb-1 uppercase tracking-wider">
+                    Secret Key
+                  </label>
+                  <p className="text-white/60 text-sm font-mono bg-[#08090e] border border-white/10 rounded-lg px-3 py-2">
+                    {settings.omiseSecretKey.slice(0, 10)}*****
+                  </p>
+                </div>
+              )}
+              <div>
+                <label className="block text-white/40 text-xs mb-1 uppercase tracking-wider">
+                  Webhook URL
+                </label>
+                <div
+                  className="flex items-center gap-2 bg-[#08090e] border border-white/10 rounded-lg px-3 py-2 cursor-pointer hover:border-gold/30 transition-colors"
+                  onClick={() => {
+                    navigator.clipboard.writeText("/api/payment/webhook");
+                  }}
+                  title="คลิกเพื่อคัดลอก"
+                >
+                  <p className="text-white/60 text-sm font-mono flex-1">/api/payment/webhook</p>
+                  <span className="text-white/30 text-xs">คัดลอก</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Credit Packages */}
+            {settings.creditPackages && settings.creditPackages.length > 0 && (
+              <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">
+                <h3 className="text-white/80 text-sm font-medium mb-4">แพ็กเกจเครดิต</h3>
+                <div className="space-y-2">
+                  {settings.creditPackages.map((pkg, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between bg-[#08090e] border border-white/10 rounded-lg px-4 py-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-gold font-semibold">{pkg.credits}</span>
+                        <span className="text-white/40 text-sm">เครดิต</span>
+                        {pkg.label && (
+                          <span className="text-white/20 text-xs">({pkg.label})</span>
+                        )}
+                      </div>
+                      <span className="text-white/60 text-sm font-mono">฿{pkg.price.toLocaleString()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Maintenance Mode */}
             <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5">

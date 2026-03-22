@@ -7,6 +7,7 @@ const NAV = [
   { href: "/admin/readings", label: "คำทำนาย", icon: "♠" },
   { href: "/admin/users", label: "ผู้ใช้", icon: "♦" },
   { href: "/admin/credits", label: "เครดิต", icon: "★" },
+  { href: "/admin/transactions", label: "ธุรกรรม", icon: "฿" },
   { href: "/admin/settings", label: "ตั้งค่า", icon: "⚙" },
 ];
 

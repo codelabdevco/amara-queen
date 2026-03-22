@@ -9,6 +9,10 @@ interface Stats {
   todayReadings: number;
   userCount: number;
   estimatedCost: number;
+  totalRevenue: number;
+  totalCreditsIssued: number;
+  pendingPayments: number;
+  methodBreakdown: Record<string, { count: number; amount: number }>;
   last7: { date: string; count: number; tokens: number }[];
   topTopics: [string, number][];
   topSpreads: [string, number][];
@@ -59,6 +63,36 @@ export default function AdminDashboardPage() {
               <StatCard label="ผู้ใช้ทั้งหมด" value={(stats.userCount || 0).toLocaleString()} />
               <StatCard label="ค่าใช้จ่ายโดยประมาณ" value={`$${(stats.estimatedCost || 0).toFixed(2)}`} />
             </div>
+
+            {/* Payment Stat Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+              <StatCard label="รายได้รวม" value={`฿${(stats.totalRevenue || 0).toLocaleString()}`} />
+              <StatCard label="เครดิตที่ออก" value={(stats.totalCreditsIssued || 0).toLocaleString()} />
+              {(stats.pendingPayments || 0) > 0 && (
+                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-5">
+                  <p className="text-yellow-400/60 text-xs mb-2 uppercase tracking-wider">ธุรกรรมรอดำเนินการ</p>
+                  <p className="text-yellow-400 text-2xl font-semibold">{stats.pendingPayments.toLocaleString()}</p>
+                </div>
+              )}
+            </div>
+
+            {/* Method Breakdown */}
+            {stats.methodBreakdown && Object.keys(stats.methodBreakdown).length > 0 && (
+              <div className="bg-[#0c0d14] border border-white/[0.06] rounded-xl p-5 mb-8">
+                <h3 className="text-sm text-white/50 mb-4">วิธีชำระเงิน</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {Object.entries(stats.methodBreakdown).map(([method, data]) => (
+                    <div key={method} className="bg-[#08090e] border border-white/10 rounded-lg p-4">
+                      <p className="text-white/60 text-sm font-medium mb-2 capitalize">{method}</p>
+                      <div className="flex items-baseline justify-between">
+                        <span className="text-gold text-lg font-semibold">฿{data.amount.toLocaleString()}</span>
+                        <span className="text-white/30 text-xs">{data.count} รายการ</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Bar Chart */}
