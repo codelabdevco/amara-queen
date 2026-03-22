@@ -8,13 +8,13 @@ import LaurelButton from "@/components/ui/LaurelButton";
 interface UserInfo { nickname: string; zodiac: { western: { signTh: string } } | null }
 
 const FORTUNE_SERVICES = [
-  { href: "/tarot", icon: "☽", name: "ไพ่ทาโร่", cost: 1 },
-  { href: "/gypsy", icon: "♦", name: "ไพ่ยิปซี", cost: 1 },
+  { href: "/tarot", icon: "☽", name: "ไพ่ทาโร่", cost: 3 },
+  { href: "/gypsy", icon: "♦", name: "ไพ่ยิปซี", cost: 2 },
   { href: "/siamsi", icon: "☰", name: "เซียมซี", cost: 1 },
 ];
 
 const OTHER_SERVICES = [
-  { href: "/auspicious", icon: "☆", name: "ฤกษ์ยามมงคล", cost: 1 },
+  { href: "/auspicious", icon: "☆", name: "ฤกษ์ยามมงคล", cost: 2 },
   { href: "/calendar", icon: "☼", name: "วันดีวันร้าย", cost: 0 },
   { href: "/booking", icon: "☷", name: "นัดหมอดู", cost: 0 },
   { href: "/shop", icon: "❖", name: "ร้านค้ามงคล", cost: 0 },

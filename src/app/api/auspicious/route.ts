@@ -10,8 +10,8 @@ const client = new Anthropic();
 
 export async function POST(req: NextRequest) {
   try {
-    // Credit check
-    const creditError = requireCredits(req);
+    // Credit check — 2 เครดิต
+    const creditError = requireCredits(req, "auspicious");
     if (creditError) return creditError;
 
     const settings = getSettings();

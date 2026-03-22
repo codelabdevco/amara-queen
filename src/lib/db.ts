@@ -587,6 +587,10 @@ export interface AppSettings {
   welcomeCredits: number;
   monthlyFreeCredits: number;
   creditCostPerReading: number;
+  creditCostTarot: number;
+  creditCostGypsy: number;
+  creditCostSiamsi: number;
+  creditCostAuspicious: number;
   creditPackages: { credits: number; price: number; label: string }[];
   promptPayNumber: string;
   promptPayName: string;
@@ -623,13 +627,18 @@ const DEFAULT_SETTINGS: AppSettings = {
   dailyFreeLimit: 5,
   rateLimitPerMinute: 10,
   maintenanceMode: false,
-  welcomeCredits: 5,
+  welcomeCredits: 10,
   monthlyFreeCredits: 3,
   creditCostPerReading: 1,
+  creditCostTarot: 3,
+  creditCostGypsy: 2,
+  creditCostSiamsi: 1,
+  creditCostAuspicious: 2,
   creditPackages: [
     { credits: 10, price: 29, label: "10 เครดิต" },
-    { credits: 30, price: 79, label: "30 เครดิต" },
+    { credits: 30, price: 69, label: "30 เครดิต" },
     { credits: 100, price: 199, label: "100 เครดิต" },
+    { credits: 300, price: 499, label: "300 เครดิต" },
   ],
   promptPayNumber: "",
   promptPayName: "",

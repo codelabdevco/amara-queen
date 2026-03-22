@@ -285,6 +285,7 @@ function CardLightbox({ card, position, onClose }: { card: { id: number; nameTh:
 
 // ── Main ──
 export default function ReadingScreen() {
+  const service = useTarotStore((s) => s.service);
   const selectedTopic = useTarotStore((s) => s.selectedTopic);
   const selectedSpread = useTarotStore((s) => s.selectedSpread);
   const userQuestion = useTarotStore((s) => s.userQuestion);
@@ -307,6 +308,7 @@ export default function ReadingScreen() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          service,
           topic: selectedTopic.nameTH,
           spread: selectedSpread.nameTH,
           question: userQuestion || "ดูดวงทั่วไป",

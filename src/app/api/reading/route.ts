@@ -112,13 +112,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Credit check
-    const creditError = requireCredits(req);
+    const body = (await req.json()) as ReadingRequest & { service?: string };
+    const { topic, topicIcon, spread, question, cards } = body;
+
+    // Credit check — tarot 3 เครดิต, gypsy 2 เครดิต
+    const service = body.service === "gypsy" ? "gypsy" as const : "tarot" as const;
+    const creditError = requireCredits(req, service);
     if (creditError) return creditError;
 
     const user = getUserFromRequest(req);
-
-    const { topic, topicIcon, spread, question, cards } = (await req.json()) as ReadingRequest;
 
     const cardDetails = cards
       .map(
