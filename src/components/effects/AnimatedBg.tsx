@@ -26,14 +26,22 @@ export default function AnimatedBg() {
 
   return (
     <>
-      {/* Layer 1: Curtain — back-most */}
-      <div className="fixed inset-0 z-0">
-        <img src="/curtain.svg" alt="" className="w-full h-full object-cover" draggable={false} />
+      {/* Layer 1: Curtain — back-most, gentle sway */}
+      <div className="fixed z-0 overflow-hidden" style={{ inset: "-3%" }}>
+        <img src="/curtain.svg" alt=""
+          className="w-full h-full object-cover"
+          style={{ animation: "curtainSway 15s ease-in-out infinite" }}
+          draggable={false}
+        />
       </div>
 
-      {/* Layer 2: Globe — on top of curtain */}
-      <div className="fixed inset-0 z-[1]">
-        <img src="/globe.svg" alt="" className="w-full h-full object-cover opacity-[0.25]" draggable={false} />
+      {/* Layer 2: Globe — slow rotate */}
+      <div className="fixed z-[1] overflow-hidden" style={{ inset: "-2%" }}>
+        <img src="/globe.svg" alt=""
+          className="w-full h-full object-cover opacity-[0.25]"
+          style={{ animation: "globeFloat 25s ease-in-out infinite" }}
+          draggable={false}
+        />
       </div>
 
       {/* Layer 3: Dark overlay for readability */}
