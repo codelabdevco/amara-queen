@@ -16,7 +16,7 @@ interface Product {
 
 interface CartItem extends Product { qty: number }
 
-type Step = "browse" | "shipping" | "payment" | "processing" | "success" | "error";
+type Step = "browse" | "login" | "shipping" | "payment" | "processing" | "success" | "error";
 
 export default function ShopScreen() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -26,6 +26,8 @@ export default function ShopScreen() {
   const [orderId, setOrderId] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [credits, setCredits] = useState(0);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [payMethod, setPayMethod] = useState<"credit" | "transfer">("credit");
 
   // Shipping form
   const [shippingName, setShippingName] = useState("");
@@ -34,7 +36,7 @@ export default function ShopScreen() {
 
   useEffect(() => {
     fetch("/api/shop").then(r => r.json()).then(d => setProducts(d.products || [])).catch(() => {});
-    fetch("/api/credits/balance").then(r => r.json()).then(d => setCredits(d.credits || 0)).catch(() => {});
+    fetch("/api/credits/balance").then(r => r.json()).then(d => { setCredits(d.credits || 0); setLoggedIn(d.loggedIn || false); }).catch(() => {});
   }, []);
 
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
@@ -67,7 +69,7 @@ export default function ShopScreen() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: cart.map(i => ({ productId: i.id, qty: i.qty })),
-          paymentMethod: "credit",
+          paymentMethod: payMethod,
           shippingName,
           shippingPhone: shippingPhone.replace(/[^0-9]/g, ""),
           shippingAddress,
@@ -185,11 +187,30 @@ export default function ShopScreen() {
                             <span className="text-white/40 text-sm">รวม</span>
                             <span className="text-gold text-lg font-semibold">฿{cartTotal}</span>
                           </div>
-                          <button onClick={() => setStep("shipping")}
+                          <button onClick={() => setStep(loggedIn ? "shipping" : "login")}
                             className="w-full py-3 rounded-xl bg-gold text-[#1a0a0a] text-sm font-semibold"
                           >ดำเนินการสั่งซื้อ</button>
                         </>
                       )}
+                    </motion.div>
+                  )}
+
+                  {/* ── Login Prompt ── */}
+                  {step === "login" && (
+                    <motion.div key="login" className="text-center py-6 space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                      <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mx-auto">
+                        <span className="text-gold text-xl">♦</span>
+                      </div>
+                      <p className="text-white/60 text-sm">กรุณาเข้าสู่ระบบก่อนสั่งซื้อ</p>
+                      <a href="/api/auth/line"
+                        className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold"
+                        style={{ background: "#06C755", color: "#fff" }}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.81 2 10.44c0 3.7 3.04 6.9 7.34 7.93-.1.38-.66 2.44-.68 2.6 0 0-.01.1.05.14.06.03.13.01.13.01.17-.02 2-1.3 2.32-1.53.61.09 1.24.14 1.84.14 5.52 0 10-3.81 10-8.44C22 5.81 17.52 2 12 2z"/></svg>
+                        LINE Login
+                      </a>
+                      <a href="/api/auth/line" className="block text-gold/40 text-xs hover:text-gold/70">Demo — ทดลองใช้งาน</a>
+                      <button onClick={() => setStep("browse")} className="text-white/30 text-xs">ย้อนกลับ</button>
                     </motion.div>
                   )}
 
@@ -248,29 +269,42 @@ export default function ShopScreen() {
                       </div>
 
                       {/* Payment method */}
-                      <div className="bg-[#1e0c0c] rounded-xl p-4">
-                        <p className="text-gold/50 text-[0.6rem] uppercase tracking-wider mb-2">วิธีชำระ</p>
-                        <div className="flex items-center justify-between">
+                      <div className="bg-[#1e0c0c] rounded-xl p-4 space-y-3">
+                        <p className="text-gold/50 text-[0.6rem] uppercase tracking-wider">เลือกวิธีชำระ</p>
+
+                        <button onClick={() => setPayMethod("credit")}
+                          className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${payMethod === "credit" ? "bg-gold/10 ring-1 ring-gold/20" : "bg-[#2a1215]"}`}
+                        >
                           <div className="flex items-center gap-2">
                             <span className="text-gold">&#9733;</span>
                             <span className="text-white/70 text-sm">ใช้เครดิต</span>
                           </div>
-                          <span className={`text-sm font-mono ${credits >= cartTotal ? "text-green-400" : "text-red-400"}`}>
-                            {credits} เครดิต
-                          </span>
-                        </div>
-                        {credits < cartTotal && (
-                          <p className="text-red-400/60 text-xs mt-2">เครดิตไม่พอ ต้องการ {cartTotal} เครดิต</p>
-                        )}
+                          <span className={`text-xs font-mono ${credits >= cartTotal ? "text-green-400" : "text-red-400"}`}>{credits} เครดิต</span>
+                        </button>
+
+                        <button onClick={() => setPayMethod("transfer")}
+                          className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${payMethod === "transfer" ? "bg-gold/10 ring-1 ring-gold/20" : "bg-[#2a1215]"}`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-gold">฿</span>
+                            <span className="text-white/70 text-sm">โอนเงิน / PromptPay</span>
+                          </div>
+                          <span className="text-white/30 text-xs">฿{cartTotal}</span>
+                        </button>
                       </div>
+
+                      {payMethod === "credit" && credits < cartTotal && (
+                        <p className="text-red-400/60 text-xs">เครดิตไม่พอ (ต้องการ {cartTotal} มี {credits})</p>
+                      )}
 
                       {errorMsg && <p className="text-red-400/80 text-xs">{errorMsg}</p>}
 
                       <div className="flex gap-3 pt-2">
                         <button onClick={() => { setStep("shipping"); setErrorMsg(""); }} className="flex-1 py-2.5 rounded-xl bg-[#1e0c0c] text-white/40 text-sm">ย้อนกลับ</button>
-                        <button onClick={handleCheckout} disabled={credits < cartTotal}
+                        <button onClick={handleCheckout}
+                          disabled={payMethod === "credit" && credits < cartTotal}
                           className="flex-1 py-2.5 rounded-xl bg-gold text-[#1a0a0a] text-sm font-semibold disabled:opacity-30"
-                        >ยืนยันสั่งซื้อ</button>
+                        >ยืนยันสั่งซื้อ ฿{cartTotal}</button>
                       </div>
                     </motion.div>
                   )}
