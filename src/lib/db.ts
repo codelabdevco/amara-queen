@@ -466,14 +466,28 @@ export function getAllTransactions(limit = 50, offset = 0): { transactions: Paym
 // ── SHOP PRODUCTS ──
 export interface ShopProduct {
   id: string;
+  sku: string;
   name: string;
   description: string;
+  longDescription: string;
   price: number;
+  salePrice: number;
   icon: string;
-  image: string;
+  images: string[];
   category: string;
   stock: number;
+  weight: number;
+  sortOrder: number;
   active: boolean;
+}
+
+// ── CATEGORIES ──
+export function getCategories(): string[] {
+  return readJSON("categories.json", ["พระเครื่อง", "เครื่องประดับ", "ยันต์", "น้ำมนต์", "ของมงคล", "เทียน"]);
+}
+
+export function saveCategories(categories: string[]): void {
+  writeJSON("categories.json", categories);
 }
 
 const DEFAULT_PRODUCTS: ShopProduct[] = [];
