@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { EASE } from "@/constants/animation";
 import Button from "@/components/ui/Button";
+import { PROVINCES } from "@/lib/thai-provinces";
 
 interface Product {
   id: string;
@@ -34,6 +35,38 @@ export default function ShopScreen() {
   const [shippingName, setShippingName] = useState("");
   const [shippingPhone, setShippingPhone] = useState("");
   const [shippingAddress, setShippingAddress] = useState("");
+  const [shippingDistrict, setShippingDistrict] = useState("");
+  const [shippingSubDistrict, setShippingSubDistrict] = useState("");
+  const [shippingProvince, setShippingProvince] = useState("");
+  const [shippingPostalCode, setShippingPostalCode] = useState("");
+  const [savedAddresses, setSavedAddresses] = useState<{ id: string; label: string; name: string; phone: string; address: string; district: string; subDistrict: string; province: string; postalCode: string; isDefault: boolean }[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const [saveThisAddress, setSaveThisAddress] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/auth/address").then(r => r.json()).then(d => {
+      if (d.addresses?.length) {
+        setSavedAddresses(d.addresses);
+        const def = d.addresses.find((a: { isDefault: boolean }) => a.isDefault) || d.addresses[0];
+        if (def) loadAddress(def);
+      }
+    }).catch(() => {});
+  }, []);
+
+  function loadAddress(addr: typeof savedAddresses[0]) {
+    setSelectedAddressId(addr.id);
+    setShippingName(addr.name);
+    setShippingPhone(addr.phone);
+    setShippingAddress(addr.address);
+    setShippingDistrict(addr.district);
+    setShippingSubDistrict(addr.subDistrict);
+    setShippingProvince(addr.province);
+    setShippingPostalCode(addr.postalCode);
+  }
+
+  function getFullAddress() {
+    return [shippingAddress, shippingSubDistrict, shippingDistrict, shippingProvince, shippingPostalCode].filter(Boolean).join(" ");
+  }
 
   useEffect(() => {
     fetch("/api/shop").then(r => r.json()).then(d => setProducts(d.products || [])).catch(() => {});
@@ -56,9 +89,24 @@ export default function ShopScreen() {
   }
 
   async function handleCheckout() {
-    if (!shippingName || !shippingPhone || !shippingAddress) {
+    if (!shippingName || !shippingPhone || !shippingAddress || !shippingProvince) {
       setErrorMsg("กรุณากรอกข้อมูลจัดส่งให้ครบ");
       return;
+    }
+
+    // Save address
+    if (saveThisAddress && loggedIn) {
+      fetch("/api/auth/address", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: selectedAddressId || undefined,
+          label: "ที่อยู่หลัก",
+          name: shippingName, phone: shippingPhone, address: shippingAddress,
+          district: shippingDistrict, subDistrict: shippingSubDistrict,
+          province: shippingProvince, postalCode: shippingPostalCode, isDefault: true,
+        }),
+      }).catch(() => {});
     }
 
     setStep("processing");
@@ -73,7 +121,7 @@ export default function ShopScreen() {
           paymentMethod: payMethod,
           shippingName,
           shippingPhone: shippingPhone.replace(/[^0-9]/g, ""),
-          shippingAddress,
+          shippingAddress: getFullAddress(),
         }),
       });
       const data = await res.json();
@@ -218,28 +266,90 @@ export default function ShopScreen() {
 
                   {/* ── Shipping Form ── */}
                   {step === "shipping" && (
-                    <motion.div key="shipping" className="space-y-4" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}>
+                    <motion.div key="shipping" className="space-y-3" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}>
                       <h3 className="text-gold text-sm font-semibold">ที่อยู่จัดส่ง</h3>
-                      <div>
-                        <label className="block text-white/40 text-xs mb-1.5">ชื่อผู้รับ *</label>
-                        <input type="text" value={shippingName} onChange={e => setShippingName(e.target.value)}
-                          placeholder="ชื่อ-นามสกุล" className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 outline-none focus:ring-1 focus:ring-gold/20" />
+
+                      {/* Saved addresses */}
+                      {savedAddresses.length > 0 && (
+                        <div className="space-y-2">
+                          <p className="text-white/30 text-[0.65rem]">เลือกที่อยู่ที่บันทึกไว้</p>
+                          {savedAddresses.map(addr => (
+                            <button key={addr.id} onClick={() => loadAddress(addr)}
+                              className={`w-full text-left p-3 rounded-lg transition-colors ${selectedAddressId === addr.id ? "bg-gold/10 ring-1 ring-gold/20" : "bg-[#1e0c0c]"}`}
+                            >
+                              <p className="text-white/70 text-xs font-medium">{addr.name} · {addr.phone}</p>
+                              <p className="text-white/30 text-[0.6rem] mt-0.5">{[addr.address, addr.subDistrict, addr.district, addr.province, addr.postalCode].filter(Boolean).join(" ")}</p>
+                            </button>
+                          ))}
+                          <button onClick={() => { setSelectedAddressId(null); setShippingName(""); setShippingPhone(""); setShippingAddress(""); setShippingDistrict(""); setShippingSubDistrict(""); setShippingProvince(""); setShippingPostalCode(""); }}
+                            className="text-gold/40 text-xs hover:text-gold/70"
+                          >+ เพิ่มที่อยู่ใหม่</button>
+                        </div>
+                      )}
+
+                      {/* Address form */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-white/40 text-xs mb-1">ชื่อผู้รับ *</label>
+                          <input type="text" value={shippingName} onChange={e => setShippingName(e.target.value)}
+                            placeholder="ชื่อ-นามสกุล" className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 outline-none focus:ring-1 focus:ring-gold/20" />
+                        </div>
+                        <div>
+                          <label className="block text-white/40 text-xs mb-1">เบอร์โทร *</label>
+                          <input type="tel" inputMode="numeric" value={shippingPhone} onChange={e => setShippingPhone(e.target.value.replace(/[^0-9-]/g, "").slice(0, 12))}
+                            placeholder="08X-XXX-XXXX" className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 outline-none focus:ring-1 focus:ring-gold/20 font-mono" />
+                        </div>
                       </div>
+
                       <div>
-                        <label className="block text-white/40 text-xs mb-1.5">เบอร์โทร *</label>
-                        <input type="tel" inputMode="numeric" value={shippingPhone} onChange={e => setShippingPhone(e.target.value.replace(/[^0-9-]/g, "").slice(0, 12))}
-                          placeholder="08X-XXX-XXXX" className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 outline-none focus:ring-1 focus:ring-gold/20 font-mono" />
+                        <label className="block text-white/40 text-xs mb-1">ที่อยู่ (บ้านเลขที่ ซอย ถนน) *</label>
+                        <input type="text" value={shippingAddress} onChange={e => setShippingAddress(e.target.value)}
+                          placeholder="123/4 ซอย... ถนน..." className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 outline-none focus:ring-1 focus:ring-gold/20" />
                       </div>
-                      <div>
-                        <label className="block text-white/40 text-xs mb-1.5">ที่อยู่ *</label>
-                        <textarea value={shippingAddress} onChange={e => setShippingAddress(e.target.value)}
-                          placeholder="บ้านเลขที่ ซอย ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์"
-                          rows={3} className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 outline-none focus:ring-1 focus:ring-gold/20 resize-none" />
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-white/40 text-xs mb-1">แขวง/ตำบล</label>
+                          <input type="text" value={shippingSubDistrict} onChange={e => setShippingSubDistrict(e.target.value)}
+                            placeholder="ตำบล..." className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 outline-none focus:ring-1 focus:ring-gold/20" />
+                        </div>
+                        <div>
+                          <label className="block text-white/40 text-xs mb-1">เขต/อำเภอ</label>
+                          <input type="text" value={shippingDistrict} onChange={e => setShippingDistrict(e.target.value)}
+                            placeholder="อำเภอ..." className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 outline-none focus:ring-1 focus:ring-gold/20" />
+                        </div>
                       </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-white/40 text-xs mb-1">จังหวัด *</label>
+                          <select value={shippingProvince} onChange={e => setShippingProvince(e.target.value)}
+                            className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white outline-none focus:ring-1 focus:ring-gold/20 appearance-none cursor-pointer [color-scheme:dark]"
+                          >
+                            <option value="" className="bg-[#1e0c0c]">เลือกจังหวัด</option>
+                            {PROVINCES.map(p => <option key={p} value={p} className="bg-[#1e0c0c]">{p}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-white/40 text-xs mb-1">รหัสไปรษณีย์</label>
+                          <input type="text" inputMode="numeric" value={shippingPostalCode} onChange={e => setShippingPostalCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 5))}
+                            placeholder="10xxx" className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 outline-none focus:ring-1 focus:ring-gold/20 font-mono" />
+                        </div>
+                      </div>
+
+                      {loggedIn && (
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" checked={saveThisAddress} onChange={e => setSaveThisAddress(e.target.checked)}
+                            className="w-4 h-4 rounded accent-gold" />
+                          <span className="text-white/40 text-xs">บันทึกที่อยู่นี้สำหรับครั้งหน้า</span>
+                        </label>
+                      )}
+
                       {errorMsg && <p className="text-red-400/80 text-xs">{errorMsg}</p>}
-                      <div className="flex gap-3 pt-2">
+                      <div className="flex gap-3 pt-1">
                         <button onClick={() => { setStep("browse"); setErrorMsg(""); }} className="flex-1 py-2.5 rounded-xl bg-[#1e0c0c] text-white/40 text-sm">ย้อนกลับ</button>
-                        <button onClick={() => setStep("payment")} className="flex-1 py-2.5 rounded-xl bg-gold text-[#1a0a0a] text-sm font-semibold">ถัดไป</button>
+                        <button onClick={() => { if (!shippingName || !shippingPhone || !shippingAddress || !shippingProvince) { setErrorMsg("กรุณากรอกข้อมูลที่มี * ให้ครบ"); return; } setErrorMsg(""); setStep("payment"); }}
+                          className="flex-1 py-2.5 rounded-xl bg-gold text-[#1a0a0a] text-sm font-semibold">ถัดไป</button>
                       </div>
                     </motion.div>
                   )}
@@ -267,7 +377,7 @@ export default function ShopScreen() {
                       <div className="bg-[#1e0c0c] rounded-xl p-4 text-xs space-y-1">
                         <p className="text-gold/50 text-[0.6rem] uppercase tracking-wider mb-2">ส่งถึง</p>
                         <p className="text-white/70">{shippingName} · {shippingPhone}</p>
-                        <p className="text-white/40">{shippingAddress}</p>
+                        <p className="text-white/40">{getFullAddress()}</p>
                       </div>
 
                       {/* Payment method */}

@@ -151,17 +151,31 @@ export function getOverviewStats() {
 }
 
 // ── USERS ──
+export interface SavedAddress {
+  id: string;
+  label: string;
+  name: string;
+  phone: string;
+  address: string;
+  district: string;
+  subDistrict: string;
+  province: string;
+  postalCode: string;
+  isDefault: boolean;
+}
+
 export interface UserProfile {
   nickname: string;
   firstName: string;
   lastName: string;
-  birthdate: string; // YYYY-MM-DD
+  birthdate: string;
   gender: "male" | "female" | "other" | "";
   phone: string;
   email: string;
-  birthTime: string; // HH:mm or ""
+  birthTime: string;
   relationshipStatus: "single" | "taken" | "complicated" | "";
   occupation: string;
+  savedAddresses?: SavedAddress[];
 }
 
 export interface User {
@@ -230,6 +244,39 @@ export function updateUserProfile(userId: string, profile: UserProfile): User | 
 export function getUserProfile(userId: string): UserProfile | null {
   const user = findUserById(userId);
   return user?.profile || null;
+}
+
+export function getSavedAddresses(userId: string): SavedAddress[] {
+  const user = findUserById(userId);
+  return user?.profile?.savedAddresses || [];
+}
+
+export function saveAddress(userId: string, address: SavedAddress): SavedAddress[] {
+  const users = getUsers();
+  const user = users.find(u => u.id === userId);
+  if (!user || !user.profile) return [];
+
+  if (!user.profile.savedAddresses) user.profile.savedAddresses = [];
+
+  if (address.isDefault) {
+    user.profile.savedAddresses.forEach(a => { a.isDefault = false; });
+  }
+
+  const idx = user.profile.savedAddresses.findIndex(a => a.id === address.id);
+  if (idx >= 0) user.profile.savedAddresses[idx] = address;
+  else user.profile.savedAddresses.push(address);
+
+  saveUsers(users);
+  return user.profile.savedAddresses;
+}
+
+export function deleteAddress(userId: string, addressId: string): SavedAddress[] {
+  const users = getUsers();
+  const user = users.find(u => u.id === userId);
+  if (!user?.profile?.savedAddresses) return [];
+  user.profile.savedAddresses = user.profile.savedAddresses.filter(a => a.id !== addressId);
+  saveUsers(users);
+  return user.profile.savedAddresses;
 }
 
 export function createUser(username: string, passwordHash: string): User {
