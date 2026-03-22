@@ -71,8 +71,10 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
   async function handleSave() {
     setError("");
     if (!form.nickname.trim()) { setError("กรุณากรอกชื่อเล่น"); return; }
-    if (!form.birthdate) { setError("กรุณากรอกวันเกิด"); return; }
+    if (!form.birthdate || form.birthdate.includes("0000")) { setError("กรุณากรอกวันเกิดให้ครบ"); return; }
     if (!form.gender) { setError("กรุณาเลือกเพศ"); return; }
+    if (form.phone && !/^0[0-9]{8,9}$/.test(form.phone.replace(/-/g, ""))) { setError("เบอร์โทรไม่ถูกต้อง (เช่น 0812345678)"); return; }
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { setError("อีเมลไม่ถูกต้อง"); return; }
 
     setSaving(true);
     try {
@@ -93,6 +95,13 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
   }
 
   function update(key: keyof ProfileData, value: string) {
+    // Input sanitization
+    if (key === "phone") {
+      value = value.replace(/[^0-9-]/g, "").slice(0, 12);
+    }
+    if (key === "nickname" || key === "firstName" || key === "lastName") {
+      value = value.replace(/[0-9]/g, "").slice(0, 50);
+    }
     setForm(prev => ({ ...prev, [key]: value }));
   }
 
@@ -240,15 +249,15 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-white/40 text-xs mb-1.5">เบอร์โทร</label>
-                    <input type="tel" placeholder="08X-XXX-XXXX" value={form.phone}
+                    <input type="tel" inputMode="numeric" placeholder="0812345678" value={form.phone}
                       onChange={e => update("phone", e.target.value)}
-                      className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
+                      className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none font-mono tracking-wider"
                     />
                   </div>
                   <div>
                     <label className="block text-white/40 text-xs mb-1.5">อีเมล</label>
-                    <input type="email" placeholder="email@mail.com" value={form.email}
-                      onChange={e => update("email", e.target.value)}
+                    <input type="email" inputMode="email" placeholder="email@mail.com" value={form.email}
+                      onChange={e => update("email", e.target.value.trim())}
                       className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
                     />
                   </div>
