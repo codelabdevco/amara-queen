@@ -10,6 +10,7 @@ import LaurelButton from "@/components/ui/LaurelButton";
 export default function TopicScreen() {
   const service = useTarotStore((s) => s.service);
   const selectTopic = useTarotStore((s) => s.selectTopic);
+  const selectedTopic = useTarotStore((s) => s.selectedTopic);
   const topics = service === "gypsy" ? GYPSY_TOPICS : TOPICS;
 
   return (
@@ -21,7 +22,6 @@ export default function TopicScreen() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5, ease: EASE }}
     >
-      {/* Header */}
       <motion.div
         className="text-center mb-3"
         initial={{ opacity: 0, y: -10 }}
@@ -43,27 +43,29 @@ export default function TopicScreen() {
         <p className="text-[#8B7A4A]/50 text-[0.65rem]">เลือกหมวดที่ตรงกับคำถามในใจ</p>
       </motion.div>
 
-      {/* Topic grid */}
       <div className="grid grid-cols-2 gap-2 w-full max-w-[300px]">
-        {topics.map((t, idx) => (
-          <motion.div
-            key={t.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 + idx * 0.03, duration: 0.4, ease: EASE }}
-          >
-            <LaurelButton
-              variant="crimson"
-              onClick={() => selectTopic(t)}
-              className="w-full h-[46px]"
+        {topics.map((t, idx) => {
+          const isSelected = selectedTopic?.id === t.id;
+          return (
+            <motion.div
+              key={t.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 + idx * 0.03, duration: 0.4, ease: EASE }}
             >
-              <span className="flex items-center gap-1.5">
-                <span className="opacity-50 text-xs">{t.icon}</span>
-                <span className="text-[0.65rem]">{t.nameTH}</span>
-              </span>
-            </LaurelButton>
-          </motion.div>
-        ))}
+              <LaurelButton
+                variant={isSelected ? "gold" : "crimson"}
+                onClick={() => selectTopic(t)}
+                className="w-full h-[46px]"
+              >
+                <span className="flex items-center gap-1.5">
+                  <span className={`text-xs ${isSelected ? "" : "opacity-50"}`}>{t.icon}</span>
+                  <span className="text-[0.65rem]">{t.nameTH}</span>
+                </span>
+              </LaurelButton>
+            </motion.div>
+          );
+        })}
       </div>
     </motion.div>
   );

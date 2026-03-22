@@ -31,17 +31,17 @@ export default function BackButton() {
 
   return (
     <motion.button
-      className="flex items-center gap-1.5 text-white/35 active:text-white/60 transition-colors"
+      className="flex items-center gap-1.5 text-[#8B7A4A]/50 active:text-[#d4af37] transition-colors"
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.1, duration: 0.3 }}
       whileTap={{ scale: 0.9 }}
       onClick={handleBack}
     >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M15 18l-6-6 6-6" />
       </svg>
-      <span className="text-xs">ย้อนกลับ</span>
+      <span className="text-[0.65rem]">ย้อนกลับ</span>
     </motion.button>
   );
 }

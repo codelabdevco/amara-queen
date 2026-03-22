@@ -21,7 +21,7 @@ export default function QuestionScreen() {
       transition={{ duration: 0.5, ease: EASE }}
     >
       <h2
-        className="text-lg font-semibold tracking-[0.1em] mb-1"
+        className="text-base font-semibold tracking-[0.1em] mb-0.5"
         style={{
           background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
           backgroundSize: "200% 200%",
@@ -32,17 +32,17 @@ export default function QuestionScreen() {
       >
         ตั้งคำถาม
       </h2>
-      <p className="text-[#8B7A4A]/50 text-xs mb-5">พิมพ์คำถามของคุณ หรือข้ามไปเลยก็ได้</p>
+      <p className="text-[#8B7A4A]/50 text-[0.65rem] mb-4">พิมพ์คำถามของคุณ หรือข้ามไปเลยก็ได้</p>
 
       <textarea
-        className="w-full max-w-[340px] h-[100px] bg-[#2a1215] rounded-xl px-4 py-3 text-sm text-[#E2D4A0]/80 placeholder-[#8B7A4A]/30 resize-none focus:outline-none focus:ring-1 focus:ring-[#8B7A4A]/20"
+        className="w-full max-w-[300px] h-[90px] bg-[#2a1215] rounded-lg px-4 py-3 text-sm text-[#E2D4A0]/80 placeholder-[#8B7A4A]/30 resize-none focus:outline-none focus:ring-1 focus:ring-[#8B7A4A]/20"
         placeholder="พิมพ์คำถามของคุณ... (ไม่บังคับ)"
         value={userQuestion}
         onChange={(e) => setQuestion(e.target.value)}
       />
 
       {selectedTopic && (
-        <div className="flex flex-wrap gap-2 mt-3 max-w-[340px] justify-center">
+        <div className="flex flex-wrap gap-1.5 mt-3 max-w-[300px] justify-center">
           {selectedTopic.examples.map((ex, i) => (
             <button
               key={i}
@@ -55,7 +55,7 @@ export default function QuestionScreen() {
         </div>
       )}
 
-      <div className="flex gap-3 mt-8">
+      <div className="flex gap-3 mt-6">
         <LaurelButton variant="crimson" onClick={() => setPhase("fan")}>ข้าม</LaurelButton>
         <LaurelButton variant="gold" onClick={() => setPhase("fan")}>ต่อไป</LaurelButton>
       </div>
