@@ -104,7 +104,7 @@ function LoadingCandles() {
           />}
           {/* Glow behind rune */}
           <div className="absolute inset-0 -z-10 rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(232,212,139,0.08) 0%, transparent 70%)", transform: "scale(2)" }}
+            style={{ background: "radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 70%)", transform: "scale(2)" }}
           />
         </motion.div>
 
@@ -115,7 +115,7 @@ function LoadingCandles() {
       <div className="h-5 relative w-full text-center">
         <AnimatePresence mode="wait">
           <motion.p key={msgIdx}
-            className="text-xs text-gold/60 absolute inset-x-0"
+            className="text-xs text-[#d4af37]/60 absolute inset-x-0"
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
@@ -130,7 +130,7 @@ function LoadingCandles() {
       <div className="h-10 relative w-full text-center px-4">
         <AnimatePresence mode="wait">
           <motion.p key={wisdomIdx}
-            className="text-[0.7rem] text-gold/25 absolute inset-x-0 px-4 leading-5 italic"
+            className="text-[0.7rem] text-[#8B7A4A]/30 absolute inset-x-0 px-4 leading-5 italic"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -146,11 +146,11 @@ function LoadingCandles() {
 
 // ── Trend config ──
 const TREND_CONFIG: Record<string, { icon: string; label: string; color: string; bg: string; gradient: string }> = {
-  very_positive: { icon: "✦", label: "ดีมาก", color: "#e8d48b", bg: "rgba(232,212,139,0.08)", gradient: "from-[#e8d48b]/20 via-[#e8d48b]/5 to-transparent" },
-  positive:      { icon: "✦", label: "ดี",     color: "#a8d48b", bg: "rgba(168,212,139,0.06)", gradient: "from-[#a8d48b]/15 via-[#a8d48b]/5 to-transparent" },
-  neutral:       { icon: "☯", label: "กลางๆ",  color: "#8bb8d4", bg: "rgba(139,184,212,0.06)", gradient: "from-[#8bb8d4]/15 via-[#8bb8d4]/5 to-transparent" },
-  caution:       { icon: "⚡", label: "ระวัง",  color: "#d4a84b", bg: "rgba(212,168,75,0.06)", gradient: "from-[#d4a84b]/15 via-[#d4a84b]/5 to-transparent" },
-  challenging:   { icon: "☁", label: "ท้าทาย", color: "#b48bd4", bg: "rgba(180,139,212,0.06)", gradient: "from-[#b48bd4]/15 via-[#b48bd4]/5 to-transparent" },
+  very_positive: { icon: "✦", label: "ดีมาก", color: "#d4af37", bg: "rgba(212,175,55,0.08)", gradient: "from-[#d4af37]/20 via-[#d4af37]/5 to-transparent" },
+  positive:      { icon: "✦", label: "ดี",     color: "#C4AD72", bg: "rgba(196,173,114,0.06)", gradient: "from-[#C4AD72]/15 via-[#C4AD72]/5 to-transparent" },
+  neutral:       { icon: "☯", label: "กลางๆ",  color: "#8B7A4A", bg: "rgba(139,122,74,0.06)", gradient: "from-[#8B7A4A]/15 via-[#8B7A4A]/5 to-transparent" },
+  caution:       { icon: "⚡", label: "ระวัง",  color: "#7a4020", bg: "rgba(122,64,32,0.06)", gradient: "from-[#7a4020]/15 via-[#7a4020]/5 to-transparent" },
+  challenging:   { icon: "☁", label: "ท้าทาย", color: "#7a2020", bg: "rgba(122,32,32,0.06)", gradient: "from-[#7a2020]/15 via-[#7a2020]/5 to-transparent" },
 };
 
 // ── Decorative divider ──
@@ -159,9 +159,9 @@ function GoldDivider({ delay = 0 }: { delay?: number }) {
     <motion.div className="flex items-center gap-3 my-4 px-4"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay, duration: 0.5 }}
     >
-      <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent to-gold/15" />
-      <span className="text-gold/20 text-[0.5rem]">✦</span>
-      <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent to-gold/15" />
+      <div className="flex-1 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, #8B7A4A40, transparent)" }} />
+      <span className="text-[#8B7A4A]/30 text-[0.5rem]">✦</span>
+      <div className="flex-1 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, #8B7A4A40, transparent)" }} />
     </motion.div>
   );
 }
@@ -174,8 +174,8 @@ function TrendMeter({ trend, trendText }: { trend: string; trendText: string }) 
 
   return (
     <motion.div
-      className="relative rounded-2xl p-5 border overflow-hidden"
-      style={{ borderColor: `${config.color}20` }}
+      className="relative rounded-lg p-5 overflow-hidden"
+      style={{ border: `0.5px solid #8B7A4A15` }}
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2, duration: 0.5, ease: EASE }}
@@ -200,7 +200,7 @@ function TrendMeter({ trend, trendText }: { trend: string; trendText: string }) 
           <span style={{ color: config.color }}>{config.icon}</span>
         </motion.div>
         <div>
-          <p className="text-[0.65rem] text-white/35 tracking-wider uppercase">แนวโน้มโดยรวม</p>
+          <p className="text-[0.65rem] text-[#8B7A4A]/50 tracking-wider uppercase">แนวโน้มโดยรวม</p>
           <p className="text-base font-semibold mt-0.5" style={{ color: config.color }}>{config.label}</p>
         </div>
       </div>
@@ -211,7 +211,7 @@ function TrendMeter({ trend, trendText }: { trend: string; trendText: string }) 
           <motion.div
             key={lv}
             className="flex-1 h-2 rounded-full relative overflow-hidden"
-            style={{ background: "rgba(255,255,255,0.06)" }}
+            style={{ background: "#3A0E0E" }}
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ delay: 0.4 + i * 0.08, duration: 0.3 }}
@@ -228,7 +228,7 @@ function TrendMeter({ trend, trendText }: { trend: string; trendText: string }) 
         ))}
       </div>
 
-      <p className="relative text-xs text-white/55 leading-6">{trendText}</p>
+      <p className="relative text-xs text-[#E2D4A0]/50 leading-6">{trendText}</p>
     </motion.div>
   );
 }
@@ -243,7 +243,7 @@ function CardLightbox({ card, position, onClose }: { card: { id: number; nameTh:
       onClick={onClose}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/85 backdrop-blur-sm" />
 
       {/* Card */}
       <motion.div
@@ -254,30 +254,30 @@ function CardLightbox({ card, position, onClose }: { card: { id: number; nameTh:
       >
         {/* Card image */}
         <div className={`relative rounded-xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.6)] ${card.isReversed ? "rotate-180" : ""}`}
-          style={{ width: 200, height: 320, border: "2px solid rgba(232,212,139,0.2)" }}
+          style={{ width: 200, height: 320, border: "2px solid #8B7A4A30" }}
         >
           {card.image ? (
             <img src={card.image} alt={card.nameEn} className="absolute inset-0 w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full bg-[#2a1215] flex items-center justify-center">
-              <span className="text-gold/30 text-4xl">✦</span>
+              <span className="text-[#8B7A4A]/40 text-4xl">✦</span>
             </div>
           )}
         </div>
 
         {/* Card info */}
         <div className="text-center relative">
-          <h3 className="text-lg text-gold font-semibold">{card.nameTh}</h3>
-          <p className="text-xs text-white/30 mt-0.5">{card.nameEn}</p>
+          <h3 className="text-lg text-[#d4af37] font-semibold">{card.nameTh}</h3>
+          <p className="text-xs text-[#8B7A4A]/50 mt-0.5">{card.nameEn}</p>
           {card.isReversed && (
-            <span className="inline-block mt-1.5 text-[0.65rem] text-red-400/70 bg-red-400/10 border border-red-400/20 rounded-full px-2 py-0.5">กลับหัว</span>
+            <span className="inline-block mt-1.5 text-[0.65rem] text-[#7a2020] rounded-full px-2 py-0.5" style={{ background: "#7a202015" }}>กลับหัว</span>
           )}
-          {position && <p className="text-[0.65rem] text-gold/30 mt-2">{position}</p>}
-          <p className="text-xs text-white/50 mt-2 leading-6 max-w-[260px]">{card.meaningTh || card.meaning}</p>
+          {position && <p className="text-[0.65rem] text-[#8B7A4A]/40 mt-2">{position}</p>}
+          <p className="text-xs text-[#E2D4A0]/50 mt-2 leading-6 max-w-[260px]">{card.meaningTh || card.meaning}</p>
         </div>
 
         {/* Close hint */}
-        <p className="text-[0.6rem] text-white/20 mt-2">แตะด้านนอกเพื่อปิด</p>
+        <p className="text-[0.6rem] text-[#8B7A4A]/30 mt-2">แตะด้านนอกเพื่อปิด</p>
       </motion.div>
     </motion.div>
   );
@@ -365,12 +365,12 @@ export default function ReadingScreen() {
     >
       <AnimatePresence mode="wait">
         {!aiReading ? (
-          <motion.h2 key="loading-title" className="text-xl text-gold/70 text-center mb-3 tracking-[0.15em] font-semibold"
+          <motion.h2 key="loading-title" className="text-xl text-[#d4af37]/70 text-center mb-3 tracking-[0.15em] font-semibold"
             initial={{ opacity: 0 }} animate={{ opacity: [0.5, 1, 0.5] }} exit={{ opacity: 0, transition: { duration: 0.2 } }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           >กำลังทำนาย...</motion.h2>
         ) : (
-          <motion.h2 key="result-title" className="text-xl text-gold text-center mb-3 tracking-[0.15em] font-semibold"
+          <motion.h2 key="result-title" className="text-xl text-[#d4af37] text-center mb-3 tracking-[0.15em] font-semibold"
             initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >คำทำนาย</motion.h2>
@@ -380,14 +380,14 @@ export default function ReadingScreen() {
       {/* Context */}
       <div className="w-full max-w-full mb-4 text-center">
         {selectedTopic && (
-          <p className="text-xs text-white/40">
+          <p className="text-xs text-[#8B7A4A]/50">
             <span style={{ color: selectedTopic.color }}>{selectedTopic.icon}</span>
             {" "}{selectedTopic.nameTH}
-            {selectedSpread && <span className="text-white/20"> · {selectedSpread.nameTH}</span>}
+            {selectedSpread && <span className="text-[#8B7A4A]/30"> · {selectedSpread.nameTH}</span>}
           </p>
         )}
         {userQuestion && (
-          <p className="text-sm text-white/50 mt-2 italic leading-6">
+          <p className="text-sm text-[#E2D4A0]/50 mt-2 italic leading-6">
             &ldquo;{userQuestion}&rdquo;
           </p>
         )}
@@ -412,7 +412,7 @@ export default function ReadingScreen() {
         {/* ── Loading ── */}
         {isLoadingAI && (
           <motion.div
-            className="bg-gradient-to-br from-gold/[0.06] to-transparent rounded-2xl p-5"
+            className="bg-[#2a1215] rounded-2xl p-5" style={{ border: "1px solid #8B7A4A20" }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6, ease: EASE }}
@@ -424,12 +424,12 @@ export default function ReadingScreen() {
         {/* ── Error with retry ── */}
         {hasError && !isLoadingAI && !aiReading && (
           <motion.div
-            className="bg-gradient-to-br from-red-500/[0.06] to-transparent border border-red-500/20 rounded-2xl p-6 text-center"
+            className="bg-[#2a1215] border border-[#7a2020]/20 rounded-2xl p-6 text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: EASE }}
           >
-            <p className="text-white/60 text-sm mb-4">ไม่สามารถสร้างคำทำนายได้ กรุณาลองอีกครั้ง</p>
+            <p className="text-[#E2D4A0]/60 text-sm mb-4">ไม่สามารถสร้างคำทำนายได้ กรุณาลองอีกครั้ง</p>
             <Button variant="outline" onClick={fetchReading}>ลองใหม่</Button>
           </motion.div>
         )}
@@ -445,45 +445,45 @@ export default function ReadingScreen() {
             {/* Summary */}
             <motion.div
               className="relative rounded-2xl p-5 overflow-hidden"
-              style={{ background: "linear-gradient(135deg, rgba(232,212,139,0.06) 0%, rgba(232,212,139,0.02) 50%, transparent 100%)", border: "1px solid rgba(232,212,139,0.12)" }}
+              style={{ background: "linear-gradient(135deg, rgba(212,175,55,0.06) 0%, rgba(212,175,55,0.02) 50%, transparent 100%)", border: "1px solid #8B7A4A15" }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5, ease: EASE }}
             >
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center">
-                  <span className="text-gold/60 text-[0.6rem]">✦</span>
+                <div className="w-6 h-6 rounded-full bg-[#3A0E0E] flex items-center justify-center">
+                  <span className="text-[#d4af37]/60 text-[0.6rem]">✦</span>
                 </div>
-                <p className="text-xs text-gold/50 font-semibold tracking-wider uppercase">สรุปภาพรวม</p>
+                <p className="text-xs text-[#d4af37]/50 font-semibold tracking-wider uppercase">สรุปภาพรวม</p>
               </div>
-              <p className="text-sm leading-8 text-white/80 pl-8">{aiReading.summary}</p>
+              <p className="text-sm leading-8 text-[#E2D4A0]/80 pl-8">{aiReading.summary}</p>
             </motion.div>
 
             {/* Advice */}
             {aiReading.advice && (
               <motion.div
                 className="relative rounded-2xl p-5 overflow-hidden"
-                style={{ background: "linear-gradient(135deg, rgba(232,212,139,0.08) 0%, rgba(232,212,139,0.03) 100%)", border: "1px solid rgba(232,212,139,0.18)" }}
+                style={{ background: "linear-gradient(135deg, rgba(212,175,55,0.08) 0%, rgba(212,175,55,0.03) 100%)", border: "1px solid #8B7A4A15" }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.5, ease: EASE }}
               >
                 {/* Subtle glow */}
                 <div className="absolute -top-6 -left-6 w-20 h-20 rounded-full pointer-events-none"
-                  style={{ background: "radial-gradient(circle, rgba(232,212,139,0.1), transparent 70%)" }} />
+                  style={{ background: "radial-gradient(circle, rgba(212,175,55,0.1), transparent 70%)" }} />
 
                 <div className="flex gap-3.5 items-start relative">
                   <motion.div
-                    className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/25 flex items-center justify-center flex-shrink-0"
-                    style={{ boxShadow: "0 0 12px rgba(232,212,139,0.08)" }}
-                    animate={{ boxShadow: ["0 0 8px rgba(232,212,139,0.05)", "0 0 16px rgba(232,212,139,0.12)", "0 0 8px rgba(232,212,139,0.05)"] }}
+                    className="w-10 h-10 rounded-xl bg-[#3A0E0E] flex items-center justify-center flex-shrink-0"
+                    style={{ boxShadow: "0 0 12px rgba(212,175,55,0.08)", border: "1px solid #8B7A4A25" }}
+                    animate={{ boxShadow: ["0 0 8px rgba(212,175,55,0.05)", "0 0 16px rgba(212,175,55,0.12)", "0 0 8px rgba(212,175,55,0.05)"] }}
                     transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                   >
-                    <span className="text-gold text-sm">☆</span>
+                    <span className="text-[#d4af37] text-sm">☆</span>
                   </motion.div>
                   <div>
-                    <p className="text-xs text-gold/50 font-semibold mb-1.5 tracking-wider uppercase">คำแนะนำ</p>
-                    <p className="text-sm leading-7 text-white/80">{aiReading.advice}</p>
+                    <p className="text-xs text-[#d4af37]/50 font-semibold mb-1.5 tracking-wider uppercase">คำแนะนำ</p>
+                    <p className="text-sm leading-7 text-[#E2D4A0]/80">{aiReading.advice}</p>
                   </div>
                 </div>
               </motion.div>
@@ -495,11 +495,11 @@ export default function ReadingScreen() {
             <motion.div className="flex items-center gap-2 mt-1"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.5 }}
             >
-              <div className="w-5 h-5 rounded-full bg-gold/10 flex items-center justify-center">
-                <span className="text-gold/50 text-[0.5rem]">✦</span>
+              <div className="w-5 h-5 rounded-full bg-[#3A0E0E] flex items-center justify-center">
+                <span className="text-[#d4af37]/50 text-[0.5rem]">✦</span>
               </div>
-              <p className="text-xs text-gold/45 font-semibold tracking-wider uppercase">รายละเอียดแต่ละใบ</p>
-              <div className="flex-1 h-[1px] bg-gradient-to-r from-gold/10 to-transparent" />
+              <p className="text-xs text-[#d4af37]/45 font-semibold tracking-wider uppercase">รายละเอียดแต่ละใบ</p>
+              <div className="flex-1 h-[1px]" style={{ background: "linear-gradient(90deg, #8B7A4A20, transparent)" }} />
             </motion.div>
 
             {pickedCards.map((card, i) => {
@@ -510,37 +510,37 @@ export default function ReadingScreen() {
                 <motion.div
                   key={i}
                   className="relative rounded-2xl overflow-hidden"
-                  style={{ background: "linear-gradient(135deg, rgba(16,17,26,0.95), rgba(8,9,14,0.98))", border: "1px solid rgba(232,212,139,0.08)" }}
+                  style={{ background: "linear-gradient(135deg, #2a1215f2, #2a1215fa)", border: "1px solid #8B7A4A15" }}
                   initial={{ opacity: 0, y: 25 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.65 + i * 0.08, duration: 0.5, ease: EASE }}
                 >
                   {/* Card number badge */}
-                  <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-gold/8 border border-gold/15 flex items-center justify-center">
-                    <span className="text-[0.5rem] text-gold/40 font-bold">{i + 1}</span>
+                  <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-[#3A0E0E] flex items-center justify-center" style={{ border: "1px solid #8B7A4A15" }}>
+                    <span className="text-[0.5rem] text-[#d4af37]/40 font-bold">{i + 1}</span>
                   </div>
 
                   <div className="flex gap-4 p-4 items-start">
                     <button
                       className={`relative rounded-lg overflow-hidden flex-shrink-0 ${card.isReversed ? "rotate-180" : ""} active:scale-95 transition-transform`}
-                      style={{ width: 65, height: 100, border: "1px solid rgba(232,212,139,0.15)", boxShadow: "0 4px 12px rgba(0,0,0,0.3)" }}
+                      style={{ width: 65, height: 100, border: "1px solid #8B7A4A25", boxShadow: "0 4px 12px rgba(0,0,0,0.3)" }}
                       onClick={() => setViewCard(i)}
                     >
                       {card.image && <img src={card.image} alt={card.nameEn} className="absolute inset-0 w-full h-full object-cover" />}
                     </button>
                     <div className="flex-1 min-w-0 pr-6">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-sm text-gold-light font-semibold">{card.nameTh}</h3>
+                        <h3 className="text-sm text-[#d4af37] font-semibold">{card.nameTh}</h3>
                         {card.isReversed && (
-                          <span className="text-[0.55rem] text-red-400/60 bg-red-400/8 border border-red-400/15 rounded-full px-1.5 py-0.5">กลับหัว</span>
+                          <span className="text-[0.55rem] text-[#7a2020] rounded-full px-1.5 py-0.5" style={{ background: "#7a202015", border: "1px solid #7a202020" }}>กลับหัว</span>
                         )}
                       </div>
-                      <p className="text-[0.6rem] text-gold/30 mb-2 tracking-wide">{pos?.nameTH}</p>
+                      <p className="text-[0.6rem] text-[#8B7A4A]/40 mb-2 tracking-wide">{pos?.nameTH}</p>
 
                       {insight ? (
-                        <p className="text-[0.8rem] text-white/65 leading-7">{insight}</p>
+                        <p className="text-[0.8rem] text-[#E2D4A0]/60 leading-7">{insight}</p>
                       ) : (
-                        <p className="text-xs text-white/45 leading-6">{card.meaningTh || card.meaning}</p>
+                        <p className="text-xs text-[#E2D4A0]/50 leading-6">{card.meaningTh || card.meaning}</p>
                       )}
                     </div>
                   </div>
