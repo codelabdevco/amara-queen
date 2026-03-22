@@ -8,10 +8,10 @@ import GoldenMist from "@/components/effects/GoldenMist";
 import DustParticles from "@/components/effects/DustParticles";
 import UserAuth from "@/components/ui/UserAuth";
 import CreditBadge from "@/components/ui/CreditBadge";
+import BottomNav from "@/components/ui/BottomNav";
 import { THEME } from "@/constants/theme";
 
 const BACK_MAP: Record<string, string> = {
-  "/home": "/",
   "/tarot": "/home",
   "/gypsy": "/home",
   "/siamsi": "/home",
@@ -19,6 +19,7 @@ const BACK_MAP: Record<string, string> = {
   "/calendar": "/home",
   "/booking": "/home",
   "/shop": "/home",
+  "/profile": "/home",
 };
 
 export default function AppShell({ children }: { children: ReactNode }) {
@@ -48,7 +49,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="fixed inset-0 z-10 pt-[56px] pb-8 overflow-y-auto">
+      <main className="fixed inset-0 z-10 pt-[56px] pb-[72px] overflow-y-auto">
         {backHref && (
           <div className="px-4 pt-2 pb-1">
             <Link href={backHref} className="flex items-center gap-1.5 text-white/35 hover:text-white/60 transition-colors w-fit">
@@ -61,6 +62,8 @@ export default function AppShell({ children }: { children: ReactNode }) {
         )}
         {children}
       </main>
+
+      <BottomNav />
     </>
   );
 }
