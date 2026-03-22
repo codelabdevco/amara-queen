@@ -5,6 +5,10 @@ export interface ZodiacInfo {
   thai: { sign: string; signTh: string };
   luckyNumber: number;
   age: number;
+  birthDay: { name: string; nameTh: string; color: string; planet: string; planetTh: string };
+  personality: string;
+  luckyColor: string;
+  compatibility: string;
 }
 
 const WESTERN_ZODIAC: { sign: string; signTh: string; element: string; elementTh: string; startMonth: number; startDay: number; endMonth: number; endDay: number }[] = [
@@ -37,6 +41,52 @@ const THAI_ANIMALS = [
   { sign: "Horse", signTh: "มะเมีย (ม้า)" },
   { sign: "Goat", signTh: "มะแม (แพะ)" },
 ];
+
+const DAY_INFO = [
+  { name: "Sunday", nameTh: "อาทิตย์", color: "แดง", planet: "Sun", planetTh: "พระอาทิตย์" },
+  { name: "Monday", nameTh: "จันทร์", color: "เหลือง", planet: "Moon", planetTh: "พระจันทร์" },
+  { name: "Tuesday", nameTh: "อังคาร", color: "ชมพู", planet: "Mars", planetTh: "พระอังคาร" },
+  { name: "Wednesday", nameTh: "พุธ", color: "เขียว", planet: "Mercury", planetTh: "พระพุธ" },
+  { name: "Thursday", nameTh: "พฤหัสบดี", color: "ส้ม", planet: "Jupiter", planetTh: "พระพฤหัสบดี" },
+  { name: "Friday", nameTh: "ศุกร์", color: "ฟ้า", planet: "Venus", planetTh: "พระศุกร์" },
+  { name: "Saturday", nameTh: "เสาร์", color: "ม่วง", planet: "Saturn", planetTh: "พระเสาร์" },
+];
+
+const ZODIAC_PERSONALITY: Record<string, string> = {
+  Aries: "กล้าหาญ มุ่งมั่น เป็นผู้นำโดยธรรมชาติ มีพลังงานสูง",
+  Taurus: "อดทน มั่นคง รักความสวยงาม ให้ความสำคัญกับความมั่นคง",
+  Gemini: "ฉลาด ช่างพูด ปรับตัวเก่ง ชอบเรียนรู้สิ่งใหม่",
+  Cancer: "อ่อนโยน ห่วงใยคนรอบข้าง สัญชาตญาณแม่นยำ ผูกพันกับครอบครัว",
+  Leo: "มั่นใจ มีเสน่ห์ ใจกว้าง ชอบเป็นจุดสนใจ",
+  Virgo: "ละเอียดรอบคอบ ช่างวิเคราะห์ รักความเป็นระเบียบ ขยันขันแข็ง",
+  Libra: "รักความยุติธรรม มีรสนิยม ชอบความสมดุล เข้ากับคนง่าย",
+  Scorpio: "ลึกซึ้ง มีพลัง เด็ดขาด ซื่อสัตย์ต่อคนที่รัก",
+  Sagittarius: "รักอิสระ มองโลกกว้าง ชอบผจญภัย มองโลกในแง่ดี",
+  Capricorn: "มีระเบียบวินัย ทะเยอทะยาน อดทน มุ่งสู่เป้าหมาย",
+  Aquarius: "ความคิดล้ำ เป็นตัวของตัวเอง รักเพื่อนมนุษย์ สร้างสรรค์",
+  Pisces: "จินตนาการสูง เห็นอกเห็นใจ สัมผัสที่หก ศิลปินในตัว",
+};
+
+const ZODIAC_LUCKY_COLOR: Record<string, string> = {
+  Aries: "แดง", Taurus: "เขียว", Gemini: "เหลือง", Cancer: "เงิน",
+  Leo: "ทอง", Virgo: "น้ำตาล", Libra: "ชมพู", Scorpio: "แดงเข้ม",
+  Sagittarius: "ม่วง", Capricorn: "ดำ", Aquarius: "ฟ้า", Pisces: "เขียวทะเล",
+};
+
+const ZODIAC_COMPAT: Record<string, string> = {
+  Aries: "สิงห์ ธนู กุมภ์",
+  Taurus: "กันย์ มังกร มีน",
+  Gemini: "ตุลย์ กุมภ์ เมษ",
+  Cancer: "พิจิก มีน พฤษภ",
+  Leo: "เมษ ธนู เมถุน",
+  Virgo: "พฤษภ มังกร กรกฎ",
+  Libra: "เมถุน กุมภ์ สิงห์",
+  Scorpio: "กรกฎ มีน กันย์",
+  Sagittarius: "เมษ สิงห์ ตุลย์",
+  Capricorn: "พฤษภ กันย์ พิจิก",
+  Aquarius: "เมถุน ตุลย์ ธนู",
+  Pisces: "กรกฎ พิจิก มังกร",
+};
 
 export function calculateZodiac(birthdate: string): ZodiacInfo {
   const date = new Date(birthdate);
@@ -76,10 +126,18 @@ export function calculateZodiac(birthdate: string): ZodiacInfo {
   let age = today.getFullYear() - year;
   if (today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day)) age--;
 
+  // Day of week
+  const dayOfWeek = date.getDay();
+  const birthDayInfo = DAY_INFO[dayOfWeek];
+
   return {
     western: { sign: western.sign, signTh: western.signTh, element: western.element, elementTh: western.elementTh },
     thai: { sign: thai.sign, signTh: thai.signTh },
     luckyNumber: sum,
     age,
+    birthDay: birthDayInfo,
+    personality: ZODIAC_PERSONALITY[western.sign] || "",
+    luckyColor: ZODIAC_LUCKY_COLOR[western.sign] || "",
+    compatibility: ZODIAC_COMPAT[western.sign] || "",
   };
 }

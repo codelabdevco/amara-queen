@@ -17,10 +17,14 @@ interface ProfileData {
 }
 
 interface ZodiacInfo {
-  western: { signTh: string; elementTh: string };
+  western: { signTh: string; elementTh: string; sign: string };
   thai: { signTh: string };
   luckyNumber: number;
   age: number;
+  birthDay: { nameTh: string; color: string; planetTh: string };
+  personality: string;
+  luckyColor: string;
+  compatibility: string;
 }
 
 interface Props {
@@ -48,10 +52,11 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
   const [zodiac, setZodiac] = useState<ZodiacInfo | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [step, setStep] = useState(0); // 0: required, 1: optional, 2: done
+  const [showSummary, setShowSummary] = useState(false);
 
   useEffect(() => {
     if (open) {
+      setShowSummary(false);
       fetch("/api/auth/profile").then(r => r.json()).then(data => {
         if (data.profile) {
           setForm(data.profile);
@@ -77,7 +82,7 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
       const data = await res.json();
       if (!res.ok) { setError(data.error); setSaving(false); return; }
       setZodiac(data.zodiac);
-      setStep(2);
+      setShowSummary(true);
       onSaved?.();
     } catch {
       setError("เกิดข้อผิดพลาด");
@@ -99,216 +104,217 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
       >
         <div className="absolute inset-0 bg-black/85 backdrop-blur-sm" />
         <motion.div
-          className="relative bg-[#0c0d14] border border-white/[0.08] rounded-2xl p-6 w-full max-w-[380px] max-h-[90vh] overflow-y-auto"
+          className="relative bg-[#0c0d14] border border-white/[0.08] rounded-2xl p-6 w-full max-w-[400px] max-h-[90vh] overflow-y-auto"
           initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
         >
-          {step === 2 ? (
-            /* Success screen with zodiac info */
-            <div className="text-center py-4 space-y-5">
-              <div className="w-16 h-16 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto">
-                <span className="text-gold text-2xl">&#10022;</span>
-              </div>
-              <div>
-                <h3 className="text-gold text-lg font-semibold">สวัสดี {form.nickname}</h3>
-                <p className="text-white/30 text-xs mt-1">ข้อมูลของคุณถูกบันทึกแล้ว</p>
-              </div>
-
-              {zodiac && (
-                <div className="grid grid-cols-2 gap-3 text-left">
-                  <div className="bg-[#08090e] border border-white/[0.06] rounded-xl p-3">
-                    <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">ราศี</p>
-                    <p className="text-gold text-sm font-semibold mt-1">{zodiac.western.signTh}</p>
+          <AnimatePresence mode="wait">
+            {showSummary ? (
+              /* ── Summary Page ── */
+              <motion.div key="summary" className="space-y-4" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }}>
+                <div className="text-center">
+                  <div className="w-14 h-14 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-3">
+                    <span className="text-gold text-xl">&#10022;</span>
                   </div>
-                  <div className="bg-[#08090e] border border-white/[0.06] rounded-xl p-3">
-                    <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">ธาตุ</p>
-                    <p className="text-gold text-sm font-semibold mt-1">{zodiac.western.elementTh}</p>
-                  </div>
-                  <div className="bg-[#08090e] border border-white/[0.06] rounded-xl p-3">
-                    <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">ปีนักษัตร</p>
-                    <p className="text-gold text-sm font-semibold mt-1">{zodiac.thai.signTh}</p>
-                  </div>
-                  <div className="bg-[#08090e] border border-white/[0.06] rounded-xl p-3">
-                    <p className="text-white/30 text-[0.6rem] uppercase tracking-wider">เลขนำโชค</p>
-                    <p className="text-gold text-sm font-semibold mt-1">{zodiac.luckyNumber}</p>
-                  </div>
+                  <h3 className="text-gold text-lg font-semibold">สวัสดี {form.nickname}</h3>
+                  <p className="text-white/30 text-xs mt-1">นี่คือข้อมูลดวงชะตาของคุณ</p>
                 </div>
-              )}
 
-              <button
-                onClick={onClose}
-                className="w-full py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/20 text-sm font-medium hover:bg-gold/20 transition-colors"
-              >
-                เริ่มดูดวง
-              </button>
-            </div>
-          ) : (
-            /* Form */
-            <div className="space-y-5">
-              <div className="text-center">
-                <h3 className="text-gold text-lg font-semibold">
-                  {step === 0 ? "กรอกข้อมูลของคุณ" : "ข้อมูลเพิ่มเติม"}
-                </h3>
-                <p className="text-white/25 text-xs mt-1">
-                  {step === 0 ? "เพื่อให้การทำนายตรงกับตัวคุณมากขึ้น" : "ไม่จำเป็นต้องกรอก แต่ช่วยให้ทำนายแม่นขึ้น"}
-                </p>
-              </div>
+                {zodiac && (
+                  <>
+                    {/* Main stats grid */}
+                    <div className="grid grid-cols-3 gap-2">
+                      <InfoCard label="วันเกิด" value={`วัน${zodiac.birthDay.nameTh}`} sub={`สี${zodiac.birthDay.color}`} />
+                      <InfoCard label="ราศี" value={zodiac.western.signTh} sub={zodiac.western.sign} />
+                      <InfoCard label="อายุ" value={`${zodiac.age} ปี`} />
+                    </div>
 
-              {step === 0 && (
-                <>
-                  {/* Nickname */}
+                    <div className="grid grid-cols-3 gap-2">
+                      <InfoCard label="ธาตุ" value={zodiac.western.elementTh} />
+                      <InfoCard label="ปีนักษัตร" value={zodiac.thai.signTh} />
+                      <InfoCard label="เลขนำโชค" value={String(zodiac.luckyNumber)} />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <InfoCard label="ดาวประจำวัน" value={zodiac.birthDay.planetTh} />
+                      <InfoCard label="สีนำโชค" value={zodiac.luckyColor} />
+                    </div>
+
+                    {/* Personality */}
+                    <div className="bg-[#08090e] border border-gold/10 rounded-xl p-3.5">
+                      <p className="text-gold/50 text-[0.6rem] uppercase tracking-wider mb-1.5">บุคลิกภาพ</p>
+                      <p className="text-white/70 text-xs leading-5">{zodiac.personality}</p>
+                    </div>
+
+                    {/* Compatibility */}
+                    <div className="bg-[#08090e] border border-white/[0.06] rounded-xl p-3.5">
+                      <p className="text-white/30 text-[0.6rem] uppercase tracking-wider mb-1.5">ราศีที่เข้ากันได้ดี</p>
+                      <p className="text-gold/80 text-sm font-medium">{zodiac.compatibility}</p>
+                    </div>
+                  </>
+                )}
+
+                <button
+                  onClick={onClose}
+                  className="w-full py-3 rounded-xl bg-gradient-to-br from-[#e8d48b] to-[#c4a850] text-[#08090e] text-sm font-semibold tracking-wide shadow-[0_4px_24px_rgba(232,212,139,.25)]"
+                >
+                  เริ่มดูดวง
+                </button>
+
+                <button
+                  onClick={() => setShowSummary(false)}
+                  className="w-full text-center text-white/20 text-xs hover:text-white/40"
+                >
+                  แก้ไขข้อมูล
+                </button>
+              </motion.div>
+            ) : (
+              /* ── Form Page (all fields) ── */
+              <motion.div key="form" className="space-y-4" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 30 }}>
+                <div className="text-center">
+                  <h3 className="text-gold text-lg font-semibold">กรอกข้อมูลของคุณ</h3>
+                  <p className="text-white/25 text-xs mt-1">เพื่อให้การทำนายตรงกับตัวคุณมากขึ้น</p>
+                </div>
+
+                {/* Nickname */}
+                <div>
+                  <label className="block text-white/40 text-xs mb-1.5">ชื่อเล่น *</label>
+                  <input type="text" placeholder="เช่น มายด์, เบส, แพร" value={form.nickname}
+                    onChange={e => update("nickname", e.target.value)}
+                    className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
+                    autoFocus
+                  />
+                </div>
+
+                {/* First + Last Name */}
+                <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-white/40 text-xs mb-1.5">ชื่อเล่น *</label>
-                    <input
-                      type="text" placeholder="เช่น มายด์, เบส, แพร" value={form.nickname}
-                      onChange={e => update("nickname", e.target.value)}
+                    <label className="block text-white/40 text-xs mb-1.5">ชื่อจริง</label>
+                    <input type="text" placeholder="ชื่อ" value={form.firstName}
+                      onChange={e => update("firstName", e.target.value)}
                       className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
-                      autoFocus
                     />
                   </div>
+                  <div>
+                    <label className="block text-white/40 text-xs mb-1.5">นามสกุล</label>
+                    <input type="text" placeholder="นามสกุล" value={form.lastName}
+                      onChange={e => update("lastName", e.target.value)}
+                      className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
+                    />
+                  </div>
+                </div>
 
-                  {/* Birthdate */}
+                {/* Birthdate + Time */}
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-white/40 text-xs mb-1.5">วันเกิด *</label>
-                    <input
-                      type="date" value={form.birthdate}
+                    <input type="date" value={form.birthdate}
                       onChange={e => update("birthdate", e.target.value)}
                       className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:border-gold/30 outline-none [color-scheme:dark]"
                     />
                   </div>
-
-                  {/* Gender */}
                   <div>
-                    <label className="block text-white/40 text-xs mb-1.5">เพศ *</label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {GENDER_OPTIONS.map(g => (
-                        <button key={g.value}
-                          onClick={() => update("gender", g.value)}
-                          className={`py-2.5 rounded-lg border text-sm transition-all ${
-                            form.gender === g.value
-                              ? "bg-gold/10 border-gold/30 text-gold"
-                              : "bg-[#08090e] border-white/[0.06] text-white/40 hover:border-white/10"
-                          }`}
-                        >
-                          <span className="mr-1">{g.icon}</span> {g.label}
-                        </button>
-                      ))}
-                    </div>
+                    <label className="block text-white/40 text-xs mb-1.5">เวลาเกิด</label>
+                    <input type="time" value={form.birthTime}
+                      onChange={e => update("birthTime", e.target.value)}
+                      className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:border-gold/30 outline-none [color-scheme:dark]"
+                    />
                   </div>
+                </div>
 
-                  <div className="flex gap-3">
-                    <button onClick={onClose} className="flex-1 py-2.5 rounded-lg border border-white/[0.06] text-white/30 text-sm hover:text-white/50">
-                      ข้าม
-                    </button>
-                    <button onClick={() => setStep(1)}
-                      disabled={!form.nickname || !form.birthdate || !form.gender}
-                      className="flex-1 py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/20 text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-30"
-                    >
-                      ถัดไป
-                    </button>
+                {/* Gender */}
+                <div>
+                  <label className="block text-white/40 text-xs mb-1.5">เพศ *</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {GENDER_OPTIONS.map(g => (
+                      <button key={g.value} type="button"
+                        onClick={() => update("gender", g.value)}
+                        className={`py-2 rounded-lg border text-sm transition-all ${
+                          form.gender === g.value
+                            ? "bg-gold/10 border-gold/30 text-gold"
+                            : "bg-[#08090e] border-white/[0.06] text-white/40 hover:border-white/10"
+                        }`}
+                      >
+                        <span className="mr-1">{g.icon}</span> {g.label}
+                      </button>
+                    ))}
                   </div>
-                </>
-              )}
+                </div>
 
-              {step === 1 && (
-                <>
-                  {/* First + Last Name */}
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-white/40 text-xs mb-1.5">ชื่อจริง</label>
-                      <input
-                        type="text" placeholder="ชื่อ" value={form.firstName}
-                        onChange={e => update("firstName", e.target.value)}
-                        className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-white/40 text-xs mb-1.5">นามสกุล</label>
-                      <input
-                        type="text" placeholder="นามสกุล" value={form.lastName}
-                        onChange={e => update("lastName", e.target.value)}
-                        className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Phone + Email */}
+                {/* Phone + Email */}
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-white/40 text-xs mb-1.5">เบอร์โทร</label>
-                    <input
-                      type="tel" placeholder="08X-XXX-XXXX" value={form.phone}
+                    <input type="tel" placeholder="08X-XXX-XXXX" value={form.phone}
                       onChange={e => update("phone", e.target.value)}
                       className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
                     />
                   </div>
                   <div>
                     <label className="block text-white/40 text-xs mb-1.5">อีเมล</label>
-                    <input
-                      type="email" placeholder="example@mail.com" value={form.email}
+                    <input type="email" placeholder="email@mail.com" value={form.email}
                       onChange={e => update("email", e.target.value)}
                       className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
                     />
                   </div>
+                </div>
 
-                  {/* Birth Time */}
-                  <div>
-                    <label className="block text-white/40 text-xs mb-1.5">เวลาเกิด</label>
-                    <input
-                      type="time" value={form.birthTime}
-                      onChange={e => update("birthTime", e.target.value)}
-                      className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:border-gold/30 outline-none [color-scheme:dark]"
-                    />
-                    <p className="text-white/15 text-[0.6rem] mt-1">ช่วยคำนวณลัคนาราศี</p>
+                {/* Relationship Status */}
+                <div>
+                  <label className="block text-white/40 text-xs mb-1.5">สถานะความรัก</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {STATUS_OPTIONS.map(s => (
+                      <button key={s.value} type="button"
+                        onClick={() => update("relationshipStatus", form.relationshipStatus === s.value ? "" : s.value)}
+                        className={`py-2 rounded-lg border text-xs transition-all ${
+                          form.relationshipStatus === s.value
+                            ? "bg-gold/10 border-gold/30 text-gold"
+                            : "bg-[#08090e] border-white/[0.06] text-white/40 hover:border-white/10"
+                        }`}
+                      >
+                        {s.label}
+                      </button>
+                    ))}
                   </div>
+                </div>
 
-                  {/* Relationship Status */}
-                  <div>
-                    <label className="block text-white/40 text-xs mb-1.5">สถานะความรัก</label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {STATUS_OPTIONS.map(s => (
-                        <button key={s.value}
-                          onClick={() => update("relationshipStatus", form.relationshipStatus === s.value ? "" : s.value)}
-                          className={`py-2 rounded-lg border text-xs transition-all ${
-                            form.relationshipStatus === s.value
-                              ? "bg-gold/10 border-gold/30 text-gold"
-                              : "bg-[#08090e] border-white/[0.06] text-white/40 hover:border-white/10"
-                          }`}
-                        >
-                          {s.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                {/* Occupation */}
+                <div>
+                  <label className="block text-white/40 text-xs mb-1.5">อาชีพ</label>
+                  <input type="text" placeholder="เช่น พนักงานบริษัท, นักศึกษา" value={form.occupation}
+                    onChange={e => update("occupation", e.target.value)}
+                    className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
+                  />
+                </div>
 
-                  {/* Occupation */}
-                  <div>
-                    <label className="block text-white/40 text-xs mb-1.5">อาชีพ/สายงาน</label>
-                    <input
-                      type="text" placeholder="เช่น พนักงานบริษัท, นักศึกษา, ฟรีแลนซ์" value={form.occupation}
-                      onChange={e => update("occupation", e.target.value)}
-                      className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
-                    />
-                  </div>
+                <p className="text-white/15 text-[0.55rem] text-center leading-4">ข้อมูลของคุณจะถูกเก็บเป็นความลับ ใช้เพื่อการทำนายและติดต่อกลับเท่านั้น</p>
 
-                  <p className="text-white/15 text-[0.55rem] text-center leading-4">ข้อมูลของคุณจะถูกเก็บเป็นความลับ ใช้เพื่อการทำนายและติดต่อกลับเท่านั้น</p>
+                {error && <p className="text-red-400/80 text-xs text-center">{error}</p>}
 
-                  {error && <p className="text-red-400/80 text-xs text-center">{error}</p>}
-
-                  <div className="flex gap-3">
-                    <button onClick={() => setStep(0)} className="flex-1 py-2.5 rounded-lg border border-white/[0.06] text-white/30 text-sm hover:text-white/50">
-                      ย้อนกลับ
-                    </button>
-                    <button onClick={handleSave} disabled={saving}
-                      className="flex-1 py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/20 text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-30"
-                    >
-                      {saving ? "..." : "บันทึก"}
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
-          )}
+                <div className="flex gap-3">
+                  <button onClick={onClose} className="flex-1 py-2.5 rounded-lg border border-white/[0.06] text-white/30 text-sm hover:text-white/50">
+                    ข้าม
+                  </button>
+                  <button onClick={handleSave} disabled={saving}
+                    className="flex-1 py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/20 text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-30"
+                  >
+                    {saving ? "..." : "ดูผลวิเคราะห์"}
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </motion.div>
     </AnimatePresence>
+  );
+}
+
+function InfoCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
+  return (
+    <div className="bg-[#08090e] border border-white/[0.06] rounded-xl p-2.5 text-center">
+      <p className="text-white/25 text-[0.55rem] uppercase tracking-wider">{label}</p>
+      <p className="text-gold text-sm font-semibold mt-0.5">{value}</p>
+      {sub && <p className="text-white/20 text-[0.55rem] mt-0.5">{sub}</p>}
+    </div>
   );
 }
