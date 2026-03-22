@@ -4,21 +4,22 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { EASE } from "@/constants/animation";
-
-const FEATURED = [
-  { href: "/tarot", icon: "☽", name: "ไพ่ทาโร่", desc: "78 ใบ ทำนาย AI", color: "#e8d48b" },
-  { href: "/gypsy", icon: "♦", name: "ไพ่ยิปซี", desc: "36 ใบ Lenormand", color: "#b48bd4" },
-  { href: "/siamsi", icon: "☰", name: "เซียมซี", desc: "เสี่ยงเซียมซี AI", color: "#d4a84b" },
-];
-
-const SERVICES = [
-  { href: "/auspicious", icon: "✦", name: "ฤกษ์ยามมงคล", desc: "ดูฤกษ์ดี วันมงคล", color: "#4a9e6e" },
-  { href: "/calendar", icon: "☀", name: "วันดีวันร้าย", desc: "ดวงรายสัปดาห์", color: "#378add" },
-  { href: "/booking", icon: "☎", name: "นัดหมอดู", desc: "จองคิวหมอดูตัวจริง", color: "#c44a5a" },
-  { href: "/shop", icon: "✧", name: "ร้านค้ามงคล", desc: "วัตถุมงคล เสริมดวง", color: "#d85a30" },
-];
+import LaurelButton from "@/components/ui/LaurelButton";
 
 interface UserInfo { nickname: string; zodiac: { western: { signTh: string } } | null }
+
+const FORTUNE_SERVICES = [
+  { href: "/tarot", icon: "☽", name: "ไพ่ทาโร่", sub: "78 ใบ · AI ทำนาย" },
+  { href: "/gypsy", icon: "♦", name: "ไพ่ยิปซี", sub: "36 ใบ · Lenormand" },
+  { href: "/siamsi", icon: "☰", name: "เซียมซี", sub: "เสี่ยง 1-100" },
+];
+
+const OTHER_SERVICES = [
+  { href: "/auspicious", icon: "✦", name: "ฤกษ์ยามมงคล", color: "#4a9e6e" },
+  { href: "/calendar", icon: "☀", name: "วันดีวันร้าย", color: "#378add" },
+  { href: "/booking", icon: "☎", name: "นัดหมอดู", color: "#c44a5a" },
+  { href: "/shop", icon: "✧", name: "ร้านค้ามงคล", color: "#d85a30" },
+];
 
 export default function HomeScreen() {
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -31,110 +32,103 @@ export default function HomeScreen() {
 
   return (
     <motion.div
-      className="flex flex-col min-h-full px-4 pt-3 pb-6"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, ease: EASE }}
+      className="flex flex-col items-center min-h-full px-4 pt-4 pb-6"
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, ease: EASE }}
     >
-      {/* Greeting */}
+      {/* Hero */}
       <motion.div
-        className="mb-5"
-        initial={{ opacity: 0, y: -10 }}
+        className="text-center mb-8"
+        initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.5, ease: EASE }}
+        transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
       >
+        <h1
+          className="text-2xl font-semibold tracking-[0.15em] mb-1"
+          style={{
+            background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
+            backgroundSize: "200% 200%",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            animation: "shimmer-text 4s ease-in-out infinite",
+          }}
+        >
+          Queen Amara
+        </h1>
         {user ? (
-          <>
-            <p className="text-white/40 text-xs">สวัสดี</p>
-            <h2 className="text-gold text-xl font-semibold">{user.nickname}</h2>
-            {user.zodiac && <p className="text-gold/25 text-[0.65rem] mt-0.5">ราศี{user.zodiac.western.signTh}</p>}
-          </>
+          <p className="text-[#E2D4A0]/60 text-xs mt-1">
+            สวัสดี <span className="text-[#E2D4A0]">{user.nickname}</span>
+            {user.zodiac && <span className="text-[#E2D4A0]/40"> · ราศี{user.zodiac.western.signTh}</span>}
+          </p>
         ) : (
-          <>
-            <h2 className="text-gold text-lg font-semibold tracking-wide">เลือกบริการ</h2>
-            <p className="text-gold/25 text-xs mt-0.5">ค้นหาคำตอบที่จักรวาลมีให้คุณ</p>
-          </>
+          <p className="text-[#E2D4A0]/30 text-xs mt-1">ราชินีแห่งดวงดาว</p>
         )}
+
+        <motion.div
+          className="w-20 h-[1px] mx-auto mt-4"
+          style={{ background: "linear-gradient(90deg, transparent, #8B7A4A, transparent)" }}
+          initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+          transition={{ delay: 0.4, duration: 0.8 }}
+        />
       </motion.div>
 
-      {/* Featured — ดูดวง 3 แบบ */}
-      <motion.p
-        className="text-white/30 text-[0.65rem] uppercase tracking-wider mb-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.15, duration: 0.5 }}
-      >
-        ดูดวง
-      </motion.p>
-      <div className="flex gap-2.5 mb-5 overflow-x-auto pb-1 scrollbar-hide">
-        {FEATURED.map((svc, idx) => (
-          <motion.div
-            key={svc.href}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 + idx * 0.08, duration: 0.5, ease: EASE }}
-            className="flex-shrink-0"
-          >
-            <Link
-              href={svc.href}
-              className="group relative overflow-hidden rounded-2xl bg-[#2a1215] block w-[140px] active:scale-[0.96] transition-transform"
-            >
-              <div
-                className="absolute -top-6 -right-6 w-20 h-20 rounded-full opacity-[0.1] blur-2xl"
-                style={{ background: svc.color }}
-              />
-              <div className="relative p-4 text-center">
-                <div
-                  className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl"
-                  style={{ background: `${svc.color}12`, border: `1px solid ${svc.color}20` }}
-                >
-                  <span style={{ color: svc.color }}>{svc.icon}</span>
-                </div>
-                <p className="text-white/85 text-sm font-medium">{svc.name}</p>
-                <p className="text-gold/25 text-[0.6rem] mt-0.5">{svc.desc}</p>
-              </div>
-              <div className="h-[2px]" style={{ background: `linear-gradient(90deg, transparent, ${svc.color}30, transparent)` }} />
-            </Link>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Other Services */}
-      <motion.p
-        className="text-white/30 text-[0.65rem] uppercase tracking-wider mb-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+      {/* Fortune Services — Laurel Buttons */}
+      <motion.div
+        className="flex flex-col items-center gap-3 mb-8 w-full"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.5 }}
       >
-        บริการอื่นๆ
-      </motion.p>
-      <div className="space-y-2">
-        {SERVICES.map((svc, idx) => (
+        <p className="text-[#8B7A4A] text-[0.6rem] uppercase tracking-[0.3em] mb-1">ดูดวง</p>
+        {FORTUNE_SERVICES.map((svc, idx) => (
           <motion.div
             key={svc.href}
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 + idx * 0.06, duration: 0.5, ease: EASE }}
+            transition={{ delay: 0.35 + idx * 0.1, duration: 0.5, ease: EASE }}
           >
-            <Link
-              href={svc.href}
-              className="group flex items-center gap-3 p-3.5 rounded-xl bg-[#2a1215]/80 active:scale-[0.98] transition-transform"
-            >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-lg"
-                style={{ background: `${svc.color}10`, border: `1px solid ${svc.color}20` }}
-              >
-                <span style={{ color: svc.color }}>{svc.icon}</span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-white/80 text-sm font-medium">{svc.name}</p>
-                <p className="text-gold/25 text-[0.6rem]">{svc.desc}</p>
-              </div>
-              <span className="text-white/15 text-sm">›</span>
-            </Link>
+            <LaurelButton variant="crimson" href={svc.href} className="w-[240px]">
+              <span className="mr-1 opacity-60">{svc.icon}</span> {svc.name}
+            </LaurelButton>
           </motion.div>
         ))}
-      </div>
+      </motion.div>
+
+      {/* Divider */}
+      <motion.div
+        className="flex items-center gap-3 w-full max-w-[260px] mb-6"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+        transition={{ delay: 0.65, duration: 0.5 }}
+      >
+        <div className="flex-1 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, #5A4E34)" }} />
+        <span className="text-[#8B7A4A]/40 text-[0.5rem]">&#10022;</span>
+        <div className="flex-1 h-[1px]" style={{ background: "linear-gradient(90deg, #5A4E34, transparent)" }} />
+      </motion.div>
+
+      {/* Other Services */}
+      <motion.div
+        className="w-full max-w-[300px] space-y-2"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+        transition={{ delay: 0.7, duration: 0.5 }}
+      >
+        <p className="text-[#8B7A4A] text-[0.6rem] uppercase tracking-[0.3em] text-center mb-2">บริการอื่นๆ</p>
+        <div className="grid grid-cols-2 gap-2">
+          {OTHER_SERVICES.map((svc, idx) => (
+            <motion.div
+              key={svc.href}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.75 + idx * 0.08, duration: 0.4, ease: EASE }}
+            >
+              <Link
+                href={svc.href}
+                className="flex flex-col items-center gap-1.5 p-4 rounded-lg bg-[#2a1215]/60 hover:bg-[#2a1215] transition-colors active:scale-[0.96]"
+              >
+                <span className="text-xl" style={{ color: svc.color }}>{svc.icon}</span>
+                <span className="text-[#E2D4A0]/70 text-xs font-medium">{svc.name}</span>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
     </motion.div>
   );
 }

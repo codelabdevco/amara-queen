@@ -71,6 +71,11 @@ body {
   100% { opacity: 0; transform: translateY(-100vh) scale(0.3); }
 }
 
+/* ===== LAUREL BUTTON RIPPLE ===== */
+@keyframes qa-ripple {
+  to { transform: translate(-50%,-50%) scale(28); opacity: 0; }
+}
+
 /* ===== SHIMMER TEXT ===== */
 @keyframes shimmer-text {
   0%, 100% { background-position: 0% 50%; }
