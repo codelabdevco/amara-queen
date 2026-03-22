@@ -151,7 +151,7 @@ export default function ShopScreen() {
               onClick={() => { setShowCart(false); setStep("browse"); }}
             />
             <motion.div
-              className="fixed bottom-0 left-0 right-0 z-[130] bg-[#2a1215] rounded-t-3xl max-h-[85vh] overflow-y-auto"
+              className="fixed bottom-0 left-0 right-0 z-[130] bg-[#2a1215] rounded-t-3xl max-h-[85vh] overflow-y-auto pb-20"
               initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
               transition={{ duration: 0.35, ease: EASE }}
             >
