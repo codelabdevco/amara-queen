@@ -106,11 +106,11 @@ export default function ShopScreen() {
       {/* Cart floating button */}
       {cartCount > 0 && step === "browse" && (
         <motion.button
-          className="fixed bottom-20 right-4 z-[90] px-4 py-2.5 rounded-full bg-gold text-[#1a0a0a] text-sm font-semibold shadow-[0_4px_20px_rgba(212,175,55,0.3)] flex items-center gap-2"
-          initial={{ scale: 0 }} animate={{ scale: 1 }} whileTap={{ scale: 0.9 }}
+          className="fixed bottom-24 left-4 right-4 z-[101] py-3 rounded-xl bg-gold text-[#1a0a0a] text-sm font-semibold shadow-[0_4px_20px_rgba(212,175,55,0.3)] text-center"
+          initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} whileTap={{ scale: 0.97 }}
           onClick={() => { setShowCart(true); setStep("browse"); }}
         >
-          ตะกร้า ({cartCount}) · ฿{cartTotal}
+          ตะกร้า ({cartCount} ชิ้น) — ฿{cartTotal} · สั่งซื้อ
         </motion.button>
       )}
 
