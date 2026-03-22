@@ -38,12 +38,12 @@ export default function AnimatedBg() {
         <div ref={particlesRef} className="bg-scene__particles" />
       </div>
 
-      {/* Foreground overlay — top layer, no pointer events */}
+      {/* Foreground curtain — top layer */}
       <div className="fixed inset-0 z-[999] pointer-events-none">
         <img
-          src="/bg-card.svg"
+          src="/bg-main.svg"
           alt=""
-          className="w-full h-full object-cover opacity-[0.4]"
+          className="w-full h-full object-cover opacity-[0.35]"
           draggable={false}
         />
       </div>
