@@ -28,6 +28,7 @@ interface User {
   createdAt: number;
   readingsToday: number;
   lastFreeMonth?: string;
+  banned?: boolean;
 }
 
 export default function AdminUsersPage() {
@@ -35,6 +36,39 @@ export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [creditAmount, setCreditAmount] = useState("");
+  const [actionLoading, setActionLoading] = useState(false);
+
+  function refreshUsers() {
+    fetch("/api/admin/users").then(r => r.json()).then(d => { if (d) setUsers(d.users ?? []); }).catch(() => {});
+  }
+
+  async function handleAddCredits(userId: string) {
+    const amount = parseInt(creditAmount);
+    if (!amount) return;
+    setActionLoading(true);
+    await fetch("/api/admin/users", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId, action: "addCredits", amount }) });
+    setCreditAmount("");
+    refreshUsers();
+    setActionLoading(false);
+  }
+
+  async function handleBan(userId: string, ban: boolean) {
+    if (!confirm(ban ? "ยืนยันระงับบัญชีผู้ใช้นี้?" : "ยืนยันปลดระงับบัญชี?")) return;
+    setActionLoading(true);
+    await fetch("/api/admin/users", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId, action: ban ? "ban" : "unban" }) });
+    refreshUsers();
+    setActionLoading(false);
+  }
+
+  async function handleDelete(userId: string) {
+    if (!confirm("ยืนยันลบผู้ใช้นี้? ข้อมูลจะหายถาวร")) return;
+    setActionLoading(true);
+    await fetch("/api/admin/users", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ userId }) });
+    setExpanded(null);
+    refreshUsers();
+    setActionLoading(false);
+  }
 
   useEffect(() => {
     fetch("/api/admin/users")
@@ -116,7 +150,10 @@ export default function AdminUsersPage() {
                       </div>
                     )}
                     <div>
-                      <p className="text-white/70">{u.username || "-"}</p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-white/70">{u.username || "-"}</p>
+                        {u.banned && <span className="text-[0.5rem] text-red-400/70 bg-red-400/10 px-1.5 py-0.5 rounded">ระงับ</span>}
+                      </div>
                       {u.lineDisplayName && <p className="text-green-400/50 text-[0.6rem]">LINE: {u.lineDisplayName}</p>}
                     </div>
                   </div>
@@ -202,6 +239,42 @@ export default function AdminUsersPage() {
                         {!u.profile && !u.lineDisplayName && (
                           <p className="text-white/20 text-xs">ยังไม่มีข้อมูลเพิ่มเติม</p>
                         )}
+
+                        {/* Actions */}
+                        <div className="rounded-lg p-3 space-y-3" style={{ background: "#111111" }}>
+                          <p className="text-white/20 text-[0.55rem] uppercase tracking-wider">จัดการ</p>
+
+                          {/* Add credits */}
+                          <div className="flex items-center gap-2">
+                            <input type="number" placeholder="จำนวนเครดิต" value={creditAmount} onChange={e => setCreditAmount(e.target.value)}
+                              className="flex-1 rounded px-3 py-1.5 text-xs text-white/80 placeholder:text-white/20 outline-none"
+                              style={{ background: "#0a0a0a", border: "1px solid #ffffff08" }}
+                            />
+                            <button disabled={actionLoading || !creditAmount} onClick={() => handleAddCredits(u.id)}
+                              className="px-3 py-1.5 rounded text-xs font-medium disabled:opacity-30 transition-colors"
+                              style={{ background: "#d4af37", color: "#0a0a0a" }}
+                            >เพิ่มเครดิต</button>
+                          </div>
+
+                          {/* Ban / Delete */}
+                          <div className="flex gap-2">
+                            {u.banned ? (
+                              <button onClick={() => handleBan(u.id, false)} disabled={actionLoading}
+                                className="flex-1 px-3 py-1.5 rounded text-xs text-green-400/70 hover:text-green-400 transition-colors disabled:opacity-30"
+                                style={{ background: "#0a0a0a", border: "1px solid #ffffff08" }}
+                              >ปลดระงับ</button>
+                            ) : (
+                              <button onClick={() => handleBan(u.id, true)} disabled={actionLoading}
+                                className="flex-1 px-3 py-1.5 rounded text-xs text-yellow-400/70 hover:text-yellow-400 transition-colors disabled:opacity-30"
+                                style={{ background: "#0a0a0a", border: "1px solid #ffffff08" }}
+                              >ระงับบัญชี</button>
+                            )}
+                            <button onClick={() => handleDelete(u.id)} disabled={actionLoading}
+                              className="px-3 py-1.5 rounded text-xs text-red-400/50 hover:text-red-400 transition-colors disabled:opacity-30"
+                              style={{ background: "#0a0a0a", border: "1px solid #ffffff08" }}
+                            >ลบผู้ใช้</button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

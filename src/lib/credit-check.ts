@@ -30,9 +30,18 @@ export function requireCredits(req: NextRequest, service: ServiceName = "general
     );
   }
 
-  // Monthly free credits
   const settings = getSettings();
   const dbUser = findUserById(user.userId);
+
+  // Banned check
+  if (dbUser && (dbUser as unknown as { banned?: boolean }).banned) {
+    return NextResponse.json(
+      { error: "บัญชีของคุณถูกระงับ กรุณาติดต่อแอดมิน" },
+      { status: 403 }
+    );
+  }
+
+  // Monthly free credits
   if (dbUser) {
     const currentMonth = new Date().toISOString().slice(0, 7);
     if ((dbUser.lastFreeMonth || "") !== currentMonth) {
