@@ -39,11 +39,11 @@ export default function AnimatedBg() {
       </div>
 
       {/* Foreground overlay — top layer, no pointer events */}
-      <div className="fixed inset-0 z-[99] pointer-events-none">
+      <div className="fixed inset-0 z-[999] pointer-events-none">
         <img
           src="/bg-card.svg"
           alt=""
-          className="w-full h-full object-cover opacity-[0.15]"
+          className="w-full h-full object-cover opacity-[0.4]"
           draggable={false}
         />
       </div>
