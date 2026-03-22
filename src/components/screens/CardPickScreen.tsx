@@ -506,9 +506,9 @@ export default function CardPickScreen() {
                 {/* Deck cards */}
                 {Array.from({ length: 7 }, (_, i) => (
                   <div key={i} className="shuf-card absolute left-1/2 top-1/2 will-change-transform"
-                    style={{ marginLeft: -80, marginTop: -128, zIndex: 7 - i + 5, filter: `brightness(${1 - i * 0.03})` }}
+                    style={{ marginLeft: -95, marginTop: -148, zIndex: 7 - i + 5, filter: `brightness(${1 - i * 0.03})` }}
                   >
-                    <CardBack width={140} height={224} />
+                    <CardBack width={190} height={296} />
                   </div>
                 ))}
               </motion.div>
