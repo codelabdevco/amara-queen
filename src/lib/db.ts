@@ -359,6 +359,64 @@ export function processTopUpRequest(requestId: string, action: "approved" | "rej
   return { success: true, request: req };
 }
 
+// ── PAYMENT TRANSACTIONS ──
+export interface PaymentTransaction {
+  id: string;
+  userId: string;
+  username: string;
+  chargeId: string;
+  method: "promptpay" | "card" | "truemoney" | "manual";
+  amount: number; // in satang (THB * 100)
+  credits: number;
+  status: "pending" | "successful" | "failed" | "expired";
+  createdAt: number;
+  completedAt?: number;
+  qrCodeUrl?: string;
+}
+
+function getTransactions(): PaymentTransaction[] {
+  return readJSON("transactions.json", []);
+}
+
+function saveTransactions(txns: PaymentTransaction[]): void {
+  writeJSON("transactions.json", txns);
+}
+
+export function createTransaction(txn: PaymentTransaction): void {
+  const txns = getTransactions();
+  txns.push(txn);
+  saveTransactions(txns);
+}
+
+export function findTransaction(chargeId: string): PaymentTransaction | null {
+  return getTransactions().find(t => t.chargeId === chargeId) || null;
+}
+
+export function completeTransaction(chargeId: string, status: "successful" | "failed" | "expired"): PaymentTransaction | null {
+  const txns = getTransactions();
+  const txn = txns.find(t => t.chargeId === chargeId);
+  if (!txn || txn.status !== "pending") return null;
+
+  txn.status = status;
+  txn.completedAt = Date.now();
+
+  if (status === "successful") {
+    addCredits(txn.userId, txn.credits);
+  }
+
+  saveTransactions(txns);
+  return txn;
+}
+
+export function getPaymentHistory(userId: string): PaymentTransaction[] {
+  return getTransactions().filter(t => t.userId === userId).sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export function getAllTransactions(limit = 50, offset = 0): { transactions: PaymentTransaction[]; total: number } {
+  const txns = getTransactions().sort((a, b) => b.createdAt - a.createdAt);
+  return { transactions: txns.slice(offset, offset + limit), total: txns.length };
+}
+
 export function getUserCount(): number {
   return getUsers().length;
 }

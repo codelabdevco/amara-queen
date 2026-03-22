@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface CreditInfo {
@@ -9,50 +9,111 @@ interface CreditInfo {
   dailyFreeLimit: number;
   creditCost: number;
   packages: { credits: number; price: number; label: string }[];
-  promptPayNumber: string;
-  promptPayName: string;
 }
+
+type PaymentStep = "packages" | "processing" | "qr" | "success" | "error";
 
 export default function CreditBadge() {
   const [info, setInfo] = useState<CreditInfo | null>(null);
   const [showTopUp, setShowTopUp] = useState(false);
   const [selectedPkg, setSelectedPkg] = useState<number>(0);
-  const [paymentRef, setPaymentRef] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [step, setStep] = useState<PaymentStep>("packages");
+  const [qrUrl, setQrUrl] = useState("");
+  const [addedCredits, setAddedCredits] = useState(0);
+  const [errorMsg, setErrorMsg] = useState("");
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  useEffect(() => {
-    fetchBalance();
-  }, []);
+  useEffect(() => { fetchBalance(); }, []);
+  useEffect(() => { return () => { if (pollRef.current) clearInterval(pollRef.current); }; }, []);
 
   function fetchBalance() {
     fetch("/api/credits/balance").then(r => r.json()).then(setInfo).catch(() => {});
   }
 
-  async function handleSubmit() {
-    if (!info || !paymentRef.trim()) return;
-    setSubmitting(true);
-    const pkg = info.packages[selectedPkg];
+  function openTopUp() {
+    setShowTopUp(true);
+    setStep("packages");
+    setErrorMsg("");
+    fetchBalance();
+  }
+
+  async function handlePay() {
+    if (!info) return;
+    setStep("processing");
+    setErrorMsg("");
+
     try {
-      const res = await fetch("/api/credits/topup", {
+      const res = await fetch("/api/payment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ credits: pkg.credits, price: pkg.price, paymentRef: paymentRef.trim() }),
+        body: JSON.stringify({ packageIndex: selectedPkg }),
       });
-      if (res.ok) {
-        setSubmitted(true);
-        setPaymentRef("");
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErrorMsg(data.error || "เกิดข้อผิดพลาด");
+        setStep("error");
+        return;
       }
-    } catch {}
-    setSubmitting(false);
+
+      if (data.status === "successful") {
+        setAddedCredits(data.credits);
+        setStep("success");
+        fetchBalance();
+        return;
+      }
+
+      if (data.qrCodeUrl) {
+        setQrUrl(data.qrCodeUrl);
+        setStep("qr");
+        startPolling(data.chargeId, data.credits);
+      } else if (data.authorizeUri) {
+        window.location.href = data.authorizeUri;
+      }
+    } catch {
+      setErrorMsg("ไม่สามารถเชื่อมต่อระบบชำระเงินได้");
+      setStep("error");
+    }
+  }
+
+  function startPolling(cId: string, credits: number) {
+    if (pollRef.current) clearInterval(pollRef.current);
+    let attempts = 0;
+    pollRef.current = setInterval(async () => {
+      attempts++;
+      if (attempts > 120) {
+        if (pollRef.current) clearInterval(pollRef.current);
+        setStep("error");
+        setErrorMsg("หมดเวลาชำระเงิน กรุณาลองใหม่");
+        return;
+      }
+      try {
+        const res = await fetch(`/api/payment/status?chargeId=${cId}`);
+        const data = await res.json();
+        if (data.status === "successful") {
+          if (pollRef.current) clearInterval(pollRef.current);
+          setAddedCredits(credits);
+          setStep("success");
+          fetchBalance();
+        } else if (data.status === "failed" || data.status === "expired") {
+          if (pollRef.current) clearInterval(pollRef.current);
+          setStep("error");
+          setErrorMsg("การชำระเงินไม่สำเร็จ กรุณาลองใหม่");
+        }
+      } catch {}
+    }, 5000);
+  }
+
+  function closeModal() {
+    setShowTopUp(false);
+    if (pollRef.current) clearInterval(pollRef.current);
   }
 
   if (!info?.loggedIn) return null;
 
   return (
     <>
-      <button
-        onClick={() => { setShowTopUp(true); setSubmitted(false); fetchBalance(); }}
+      <button onClick={openTopUp}
         className="flex items-center gap-1.5 bg-gold/10 border border-gold/20 rounded-full px-2.5 py-1 hover:bg-gold/15 transition-colors"
       >
         <span className="text-gold text-[0.6rem]">&#9733;</span>
@@ -61,43 +122,30 @@ export default function CreditBadge() {
 
       <AnimatePresence>
         {showTopUp && (
-          <motion.div
-            className="fixed inset-0 z-[200] flex items-center justify-center px-4"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            onClick={() => setShowTopUp(false)}
+          <motion.div className="fixed inset-0 z-[200] flex items-center justify-center px-4"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={closeModal}
           >
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
             <motion.div
-              className="relative bg-[#0c0d14] border border-white/[0.08] rounded-2xl p-6 w-full max-w-[360px] space-y-5"
-              initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9 }}
+              className="relative bg-[#0c0d14] border border-white/[0.08] rounded-2xl p-6 w-full max-w-[380px]"
+              initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="text-center">
-                <h3 className="text-gold font-semibold text-lg">เติมเครดิต</h3>
-                <p className="text-white/30 text-xs mt-1">เครดิตคงเหลือ: <span className="text-gold">{info.credits}</span></p>
-                <p className="text-white/20 text-[0.65rem] mt-0.5">ฟรีวันนี้: {info.freeRemaining}/{info.dailyFreeLimit} ครั้ง | ใช้ {info.creditCost} เครดิต/ครั้ง หลังใช้ฟรีหมด</p>
-              </div>
+              <AnimatePresence mode="wait">
+                {step === "packages" && (
+                  <motion.div key="pkg" className="space-y-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <div className="text-center">
+                      <h3 className="text-gold font-semibold text-lg">เติมเครดิต</h3>
+                      <p className="text-white/30 text-xs mt-1">คงเหลือ: <span className="text-gold">{info.credits}</span> เครดิต</p>
+                      <p className="text-white/20 text-[0.6rem] mt-0.5">ฟรี {info.freeRemaining}/{info.dailyFreeLimit} ครั้ง/วัน</p>
+                    </div>
 
-              {submitted ? (
-                <div className="text-center py-6 space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto">
-                    <span className="text-green-400 text-xl">&#10003;</span>
-                  </div>
-                  <p className="text-white/70 text-sm">ส่งคำขอเติมเครดิตแล้ว</p>
-                  <p className="text-white/30 text-xs">รอแอดมินอนุมัติ เครดิตจะเข้าอัตโนมัติ</p>
-                </div>
-              ) : (
-                <>
-                  {/* Package selection */}
-                  <div className="space-y-2">
-                    <p className="text-white/40 text-xs">เลือกแพ็กเกจ</p>
                     <div className="grid grid-cols-3 gap-2">
                       {info.packages.map((pkg, i) => (
                         <button key={i}
                           className={`rounded-xl p-3 border text-center transition-all ${selectedPkg === i
                             ? "bg-gold/10 border-gold/30 shadow-[0_0_12px_rgba(232,212,139,0.08)]"
-                            : "bg-[#08090e] border-white/[0.06] hover:border-white/10"
-                          }`}
+                            : "bg-[#08090e] border-white/[0.06] hover:border-white/10"}`}
                           onClick={() => setSelectedPkg(i)}
                         >
                           <p className="text-gold font-semibold text-lg">{pkg.credits}</p>
@@ -106,41 +154,70 @@ export default function CreditBadge() {
                         </button>
                       ))}
                     </div>
-                  </div>
 
-                  {/* PromptPay info */}
-                  {info.promptPayNumber && (
-                    <div className="bg-[#08090e] border border-white/[0.06] rounded-xl p-3 text-center space-y-1">
-                      <p className="text-white/30 text-[0.65rem]">โอนผ่าน PromptPay</p>
-                      <p className="text-gold font-mono text-lg tracking-wider">{info.promptPayNumber}</p>
-                      <p className="text-white/40 text-xs">{info.promptPayName}</p>
-                      <p className="text-gold/60 text-sm font-semibold mt-1">{info.packages[selectedPkg]?.price} &#3647;</p>
+                    <button onClick={handlePay}
+                      className="w-full py-3 rounded-xl bg-gradient-to-br from-[#e8d48b] to-[#c4a850] text-[#08090e] text-sm font-semibold tracking-wide shadow-[0_4px_24px_rgba(232,212,139,.25)]"
+                    >
+                      ชำระเงิน {info.packages[selectedPkg]?.price} &#3647;
+                    </button>
+                    <p className="text-white/15 text-[0.55rem] text-center">PromptPay QR | เครดิตเข้าอัตโนมัติ</p>
+                  </motion.div>
+                )}
+
+                {step === "processing" && (
+                  <motion.div key="proc" className="text-center py-10" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <div className="w-10 h-10 border-2 border-gold/30 border-t-gold rounded-full animate-spin mx-auto mb-4" />
+                    <p className="text-white/50 text-sm">กำลังสร้างรายการชำระเงิน...</p>
+                  </motion.div>
+                )}
+
+                {step === "qr" && (
+                  <motion.div key="qr" className="space-y-4 text-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <h3 className="text-gold font-semibold">สแกน QR เพื่อชำระเงิน</h3>
+                    <p className="text-white/40 text-xs">{info.packages[selectedPkg]?.price} &#3647; = {info.packages[selectedPkg]?.credits} เครดิต</p>
+                    {qrUrl ? (
+                      <div className="bg-white rounded-xl p-4 w-fit mx-auto">
+                        <img src={qrUrl} alt="PromptPay QR" className="w-48 h-48" />
+                      </div>
+                    ) : (
+                      <div className="bg-white/5 rounded-xl w-48 h-48 mx-auto flex items-center justify-center">
+                        <div className="w-6 h-6 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
+                      </div>
+                    )}
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-2 h-2 bg-green-400/50 rounded-full animate-pulse" />
+                      <p className="text-white/40 text-xs">รอการชำระเงิน... เครดิตจะเข้าอัตโนมัติ</p>
                     </div>
-                  )}
+                  </motion.div>
+                )}
 
-                  {/* Payment reference */}
-                  <div className="space-y-2">
-                    <p className="text-white/40 text-xs">หมายเลขอ้างอิง / เวลาโอน</p>
-                    <input
-                      type="text"
-                      placeholder="เช่น โอนเวลา 14:30 หรือ Ref: 2024032212345"
-                      value={paymentRef}
-                      onChange={(e) => setPaymentRef(e.target.value)}
-                      className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
-                    />
-                  </div>
+                {step === "success" && (
+                  <motion.div key="ok" className="text-center py-6 space-y-4" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+                    <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto">
+                      <span className="text-green-400 text-2xl">&#10003;</span>
+                    </div>
+                    <h3 className="text-gold text-lg font-semibold">ชำระเงินสำเร็จ!</h3>
+                    <p className="text-white/40 text-sm">เพิ่ม <span className="text-gold font-semibold">{addedCredits}</span> เครดิต</p>
+                    <button onClick={closeModal}
+                      className="w-full py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/20 text-sm font-medium hover:bg-gold/20 transition-colors"
+                    >ปิด</button>
+                  </motion.div>
+                )}
 
-                  <button
-                    onClick={handleSubmit}
-                    disabled={submitting || !paymentRef.trim()}
-                    className="w-full py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/20 text-sm font-medium hover:bg-gold/20 transition-colors disabled:opacity-30"
-                  >
-                    {submitting ? "กำลังส่ง..." : "ส่งคำขอเติมเครดิต"}
-                  </button>
-                </>
-              )}
+                {step === "error" && (
+                  <motion.div key="err" className="text-center py-6 space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                    <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto">
+                      <span className="text-red-400 text-xl">&#10007;</span>
+                    </div>
+                    <p className="text-white/60 text-sm">{errorMsg}</p>
+                    <button onClick={() => setStep("packages")}
+                      className="w-full py-2.5 rounded-lg bg-gold/10 text-gold border border-gold/20 text-sm font-medium hover:bg-gold/20 transition-colors"
+                    >ลองใหม่</button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-              <button onClick={() => setShowTopUp(false)} className="w-full text-center text-white/25 text-xs hover:text-white/40">ปิด</button>
+              <button onClick={closeModal} className="w-full text-center text-white/15 text-xs hover:text-white/30 mt-3">ปิด</button>
             </motion.div>
           </motion.div>
         )}
