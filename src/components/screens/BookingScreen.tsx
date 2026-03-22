@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import { EASE } from "@/constants/animation";
 import Button from "@/components/ui/Button";
@@ -48,9 +48,30 @@ function getNextDays(n: number): Date[] {
   return days;
 }
 
+interface UserProfile {
+  nickname: string;
+  firstName: string;
+  lastName: string;
+  birthdate: string;
+  gender: string;
+}
+
+interface ProfileData {
+  profile: UserProfile | null;
+  zodiac: { western: { signTh: string }; age: number; birthDay: { nameTh: string } } | null;
+  linePictureUrl: string | null;
+  credits: number;
+  totalReadings: number;
+}
+
 /* ── Component ── */
 export default function BookingScreen() {
-  
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/profile").then(r => r.ok ? r.json() : null).then(d => { if (d) setProfileData(d); }).catch(() => {});
+  }, []);
+
   const [selectedTeller, setSelectedTeller] = useState<Teller | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -97,24 +118,47 @@ export default function BookingScreen() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5, ease: EASE }}
     >
-      {/* Back */}
-      <motion.button
-        className="fixed top-3 left-3 z-[110] w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 active:bg-white/10 backdrop-blur-sm"
-        style={{ top: "max(12px, env(safe-area-inset-top))" }}
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.3, duration: 0.3 }}
-        whileTap={{ scale: 0.85 }}
-        onClick={() => {
-          if (step === "slots") { setSelectedTeller(null); setSelectedDate(null); setSelectedTime(null); }
-          else if (step === "confirm") { setShowConfirm(false); }
-          else { window.location.href = "/home"; }
-        }}
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
-      </motion.button>
+      {/* Profile Card */}
+      {profileData?.profile && (
+        <motion.div
+          className="w-full max-w-full mb-5 bg-[#0c0d14] border border-white/[0.06] rounded-2xl p-4"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: EASE }}
+        >
+          <div className="flex items-center gap-3">
+            {profileData.linePictureUrl ? (
+              <img src={profileData.linePictureUrl} alt="" className="w-12 h-12 rounded-full" />
+            ) : (
+              <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center">
+                <span className="text-gold text-lg">{profileData.profile.nickname?.charAt(0) || "?"}</span>
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-white/80 font-medium truncate">{profileData.profile.nickname}</p>
+              {profileData.profile.firstName && (
+                <p className="text-white/30 text-xs">{profileData.profile.firstName} {profileData.profile.lastName}</p>
+              )}
+              {profileData.zodiac && (
+                <p className="text-gold/50 text-[0.65rem] mt-0.5">
+                  ราศี{profileData.zodiac.western.signTh} · อายุ {profileData.zodiac.age} ปี
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 mt-3">
+            <div className="bg-[#08090e] rounded-lg p-2.5 text-center">
+              <p className="text-gold text-lg font-semibold">{profileData.totalReadings}</p>
+              <p className="text-white/25 text-[0.6rem]">ดูดวงแล้ว</p>
+            </div>
+            <div className="bg-[#08090e] rounded-lg p-2.5 text-center">
+              <p className="text-gold text-lg font-semibold">{profileData.credits}</p>
+              <p className="text-white/25 text-[0.6rem]">เครดิตคงเหลือ</p>
+            </div>
+          </div>
+        </motion.div>
+      )}
 
       {/* Header */}
       <motion.div
@@ -197,7 +241,7 @@ export default function BookingScreen() {
             {/* Date selection */}
             <p className="text-white/40 text-xs mb-2">เลือกวัน</p>
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide mb-4">
-              {nextDays.map((day, idx) => {
+              {nextDays.map((day: Date, idx: number) => {
                 const isSel = selectedDate?.toDateString() === day.toDateString();
                 return (
                   <button

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/admin-auth";
-import { getUserProfile, updateUserProfile, findUserById, type UserProfile } from "@/lib/db";
+import { getUserProfile, updateUserProfile, findUserById, getReadings, type UserProfile } from "@/lib/db";
 import { calculateZodiac } from "@/lib/zodiac";
 
-// GET — get current user profile + zodiac info
+// GET — get current user profile + zodiac info + reading stats
 export async function GET(req: NextRequest) {
   const user = getUserFromRequest(req);
   if (!user) return NextResponse.json({ error: "ไม่ได้เข้าสู่ระบบ" }, { status: 401 });
@@ -16,11 +16,16 @@ export async function GET(req: NextRequest) {
     zodiac = calculateZodiac(profile.birthdate);
   }
 
+  // Reading stats
+  const { total: totalReadings } = getReadings(1, 0, { userId: user.userId });
+
   return NextResponse.json({
     profile: profile || null,
     zodiac,
     lineDisplayName: dbUser?.lineDisplayName || null,
     linePictureUrl: dbUser?.linePictureUrl || null,
+    credits: dbUser?.credits || 0,
+    totalReadings,
   });
 }
 
