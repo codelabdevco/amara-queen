@@ -96,7 +96,7 @@ export default function AdminSettingsPage() {
         ) : !settings ? (
           <p className="text-white/40">{error || "ไม่สามารถโหลดการตั้งค่าได้"}</p>
         ) : (
-          <div className="max-w-2xl space-y-6">
+          <div className="space-y-6">
             {/* Prompt Template */}
             <div className="bg-[#111111] rounded-xl p-5">
               <label className="block text-white/50 text-xs mb-2 uppercase tracking-wider">
