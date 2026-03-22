@@ -5,11 +5,16 @@ import { useTarotStore } from "@/store/useTarotStore";
 import type { Phase } from "@/types/tarot";
 
 const PHASE_BACK: Partial<Record<Phase, Phase>> = {
-  topic: "landing",
+  topic: "home",
   spread: "topic",
   question: "spread",
   fan: "question",
   reading: "fan",
+  siamsi: "home",
+  auspicious: "home",
+  calendar: "home",
+  booking: "home",
+  shop: "home",
 };
 
 export default function BackButton() {
@@ -21,11 +26,10 @@ export default function BackButton() {
 
   return (
     <motion.button
-      className="fixed top-3 left-3 z-[110] w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 active:bg-white/10 backdrop-blur-sm"
-      style={{ top: "max(12px, env(safe-area-inset-top))" }}
+      className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 active:bg-white/10"
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: 0.3, duration: 0.3 }}
+      transition={{ delay: 0.2, duration: 0.3 }}
       whileTap={{ scale: 0.85 }}
       onClick={() => setPhase(target)}
     >
