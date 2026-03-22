@@ -25,8 +25,31 @@ export default function AnimatedBg() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none">
-      <div ref={particlesRef} />
-    </div>
+    <>
+      {/* Particles */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div ref={particlesRef} />
+      </div>
+
+      {/* Globe — front layer */}
+      <div className="fixed inset-0 z-[998] pointer-events-none">
+        <img
+          src="/globe.svg"
+          alt=""
+          className="w-full h-full object-cover opacity-[0.25]"
+          draggable={false}
+        />
+      </div>
+
+      {/* Curtain — front-most layer */}
+      <div className="fixed inset-0 z-[999] pointer-events-none">
+        <img
+          src="/curtain.svg"
+          alt=""
+          className="w-full h-full object-cover opacity-[0.35]"
+          draggable={false}
+        />
+      </div>
+    </>
   );
 }
