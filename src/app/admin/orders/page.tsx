@@ -107,9 +107,9 @@ export default function AdminOrdersPage() {
     .reduce((s, o) => s + o.total, 0);
 
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <AdminNav />
-      <main className="flex-1 ml-56 p-8 min-h-screen overflow-y-auto">
+      <main className="flex-1 ml-56 p-8 h-screen overflow-y-auto pb-20">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold">คำสั่งซื้อ</h2>
           <span className="text-white/30 text-sm">{orders.length} รายการ</span>

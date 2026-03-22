@@ -83,9 +83,9 @@ export default function AdminReadingsPage() {
   }
 
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <AdminNav />
-      <main className="flex-1 ml-56 p-8 min-h-screen overflow-y-auto">
+      <main className="flex-1 ml-56 p-8 h-screen overflow-y-auto pb-20">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold">คำทำนาย</h2>
           {data && (

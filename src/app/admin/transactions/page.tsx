@@ -77,9 +77,9 @@ export default function AdminTransactionsPage() {
   const totalCredits = successful.reduce((sum, t) => sum + t.credits, 0);
 
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <AdminNav />
-      <main className="flex-1 ml-56 p-8 min-h-screen overflow-y-auto">
+      <main className="flex-1 ml-56 p-8 h-screen overflow-y-auto pb-20">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold">รายการชำระเงิน</h2>
           <span className="text-white/30 text-sm">
