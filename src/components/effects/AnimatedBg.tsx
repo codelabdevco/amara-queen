@@ -43,8 +43,7 @@ export default function AnimatedBg() {
         <img
           src="/bg-card.svg"
           alt=""
-          className="w-full h-full object-cover opacity-[0.07]"
-          style={{ mixBlendMode: "screen" }}
+          className="w-full h-full object-cover opacity-[0.15]"
           draggable={false}
         />
       </div>
