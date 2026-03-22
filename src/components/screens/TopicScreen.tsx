@@ -14,6 +14,8 @@ export default function TopicScreen() {
   const selectedTopic = useTarotStore((s) => s.selectedTopic);
   const topics = service === "gypsy" ? GYPSY_TOPICS : TOPICS;
   const [credits, setCredits] = useState<number | null>(null);
+  const costMap: Record<string, number> = { tarot: 3, gypsy: 2 };
+  const cost = costMap[service] || 1;
 
   useEffect(() => {
     fetch("/api/credits/balance").then(r => r.json()).then(d => setCredits(d.credits ?? 0)).catch(() => {});
@@ -48,7 +50,7 @@ export default function TopicScreen() {
         </h2>
         <p className="text-[#8B7A4A]/50 text-[0.65rem]">เลือกหมวดที่ตรงกับคำถามในใจ</p>
         {credits !== null && (
-          <p className="text-[#d4af37]/40 text-[0.55rem] mt-1">&#9733; ใช้ 1 เครดิต/ครั้ง · คงเหลือ {credits}</p>
+          <p className="text-[#d4af37]/40 text-[0.55rem] mt-1">&#9733; ใช้ {cost} เครดิต/ครั้ง · คงเหลือ {credits}</p>
         )}
       </motion.div>
 

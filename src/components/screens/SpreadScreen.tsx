@@ -16,6 +16,8 @@ export default function SpreadScreen() {
   const setPhase = useTarotStore((s) => s.setPhase);
   const spreads = service === "gypsy" ? GYPSY_SPREADS : SPREADS;
   const [credits, setCredits] = useState<number | null>(null);
+  const costMap: Record<string, number> = { tarot: 3, gypsy: 2 };
+  const cost = costMap[service] || 1;
 
   useEffect(() => {
     fetch("/api/credits/balance").then(r => r.json()).then(d => setCredits(d.credits ?? 0)).catch(() => {});
@@ -47,7 +49,7 @@ export default function SpreadScreen() {
       </p>
       {credits !== null && (
         <p className="text-[#d4af37]/40 text-[0.6rem]">
-          &#9733; ใช้ 1 เครดิต/ครั้ง · คงเหลือ {credits} เครดิต
+          &#9733; ใช้ {cost} เครดิต/ครั้ง · คงเหลือ {credits} เครดิต
         </p>
       )}
       <motion.div
