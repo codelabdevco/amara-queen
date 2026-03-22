@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { useTarotStore } from "@/store/useTarotStore";
+
 import { EASE } from "@/constants/animation";
 import Button from "@/components/ui/Button";
 
@@ -30,7 +30,7 @@ const PRODUCTS: Product[] = [
 
 /* ── Component ── */
 export default function ShopScreen() {
-  const setPhase = useTarotStore((s) => s.setPhase);
+  
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -78,7 +78,7 @@ export default function ShopScreen() {
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.3, duration: 0.3 }}
         whileTap={{ scale: 0.85 }}
-        onClick={() => setPhase("home")}
+        onClick={() => window.location.href = "/home"}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M15 18l-6-6 6-6" />

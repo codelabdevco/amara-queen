@@ -1,5 +1,7 @@
-import TarotApp from "@/components/TarotApp";
+"use client";
+import AppShell from "@/components/AppShell";
+import WelcomeScreen from "@/components/screens/WelcomeScreen";
 
 export default function Home() {
-  return <TarotApp />;
+  return <AppShell><WelcomeScreen /></AppShell>;
 }

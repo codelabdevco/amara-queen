@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useCallback } from "react";
-import { useTarotStore } from "@/store/useTarotStore";
+
 import { EASE } from "@/constants/animation";
 import Button from "@/components/ui/Button";
 
@@ -132,7 +132,7 @@ function GoldDivider({ delay = 0 }: { delay?: number }) {
 }
 
 export default function AuspiciousScreen() {
-  const setPhase = useTarotStore((s) => s.setPhase);
+  
   const [state, setState] = useState<ScreenState>("select");
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("");
@@ -206,7 +206,7 @@ export default function AuspiciousScreen() {
           } else if (state === "result") {
             handleRetry();
           } else {
-            setPhase("home");
+            window.location.href = "/home";
           }
         }}
       >
@@ -649,7 +649,7 @@ export default function AuspiciousScreen() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7, duration: 0.5 }}
             >
-              <Button variant="outline" onClick={() => setPhase("home")}>
+              <Button variant="outline" onClick={() => window.location.href = "/home"}>
                 กลับหน้าหลัก
               </Button>
               <Button onClick={handleRetry}>

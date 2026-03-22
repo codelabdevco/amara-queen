@@ -1,13 +1,8 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
 import CardBack from "@/components/ui/CardBack";
-import Button from "@/components/ui/Button";
-import { useTarotStore } from "@/store/useTarotStore";
-import dynamic from "next/dynamic";
-
-const HistoryScreen = dynamic(() => import("@/components/screens/HistoryScreen"), { ssr: false });
 
 import { EASE } from "@/constants/animation";
 
@@ -18,8 +13,6 @@ const cardVariants = [
 ];
 
 export default function WelcomeScreen() {
-  const setPhase = useTarotStore(s => s.setPhase);
-  const [showHistory, setShowHistory] = useState(false);
 
   return (
     <motion.div
@@ -70,7 +63,11 @@ export default function WelcomeScreen() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.8, ease: EASE }}
       >
-        <Button onClick={() => setPhase("home")}>เริ่มใช้งาน</Button>
+        <Link href="/home"
+          className="px-10 py-3.5 rounded-full font-semibold text-sm tracking-wider bg-gradient-to-br from-[#e8d48b] to-[#c4a850] text-[#08090e] shadow-[0_4px_24px_rgba(232,212,139,.25)]"
+        >
+          เริ่มใช้งาน
+        </Link>
 
         <a
           href="/api/auth/line"
@@ -88,20 +85,6 @@ export default function WelcomeScreen() {
           Demo — เข้าสู่ระบบทดลอง
         </a>
       </motion.div>
-
-      <motion.button
-        className="mt-3 text-xs text-white/25 hover:text-white/50 transition-colors tracking-wide"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8, ease: EASE }}
-        onClick={() => setShowHistory(true)}
-      >
-        ดูประวัติ
-      </motion.button>
-
-      <AnimatePresence>
-        {showHistory && <HistoryScreen onClose={() => setShowHistory(false)} />}
-      </AnimatePresence>
     </motion.div>
   );
 }

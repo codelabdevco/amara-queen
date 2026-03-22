@@ -22,5 +22,29 @@
     "readingsToday": 0,
     "lastReadingDate": "",
     "credits": 0
+  },
+  {
+    "id": "eaa644c4-6182-4964-b001-a62eeb5911e1",
+    "username": "LINE User",
+    "passwordHash": "",
+    "lineUserId": "line_demo_404799c3",
+    "lineDisplayName": "LINE User",
+    "linePictureUrl": "",
+    "createdAt": 1774171743824,
+    "readingsToday": 0,
+    "lastReadingDate": "",
+    "credits": 0
+  },
+  {
+    "id": "3f545837-ec7d-4a97-aa79-11b3716bb9e2",
+    "username": "LINE User",
+    "passwordHash": "",
+    "lineUserId": "line_demo_8c7b055c",
+    "lineDisplayName": "LINE User",
+    "linePictureUrl": "",
+    "createdAt": 1774171765187,
+    "readingsToday": 0,
+    "lastReadingDate": "",
+    "credits": 0
   }
 ]

@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useMemo } from "react";
-import { useTarotStore } from "@/store/useTarotStore";
+
 import { EASE } from "@/constants/animation";
 import Button from "@/components/ui/Button";
 
@@ -50,7 +50,7 @@ function getNextDays(n: number): Date[] {
 
 /* ── Component ── */
 export default function BookingScreen() {
-  const setPhase = useTarotStore((s) => s.setPhase);
+  
   const [selectedTeller, setSelectedTeller] = useState<Teller | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -108,7 +108,7 @@ export default function BookingScreen() {
         onClick={() => {
           if (step === "slots") { setSelectedTeller(null); setSelectedDate(null); setSelectedTime(null); }
           else if (step === "confirm") { setShowConfirm(false); }
-          else { setPhase("home"); }
+          else { window.location.href = "/home"; }
         }}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
