@@ -44,7 +44,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="flex">
       <AdminNav />
-      <main className="flex-1 ml-56 p-8">
+      <main className="flex-1 ml-56 p-8 min-h-screen overflow-y-auto">
         <h2 className="text-xl font-semibold mb-6">แดชบอร์ด</h2>
 
         {loading ? (

@@ -53,7 +53,7 @@ export default function AdminUsersPage() {
   return (
     <div className="flex">
       <AdminNav />
-      <main className="flex-1 ml-56 p-8">
+      <main className="flex-1 ml-56 p-8 min-h-screen overflow-y-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold">ผู้ใช้</h2>
           <span className="text-white/30 text-sm">{users.length} คน</span>
