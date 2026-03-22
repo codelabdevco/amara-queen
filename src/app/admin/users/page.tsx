@@ -12,6 +12,9 @@ interface UserProfile {
   gender: string;
   phone: string;
   email: string;
+  birthTime?: string;
+  relationshipStatus?: string;
+  occupation?: string;
 }
 
 interface User {
@@ -133,29 +136,74 @@ export default function AdminUsersPage() {
 
                 {/* Expanded profile details */}
                 {expanded === u.id && (
-                  <div className="px-5 py-4 bg-white/[0.01]">
-                    {/* LINE info */}
-                    <div className="flex items-center gap-3 mb-3">
-                      {u.linePictureUrl && <img src={u.linePictureUrl} alt="" className="w-10 h-10 rounded-full" />}
-                      <div className="text-xs">
-                        {u.lineDisplayName && <Info label="LINE ชื่อ" value={u.lineDisplayName} />}
-                        {u.lineUserId && <Info label="LINE ID" value={u.lineUserId} />}
+                  <div className="px-5 py-5 bg-[#0a0a0a]">
+                    <div className="flex gap-5">
+                      {/* Left: Avatar */}
+                      <div className="flex-shrink-0 flex flex-col items-center gap-2">
+                        {u.linePictureUrl ? (
+                          <img src={u.linePictureUrl} alt="" className="w-20 h-20 rounded-full" style={{ border: "2px solid #ffffff08" }} />
+                        ) : (
+                          <div className="w-20 h-20 rounded-full bg-[#111111] flex items-center justify-center text-[#d4af37]/30 text-2xl" style={{ border: "2px solid #ffffff08" }}>
+                            {(u.username || "?").charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <span className="text-[#d4af37] text-xs font-mono">{u.credits || 0} เครดิต</span>
+                      </div>
+
+                      {/* Right: Details */}
+                      <div className="flex-1 space-y-3">
+                        {/* LINE */}
+                        <div className="rounded-lg p-3" style={{ background: "#111111" }}>
+                          <p className="text-white/20 text-[0.55rem] uppercase tracking-wider mb-2">LINE</p>
+                          <div className="grid grid-cols-2 gap-2 text-xs">
+                            <Info label="ชื่อ LINE" value={u.lineDisplayName || "-"} />
+                            <Info label="LINE ID" value={u.lineUserId ? u.lineUserId.slice(0, 12) + "..." : "-"} />
+                          </div>
+                        </div>
+
+                        {/* Profile */}
+                        {u.profile && (
+                          <div className="rounded-lg p-3" style={{ background: "#111111" }}>
+                            <p className="text-white/20 text-[0.55rem] uppercase tracking-wider mb-2">ข้อมูลส่วนตัว</p>
+                            <div className="grid grid-cols-3 gap-2 text-xs">
+                              <Info label="ชื่อเล่น" value={u.profile.nickname || "-"} />
+                              <Info label="ชื่อจริง" value={u.profile.firstName ? `${u.profile.firstName} ${u.profile.lastName || ""}` : "-"} />
+                              <Info label="เพศ" value={u.profile.gender === "male" ? "ชาย" : u.profile.gender === "female" ? "หญิง" : u.profile.gender === "other" ? "อื่นๆ" : "-"} />
+                              <Info label="วันเกิด" value={u.profile.birthdate || "-"} />
+                              <Info label="เวลาเกิด" value={u.profile.birthTime || "-"} />
+                              <Info label="สถานะ" value={u.profile.relationshipStatus === "single" ? "โสด" : u.profile.relationshipStatus === "taken" ? "มีคู่" : u.profile.relationshipStatus === "complicated" ? "ซับซ้อน" : "-"} />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Contact */}
+                        {u.profile && (u.profile.phone || u.profile.email || u.profile.occupation) && (
+                          <div className="rounded-lg p-3" style={{ background: "#111111" }}>
+                            <p className="text-white/20 text-[0.55rem] uppercase tracking-wider mb-2">ข้อมูลติดต่อ</p>
+                            <div className="grid grid-cols-3 gap-2 text-xs">
+                              <Info label="เบอร์โทร" value={u.profile.phone || "-"} />
+                              <Info label="อีเมล" value={u.profile.email || "-"} />
+                              <Info label="อาชีพ" value={u.profile.occupation || "-"} />
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Stats */}
+                        <div className="rounded-lg p-3" style={{ background: "#111111" }}>
+                          <p className="text-white/20 text-[0.55rem] uppercase tracking-wider mb-2">สถิติ</p>
+                          <div className="grid grid-cols-4 gap-2 text-xs">
+                            <Info label="เครดิต" value={String(u.credits || 0)} />
+                            <Info label="ใช้วันนี้" value={String(u.readingsToday || 0)} />
+                            <Info label="ฟรีเดือน" value={u.lastFreeMonth || "-"} />
+                            <Info label="สมัครเมื่อ" value={formatDate(u.createdAt)} />
+                          </div>
+                        </div>
+
+                        {!u.profile && !u.lineDisplayName && (
+                          <p className="text-white/20 text-xs">ยังไม่มีข้อมูลเพิ่มเติม</p>
+                        )}
                       </div>
                     </div>
-                    {/* Profile info */}
-                    {u.profile && (
-                      <div className="grid grid-cols-3 gap-3 text-xs">
-                        {u.profile.nickname && <Info label="ชื่อเล่น" value={u.profile.nickname} />}
-                        {u.profile.firstName && <Info label="ชื่อจริง" value={`${u.profile.firstName} ${u.profile.lastName || ""}`} />}
-                        {u.profile.birthdate && <Info label="วันเกิด" value={u.profile.birthdate} />}
-                        {u.profile.gender && <Info label="เพศ" value={u.profile.gender === "male" ? "ชาย" : u.profile.gender === "female" ? "หญิง" : "อื่นๆ"} />}
-                        {u.profile.phone && <Info label="เบอร์โทร" value={u.profile.phone} />}
-                        {u.profile.email && <Info label="อีเมล" value={u.profile.email} />}
-                      </div>
-                    )}
-                    {!u.profile && !u.lineDisplayName && (
-                      <p className="text-white/20 text-xs">ยังไม่มีข้อมูลเพิ่มเติม</p>
-                    )}
                   </div>
                 )}
               </div>
