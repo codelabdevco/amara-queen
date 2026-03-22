@@ -31,7 +31,9 @@ export async function GET(req: NextRequest) {
   const token = signUserToken(user.id, user.username);
   const needProfile = !user.profile?.birthdate;
 
-  const baseUrl = new URL(req.url).origin;
+  const host = req.headers.get("host") || "localhost:3000";
+  const proto = req.headers.get("x-forwarded-proto") || "http";
+  const baseUrl = `${proto}://${host}`;
   const res = NextResponse.redirect(new URL(needProfile ? "/?setup=profile" : "/", baseUrl));
   res.cookies.set("amara_token", token, { httpOnly: true, path: "/", maxAge: 30 * 86400, sameSite: "lax" });
   return res;
