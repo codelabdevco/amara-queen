@@ -3,10 +3,13 @@
 import { motion } from "framer-motion";
 import { useTarotStore } from "@/store/useTarotStore";
 import { TOPICS } from "@/types/tarot";
+import { GYPSY_TOPICS } from "@/types/gypsy";
 import { EASE } from "@/constants/animation";
 
 export default function TopicScreen() {
+  const service = useTarotStore((s) => s.service);
   const selectTopic = useTarotStore((s) => s.selectTopic);
+  const topics = service === "gypsy" ? GYPSY_TOPICS : TOPICS;
 
   return (
     <motion.div
@@ -41,7 +44,7 @@ export default function TopicScreen() {
 
       {/* Topic grid */}
       <div className="grid grid-cols-2 gap-2.5 w-full max-w-full">
-        {TOPICS.map((t, idx) => (
+        {topics.map((t, idx) => (
           <motion.button
             key={t.id}
             className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-[#0c0d14]/90 text-left active:scale-[0.97] transition-transform"

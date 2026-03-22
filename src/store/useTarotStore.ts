@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { Phase, ServiceType, Topic, Spread, TarotCard, PickedCard, SPREADS, TOPIC_DEFAULT_SPREAD } from "@/types/tarot";
+import { GYPSY_SPREADS, GYPSY_TOPIC_DEFAULT_SPREAD } from "@/types/gypsy";
 
 export interface AIReading {
   trend: "very_positive" | "positive" | "neutral" | "caution" | "challenging";
@@ -9,6 +10,7 @@ export interface AIReading {
   cardInsights: string[];
 }
 import { allTarotCards } from "@/data/tarot";
+import { allGypsyCards } from "@/data/gypsy";
 import { shuffleArray } from "@/lib/utils";
 
 interface TarotState {
@@ -52,8 +54,11 @@ export const useTarotStore = create<TarotState>((set, get) => ({
   setPhase: (p) => set({ phase: p }),
 
   selectTopic: (t) => {
-    const defaultSpreadId = TOPIC_DEFAULT_SPREAD[t.id] || "three";
-    const defaultSpread = SPREADS.find(s => s.id === defaultSpreadId) || SPREADS[2];
+    const svc = get().service;
+    const defaults = svc === "gypsy" ? GYPSY_TOPIC_DEFAULT_SPREAD : TOPIC_DEFAULT_SPREAD;
+    const spreads = svc === "gypsy" ? GYPSY_SPREADS : SPREADS;
+    const defaultSpreadId = defaults[t.id] || "three";
+    const defaultSpread = spreads.find(s => s.id === defaultSpreadId) || spreads[0];
     set({ selectedTopic: t, selectedSpread: defaultSpread, phase: "spread" });
   },
 
@@ -62,7 +67,9 @@ export const useTarotStore = create<TarotState>((set, get) => ({
   setQuestion: (q) => set({ userQuestion: q }),
 
   shuffleDeck: () => {
-    set({ shuffledDeck: shuffleArray(allTarotCards) });
+    const svc = get().service;
+    const cards = svc === "gypsy" ? allGypsyCards : allTarotCards;
+    set({ shuffledDeck: shuffleArray(cards) });
   },
 
   pickCard: (deckIndex) => {

@@ -3,14 +3,17 @@
 import { motion } from "framer-motion";
 import { useTarotStore } from "@/store/useTarotStore";
 import { SPREADS } from "@/types/tarot";
+import { GYPSY_SPREADS } from "@/types/gypsy";
 import { EASE } from "@/constants/animation";
 import MiniCardBack from "@/components/ui/MiniCardBack";
 
 export default function SpreadScreen() {
+  const service = useTarotStore((s) => s.service);
   const selectedTopic = useTarotStore((s) => s.selectedTopic);
   const selectedSpread = useTarotStore((s) => s.selectedSpread);
   const selectSpread = useTarotStore((s) => s.selectSpread);
   const setPhase = useTarotStore((s) => s.setPhase);
+  const spreads = service === "gypsy" ? GYPSY_SPREADS : SPREADS;
 
   return (
     <motion.div
@@ -27,7 +30,7 @@ export default function SpreadScreen() {
       </p>
 
       <div className="w-full max-w-full space-y-2.5">
-        {SPREADS.map((s, idx) => {
+        {spreads.map((s, idx) => {
           const isDefault = s.id === selectedSpread?.id;
           return (
             <motion.button
