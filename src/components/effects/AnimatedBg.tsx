@@ -26,29 +26,24 @@ export default function AnimatedBg() {
 
   return (
     <>
-      {/* Particles */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
+      {/* Layer 1: Curtain — back-most */}
+      <div className="fixed inset-0 z-0">
+        <img src="/curtain.svg" alt="" className="w-full h-full object-cover" draggable={false} />
+      </div>
+
+      {/* Layer 2: Globe — on top of curtain */}
+      <div className="fixed inset-0 z-[1]">
+        <img src="/globe.svg" alt="" className="w-full h-full object-cover opacity-[0.25]" draggable={false} />
+      </div>
+
+      {/* Layer 3: Dark overlay for readability */}
+      <div className="fixed inset-0 z-[2] pointer-events-none"
+        style={{ background: "linear-gradient(180deg, rgba(26,10,10,0.3) 0%, rgba(26,10,10,0.6) 50%, rgba(26,10,10,0.8) 100%)" }}
+      />
+
+      {/* Layer 4: Particles */}
+      <div className="fixed inset-0 z-[3] pointer-events-none">
         <div ref={particlesRef} />
-      </div>
-
-      {/* Globe — front layer */}
-      <div className="fixed inset-0 z-[998] pointer-events-none">
-        <img
-          src="/globe.svg"
-          alt=""
-          className="w-full h-full object-cover opacity-[0.25]"
-          draggable={false}
-        />
-      </div>
-
-      {/* Curtain — front-most layer */}
-      <div className="fixed inset-0 z-[999] pointer-events-none">
-        <img
-          src="/curtain.svg"
-          alt=""
-          className="w-full h-full object-cover"
-          draggable={false}
-        />
       </div>
     </>
   );
