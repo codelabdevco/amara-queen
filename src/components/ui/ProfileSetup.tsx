@@ -5,8 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface ProfileData {
   nickname: string;
+  firstName: string;
+  lastName: string;
   birthdate: string;
   gender: string;
+  phone: string;
+  email: string;
   birthTime: string;
   relationshipStatus: string;
   occupation: string;
@@ -39,7 +43,7 @@ const STATUS_OPTIONS = [
 
 export default function ProfileSetup({ open, onClose, onSaved }: Props) {
   const [form, setForm] = useState<ProfileData>({
-    nickname: "", birthdate: "", gender: "", birthTime: "", relationshipStatus: "", occupation: "",
+    nickname: "", firstName: "", lastName: "", birthdate: "", gender: "", phone: "", email: "", birthTime: "", relationshipStatus: "", occupation: "",
   });
   const [zodiac, setZodiac] = useState<ZodiacInfo | null>(null);
   const [saving, setSaving] = useState(false);
@@ -207,6 +211,44 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
 
               {step === 1 && (
                 <>
+                  {/* First + Last Name */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-white/40 text-xs mb-1.5">ชื่อจริง</label>
+                      <input
+                        type="text" placeholder="ชื่อ" value={form.firstName}
+                        onChange={e => update("firstName", e.target.value)}
+                        className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-white/40 text-xs mb-1.5">นามสกุล</label>
+                      <input
+                        type="text" placeholder="นามสกุล" value={form.lastName}
+                        onChange={e => update("lastName", e.target.value)}
+                        className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Phone + Email */}
+                  <div>
+                    <label className="block text-white/40 text-xs mb-1.5">เบอร์โทร</label>
+                    <input
+                      type="tel" placeholder="08X-XXX-XXXX" value={form.phone}
+                      onChange={e => update("phone", e.target.value)}
+                      className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-white/40 text-xs mb-1.5">อีเมล</label>
+                    <input
+                      type="email" placeholder="example@mail.com" value={form.email}
+                      onChange={e => update("email", e.target.value)}
+                      className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
+                    />
+                  </div>
+
                   {/* Birth Time */}
                   <div>
                     <label className="block text-white/40 text-xs mb-1.5">เวลาเกิด</label>
@@ -215,7 +257,7 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                       onChange={e => update("birthTime", e.target.value)}
                       className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:border-gold/30 outline-none [color-scheme:dark]"
                     />
-                    <p className="text-white/15 text-[0.6rem] mt-1">ช่วยคำนวณลัคนาราศี (ไม่บังคับ)</p>
+                    <p className="text-white/15 text-[0.6rem] mt-1">ช่วยคำนวณลัคนาราศี</p>
                   </div>
 
                   {/* Relationship Status */}
@@ -246,6 +288,8 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                       className="w-full bg-[#08090e] border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/30 outline-none"
                     />
                   </div>
+
+                  <p className="text-white/15 text-[0.55rem] text-center leading-4">ข้อมูลของคุณจะถูกเก็บเป็นความลับ ใช้เพื่อการทำนายและติดต่อกลับเท่านั้น</p>
 
                   {error && <p className="text-red-400/80 text-xs text-center">{error}</p>}
 

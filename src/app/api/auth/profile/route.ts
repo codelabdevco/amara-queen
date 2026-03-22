@@ -32,8 +32,12 @@ export async function PUT(req: NextRequest) {
   const body = await req.json();
   const profile: UserProfile = {
     nickname: (body.nickname || "").trim().slice(0, 50),
+    firstName: (body.firstName || "").trim().slice(0, 100),
+    lastName: (body.lastName || "").trim().slice(0, 100),
     birthdate: body.birthdate || "",
     gender: ["male", "female", "other"].includes(body.gender) ? body.gender : "",
+    phone: (body.phone || "").trim().slice(0, 20),
+    email: (body.email || "").trim().slice(0, 100),
     birthTime: body.birthTime || "",
     relationshipStatus: ["single", "taken", "complicated"].includes(body.relationshipStatus) ? body.relationshipStatus : "",
     occupation: (body.occupation || "").trim().slice(0, 100),

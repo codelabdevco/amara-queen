@@ -153,8 +153,12 @@ export function getOverviewStats() {
 // ── USERS ──
 export interface UserProfile {
   nickname: string;
+  firstName: string;
+  lastName: string;
   birthdate: string; // YYYY-MM-DD
   gender: "male" | "female" | "other" | "";
+  phone: string;
+  email: string;
   birthTime: string; // HH:mm or ""
   relationshipStatus: "single" | "taken" | "complicated" | "";
   occupation: string;

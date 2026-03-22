@@ -148,7 +148,8 @@ export async function POST(req: NextRequest) {
       if (profile?.birthdate) {
         const zodiac = calculateZodiac(profile.birthdate);
         const parts: string[] = [];
-        if (profile.nickname) parts.push(`ชื่อ: ${profile.nickname}`);
+        if (profile.nickname) parts.push(`ชื่อเล่น: ${profile.nickname}`);
+        if (profile.firstName) parts.push(`ชื่อจริง: ${profile.firstName}${profile.lastName ? " " + profile.lastName : ""}`);
         parts.push(`อายุ: ${zodiac.age} ปี`);
         if (profile.gender) parts.push(`เพศ: ${profile.gender === "male" ? "ชาย" : profile.gender === "female" ? "หญิง" : "อื่นๆ"}`);
         parts.push(`ราศี: ${zodiac.western.signTh} (ธาตุ${zodiac.western.elementTh})`);
