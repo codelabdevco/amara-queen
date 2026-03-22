@@ -31,6 +31,7 @@ export default function AnimatedBg() {
     if (!container) return;
 
     function createSparkle() {
+      if (!container) return;
       const s = document.createElement("div");
       s.className = "sparkle";
       s.style.left = `${10 + Math.random() * 80}%`;
