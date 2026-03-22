@@ -42,6 +42,9 @@ export default function ShopScreen() {
   const [savedAddresses, setSavedAddresses] = useState<{ id: string; label: string; name: string; phone: string; address: string; district: string; subDistrict: string; province: string; postalCode: string; isDefault: boolean }[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [saveThisAddress, setSaveThisAddress] = useState(true);
+  const [amphoeList, setAmphoeList] = useState<string[]>([]);
+  const [subDistrictList, setSubDistrictList] = useState<string[]>([]);
+  const [zipcodeMap, setZipcodeMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
     fetch("/api/auth/address").then(r => r.json()).then(d => {
@@ -62,6 +65,36 @@ export default function ShopScreen() {
     setShippingSubDistrict(addr.subDistrict);
     setShippingProvince(addr.province);
     setShippingPostalCode(addr.postalCode);
+  }
+
+  function onProvinceChange(prov: string) {
+    setShippingProvince(prov);
+    setShippingDistrict("");
+    setShippingSubDistrict("");
+    setShippingPostalCode("");
+    setAmphoeList([]);
+    setSubDistrictList([]);
+    if (prov) {
+      fetch(`/api/address-lookup?province=${encodeURIComponent(prov)}`).then(r => r.json()).then(d => setAmphoeList(d.amphoes || [])).catch(() => {});
+    }
+  }
+
+  function onAmphoeChange(amp: string) {
+    setShippingDistrict(amp);
+    setShippingSubDistrict("");
+    setShippingPostalCode("");
+    setSubDistrictList([]);
+    if (amp && shippingProvince) {
+      fetch(`/api/address-lookup?amphoe=${encodeURIComponent(amp)}&province=${encodeURIComponent(shippingProvince)}`).then(r => r.json()).then(d => {
+        setSubDistrictList(d.subDistricts || []);
+        setZipcodeMap(d.zipcodes || {});
+      }).catch(() => {});
+    }
+  }
+
+  function onSubDistrictChange(sub: string) {
+    setShippingSubDistrict(sub);
+    if (zipcodeMap[sub]) setShippingPostalCode(zipcodeMap[sub]);
   }
 
   function getFullAddress() {
@@ -307,34 +340,57 @@ export default function ShopScreen() {
                           placeholder="123/4 ซอย... ถนน..." className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 outline-none focus:ring-1 focus:ring-gold/20" />
                       </div>
 
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-white/40 text-xs mb-1">แขวง/ตำบล</label>
-                          <input type="text" value={shippingSubDistrict} onChange={e => setShippingSubDistrict(e.target.value)}
-                            placeholder="ตำบล..." className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 outline-none focus:ring-1 focus:ring-gold/20" />
-                        </div>
-                        <div>
-                          <label className="block text-white/40 text-xs mb-1">เขต/อำเภอ</label>
-                          <input type="text" value={shippingDistrict} onChange={e => setShippingDistrict(e.target.value)}
-                            placeholder="อำเภอ..." className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 outline-none focus:ring-1 focus:ring-gold/20" />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-white/40 text-xs mb-1">จังหวัด *</label>
-                          <select value={shippingProvince} onChange={e => setShippingProvince(e.target.value)}
+                      {/* Province */}
+                      <div>
+                        <label className="block text-white/40 text-xs mb-1">จังหวัด *</label>
+                        <div className="relative">
+                          <select value={shippingProvince} onChange={e => onProvinceChange(e.target.value)}
                             className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white outline-none focus:ring-1 focus:ring-gold/20 appearance-none cursor-pointer [color-scheme:dark]"
                           >
                             <option value="" className="bg-[#1e0c0c]">เลือกจังหวัด</option>
                             {PROVINCES.map(p => <option key={p} value={p} className="bg-[#1e0c0c]">{p}</option>)}
                           </select>
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 text-[0.5rem] pointer-events-none">▼</span>
                         </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        {/* Amphoe/District */}
                         <div>
-                          <label className="block text-white/40 text-xs mb-1">รหัสไปรษณีย์</label>
-                          <input type="text" inputMode="numeric" value={shippingPostalCode} onChange={e => setShippingPostalCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 5))}
-                            placeholder="10xxx" className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/15 outline-none focus:ring-1 focus:ring-gold/20 font-mono" />
+                          <label className="block text-white/40 text-xs mb-1">เขต/อำเภอ *</label>
+                          <div className="relative">
+                            <select value={shippingDistrict} onChange={e => onAmphoeChange(e.target.value)}
+                              disabled={!amphoeList.length}
+                              className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white outline-none focus:ring-1 focus:ring-gold/20 appearance-none cursor-pointer disabled:opacity-30 [color-scheme:dark]"
+                            >
+                              <option value="" className="bg-[#1e0c0c]">เลือกอำเภอ</option>
+                              {amphoeList.map(a => <option key={a} value={a} className="bg-[#1e0c0c]">{a}</option>)}
+                            </select>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 text-[0.5rem] pointer-events-none">▼</span>
+                          </div>
                         </div>
+
+                        {/* Sub-district */}
+                        <div>
+                          <label className="block text-white/40 text-xs mb-1">แขวง/ตำบล</label>
+                          <div className="relative">
+                            <select value={shippingSubDistrict} onChange={e => onSubDistrictChange(e.target.value)}
+                              disabled={!subDistrictList.length}
+                              className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white outline-none focus:ring-1 focus:ring-gold/20 appearance-none cursor-pointer disabled:opacity-30 [color-scheme:dark]"
+                            >
+                              <option value="" className="bg-[#1e0c0c]">เลือกตำบล</option>
+                              {subDistrictList.map(s => <option key={s} value={s} className="bg-[#1e0c0c]">{s}</option>)}
+                            </select>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 text-[0.5rem] pointer-events-none">▼</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Postal code (auto-fill) */}
+                      <div>
+                        <label className="block text-white/40 text-xs mb-1">รหัสไปรษณีย์</label>
+                        <input type="text" inputMode="numeric" value={shippingPostalCode} readOnly
+                          placeholder="เลือกตำบลแล้วจะกรอกให้อัตโนมัติ" className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2 text-sm text-white/60 placeholder:text-white/15 outline-none font-mono" />
                       </div>
 
                       {loggedIn && (
