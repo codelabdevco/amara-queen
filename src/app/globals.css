@@ -47,6 +47,25 @@ body {
   80% { transform: translate(-1.2%, 0.5%) scale(1.04) rotate(-0.3deg); }
 }
 
+/* ===== SPARKLE ===== */
+.sparkle {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 5;
+  animation: sparkleFloat linear infinite;
+}
+
+@keyframes sparkleFloat {
+  0% { opacity: 0; transform: scale(0); }
+  15% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.6); }
+  85% { opacity: 0.8; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(0); }
+}
+
 /* ===== PARTICLES ===== */
 .bg-particle {
   position: absolute;
