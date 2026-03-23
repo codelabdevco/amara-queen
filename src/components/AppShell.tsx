@@ -16,6 +16,7 @@ const BACK_MAP: Record<string, string> = {
   "/shop": "/home",
   "/profile": "/home",
   "/subscription": "/home",
+  "/numerology": "/home",
 };
 
 export default function AppShell({ children }: { children: ReactNode }) {

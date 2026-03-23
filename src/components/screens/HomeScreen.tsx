@@ -11,6 +11,7 @@ const FORTUNE_SERVICES = [
   { href: "/tarot", icon: "☽", name: "ไพ่ทาโร่", cost: 3 },
   { href: "/gypsy", icon: "♦", name: "ไพ่ยิปซี", cost: 2 },
   { href: "/siamsi", icon: "☰", name: "เซียมซี", cost: 1 },
+  { href: "/numerology", icon: "✡", name: "เลขศาสตร์", cost: 1 },
 ];
 
 const OTHER_SERVICES = [
