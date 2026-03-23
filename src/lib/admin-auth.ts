@@ -47,7 +47,9 @@ export function getTokenFromRequest(req: NextRequest): string | null {
 }
 
 export function requireAdmin(req: NextRequest): NextResponse | null {
-  const token = getTokenFromRequest(req);
+  // Check admin cookie first, then shared cookie
+  const adminCookie = req.cookies.get("amara_admin_token");
+  const token = adminCookie?.value || getTokenFromRequest(req);
   if (!token) return NextResponse.json({ error: "ไม่ได้เข้าสู่ระบบ" }, { status: 401 });
   const payload = verifyToken(token);
   if (!payload || payload.role !== "admin") return NextResponse.json({ error: "ไม่มีสิทธิ์เข้าถึง" }, { status: 403 });

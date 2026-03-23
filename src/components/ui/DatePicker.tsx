@@ -47,7 +47,7 @@ export default function DatePicker({ value, onChange }: Props) {
     return new Date(y, m, 0).getDate();
   }, [parsed.month, parsed.year, currentYear]);
 
-  const selectClass = "bg-[#1e0c0c] border border-[#8B7A4A]/10 rounded-lg px-2 py-2.5 text-sm text-white outline-none appearance-none cursor-pointer transition-colors focus:border-[#8B7A4A]/25 [color-scheme:dark]";
+  const selectClass = "bg-[#1e0c0c] border border-[#8B7A4A]/10 rounded-lg px-2 py-2.5 text-sm text-[#E2D4A0] outline-none cursor-pointer transition-colors focus:border-[#8B7A4A]/25";
 
   return (
     <div className="grid grid-cols-3 gap-2">

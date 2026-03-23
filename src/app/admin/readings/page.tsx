@@ -5,22 +5,22 @@ import { useRouter } from "next/navigation";
 import AdminNav from "@/components/admin/AdminNav";
 
 interface Reading {
-  _id: string;
-  createdAt: string;
+  id: string;
+  timestamp: number;
   topic: string;
+  topicIcon: string;
   spread: string;
   question: string;
   trend: string;
-  user: string;
-  answer?: string;
-  cards?: string[];
+  summary: string;
+  advice: string;
+  userId: string | null;
+  cardInsights: string[];
 }
 
 interface ReadingsResponse {
   readings: Reading[];
   total: number;
-  page: number;
-  pages: number;
 }
 
 export default function AdminReadingsPage() {
@@ -34,7 +34,7 @@ export default function AdminReadingsPage() {
   const fetchReadings = useCallback(
     (p: number) => {
       setLoading(true);
-      fetch(`/api/admin/readings?page=${p}&limit=20`)
+      fetch(`/api/admin/readings?offset=${(p - 1) * 20}&limit=20`)
         .then((res) => {
           if (res.status === 401) {
             router.push("/admin/login");
@@ -59,7 +59,7 @@ export default function AdminReadingsPage() {
     if (!confirm("ต้องการลบคำทำนายนี้?")) return;
     setDeleting(id);
     try {
-      const res = await fetch(`/api/admin/readings?id=${id}`, { method: "DELETE" });
+      const res = await fetch("/api/admin/readings", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
       if (res.ok) {
         fetchReadings(page);
         if (expandedId === id) setExpandedId(null);
@@ -71,7 +71,7 @@ export default function AdminReadingsPage() {
     }
   }
 
-  function formatDate(iso: string) {
+  function formatDate(iso: string | number) {
     const d = new Date(iso);
     return d.toLocaleDateString("th-TH", {
       day: "numeric",
@@ -119,41 +119,41 @@ export default function AdminReadingsPage() {
               )}
 
               {data.readings.map((r) => (
-                <div key={r._id}>
+                <div key={r.id}>
                   <div
                     className="grid grid-cols-[160px_1fr_1fr_2fr_100px_120px_60px] gap-3 px-5 py-3 text-sm hover:bg-gold/[0.02] cursor-pointer transition-colors items-center"
-                    onClick={() => setExpandedId(expandedId === r._id ? null : r._id)}
+                    onClick={() => setExpandedId(expandedId === r.id ? null : r.id)}
                   >
-                    <span className="text-white/40 text-xs">{formatDate(r.createdAt)}</span>
+                    <span className="text-white/40 text-xs">{formatDate(r.timestamp)}</span>
                     <span className="text-white/70 truncate">{r.topic}</span>
                     <span className="text-white/50 truncate">{r.spread}</span>
                     <span className="text-white/60 truncate">{r.question}</span>
                     <span className="text-[#d4af37]/70 text-xs">{r.trend}</span>
-                    <span className="text-white/40 text-xs truncate">{r.user || "-"}</span>
+                    <span className="text-white/40 text-xs truncate">{r.userId || "-"}</span>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(r._id);
+                        handleDelete(r.id);
                       }}
-                      disabled={deleting === r._id}
+                      disabled={deleting === r.id}
                       className="text-red-400/40 hover:text-red-400 text-xs transition-colors disabled:opacity-30"
                     >
-                      {deleting === r._id ? "..." : "ลบ"}
+                      {deleting === r.id ? "..." : "ลบ"}
                     </button>
                   </div>
 
                   {/* Expanded detail */}
-                  {expandedId === r._id && (
+                  {expandedId === r.id && (
                     <div className="px-5 py-4 bg-white/[0.01] space-y-3">
                       <div>
                         <p className="text-white/30 text-xs mb-1">คำถาม</p>
                         <p className="text-white/70 text-sm">{r.question}</p>
                       </div>
-                      {r.cards && r.cards.length > 0 && (
+                      {r.cardInsights && r.cardInsights.length > 0 && (
                         <div>
                           <p className="text-white/30 text-xs mb-1">ไพ่ที่ได้</p>
                           <div className="flex flex-wrap gap-1.5">
-                            {r.cards.map((c, i) => (
+                            {r.cardInsights.map((c, i) => (
                               <span
                                 key={i}
                                 className="bg-gold/10 text-[#d4af37]/80 text-xs px-2 py-0.5 rounded"
@@ -164,11 +164,11 @@ export default function AdminReadingsPage() {
                           </div>
                         </div>
                       )}
-                      {r.answer && (
+                      {r.summary && (
                         <div>
                           <p className="text-white/30 text-xs mb-1">คำทำนาย</p>
                           <p className="text-white/60 text-sm leading-relaxed whitespace-pre-wrap">
-                            {r.answer}
+                            {r.summary}
                           </p>
                         </div>
                       )}
@@ -179,7 +179,7 @@ export default function AdminReadingsPage() {
             </div>
 
             {/* Pagination */}
-            {data.pages > 1 && (
+            {Math.ceil((data?.total || 0) / 20) > 1 && (
               <div className="flex items-center justify-center gap-2 mt-6">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -189,11 +189,11 @@ export default function AdminReadingsPage() {
                   ก่อนหน้า
                 </button>
                 <span className="text-white/40 text-sm px-3">
-                  {page} / {data.pages}
+                  {page} / {Math.ceil((data?.total || 0) / 20)}
                 </span>
                 <button
-                  onClick={() => setPage((p) => Math.min(data.pages, p + 1))}
-                  disabled={page >= data.pages}
+                  onClick={() => setPage((p) => Math.min(Math.ceil((data?.total || 0) / 20), p + 1))}
+                  disabled={page >= Math.ceil((data?.total || 0) / 20)}
                   className="px-3 py-1.5 rounded-lg text-sm bg-gold/10 text-[#d4af37] hover:bg-gold/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   ถัดไป

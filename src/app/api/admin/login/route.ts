@@ -8,6 +8,6 @@ export async function POST(req: NextRequest) {
   }
   const token = signAdminToken();
   const res = NextResponse.json({ ok: true });
-  res.cookies.set("amara_token", token, { httpOnly: true, path: "/", maxAge: 86400, sameSite: "lax" });
+  res.cookies.set("amara_admin_token", token, { httpOnly: true, path: "/", maxAge: 86400, sameSite: "lax" });
   return res;
 }
