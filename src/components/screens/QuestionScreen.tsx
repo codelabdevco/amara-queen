@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useTarotStore } from "@/store/useTarotStore";
 import { EASE } from "@/constants/animation";
 import LaurelButton from "@/components/ui/LaurelButton";
+import PersonalDataBadge from "@/components/ui/PersonalDataBadge";
 
 const SERVICE_COST: Record<string, number> = { tarot: 3, gypsy: 2 };
 
@@ -16,6 +17,7 @@ export default function QuestionScreen() {
   const setPhase = useTarotStore((s) => s.setPhase);
   const [showConfirm, setShowConfirm] = useState(false);
   const [credits, setCredits] = useState<number | null>(null);
+  const [usePersonal, setUsePersonal] = useState(true);
 
   const cost = SERVICE_COST[service] || 1;
 
@@ -76,12 +78,16 @@ export default function QuestionScreen() {
         </div>
       )}
 
-      {/* Credit info */}
-      <p className="text-[#d4af37]/30 text-[0.55rem] mt-4">
+      {/* Personal data toggle */}
+      <div className="mt-4">
+        <PersonalDataBadge enabled={usePersonal} onToggle={setUsePersonal} />
+      </div>
+
+      <p className="text-[#d4af37]/30 text-[0.55rem] mt-2">
         &#9733; ใช้ {cost} เครดิต{credits !== null && ` · คงเหลือ ${credits}`}
       </p>
 
-      <div className="flex gap-3 mt-4">
+      <div className="flex gap-3 mt-3">
         <LaurelButton variant="crimson" onClick={() => setPhase("fan")}>ข้าม</LaurelButton>
         <LaurelButton variant="gold" onClick={handleStart}>เริ่มจั่วไพ่</LaurelButton>
       </div>

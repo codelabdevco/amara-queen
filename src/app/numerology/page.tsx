@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import AppShell from "@/components/AppShell";
 import LaurelButton from "@/components/ui/LaurelButton";
+import PersonalDataBadge from "@/components/ui/PersonalDataBadge";
 import { EASE } from "@/constants/animation";
 
 const TYPES = [
@@ -97,6 +98,7 @@ export default function NumerologyPage() {
   const [result, setResult] = useState<Result | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [usePersonal, setUsePersonal] = useState(true);
 
   function handleInput(val: string) {
     if (!selectedType) return;
@@ -218,6 +220,8 @@ export default function NumerologyPage() {
                 style={{ background: "#1e0c0c", border: "1px solid #8B7A4A15" }}
                 autoFocus
               />
+
+              <PersonalDataBadge enabled={usePersonal} onToggle={setUsePersonal} />
 
               {error && <p className="text-[#7a2020]/70 text-xs">{error}</p>}
 
