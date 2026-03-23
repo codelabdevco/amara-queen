@@ -9,6 +9,7 @@ interface UserInfo {
   role: string;
   userId?: string;
   username?: string;
+  linePictureUrl?: string | null;
 }
 
 export default function UserAuth() {
@@ -70,19 +71,14 @@ export default function UserAuth() {
   if (user) {
     return (
       <>
-        <button
-          onClick={() => setShowProfile(true)}
-          className="flex items-center gap-2"
-        >
-          <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center">
-            <span className="text-gold/60 text-xs">
-              {user.username?.charAt(0).toUpperCase() || "A"}
-            </span>
-          </div>
-          <span className="text-xs text-white/40 hidden sm:inline">{user.username || "Admin"}</span>
-        </button>
-        <button onClick={handleLogout} className="text-[0.6rem] text-white/20 hover:text-white/40 ml-1">
-          ออก
+        <button onClick={() => setShowProfile(true)} className="flex items-center gap-2">
+          {user.linePictureUrl ? (
+            <img src={user.linePictureUrl} alt="" className="w-7 h-7 rounded-full" style={{ border: "1px solid #8B7A4A30" }} />
+          ) : (
+            <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: "#3A0E0E", border: "1px solid #8B7A4A30" }}>
+              <span className="text-[#d4af37]/60 text-xs">{user.username?.charAt(0).toUpperCase() || "?"}</span>
+            </div>
+          )}
         </button>
         <ProfileSetup open={showProfile} onClose={() => setShowProfile(false)} />
       </>
