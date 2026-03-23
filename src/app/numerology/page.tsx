@@ -9,9 +9,23 @@ import { EASE } from "@/constants/animation";
 const TYPES = [
   { id: "phone", icon: "☎", name: "เบอร์โทรศัพท์", placeholder: "0XX-XXX-XXXX", inputMode: "tel" as const, maxLen: 12 },
   { id: "lucky", icon: "★", name: "เบอร์มงคล", placeholder: "0XX-XXX-XXXX", inputMode: "tel" as const, maxLen: 12 },
-  { id: "bank", icon: "฿", name: "เลขบัญชีธนาคาร", placeholder: "XXX-X-XXXXX-X", inputMode: "numeric" as const, maxLen: 15 },
+  { id: "bank", icon: "฿", name: "เลขบัญชีธนาคาร", placeholder: "เลือกธนาคารก่อน", inputMode: "numeric" as const, maxLen: 15 },
   { id: "car", icon: "◈", name: "ทะเบียนรถ", placeholder: "กข 1234", inputMode: "text" as const, maxLen: 10 },
   { id: "id", icon: "♦", name: "บัตรประชาชน", placeholder: "X-XXXX-XXXXX-XX-X", inputMode: "numeric" as const, maxLen: 17 },
+];
+
+const BANKS = [
+  { id: "kbank", name: "กสิกรไทย", digits: 10, format: "XXX-X-XXXXX-X", color: "#138F2D" },
+  { id: "bbl", name: "กรุงเทพ", digits: 10, format: "XXX-X-XXXXX-X", color: "#1E4598" },
+  { id: "scb", name: "ไทยพาณิชย์", digits: 10, format: "XXX-X-XXXXX-X", color: "#4E2A82" },
+  { id: "ktb", name: "กรุงไทย", digits: 10, format: "XXX-X-XXXXX-X", color: "#1BA5E0" },
+  { id: "bay", name: "กรุงศรี", digits: 10, format: "XXX-X-XXXXX-X", color: "#FEC43B" },
+  { id: "ttb", name: "ทหารไทยธนชาต", digits: 10, format: "XXX-X-XXXXX-X", color: "#0055A5" },
+  { id: "gsb", name: "ออมสิน", digits: 12, format: "XXXXXXXXXXXX", color: "#EB198D" },
+  { id: "baac", name: "ธ.ก.ส.", digits: 12, format: "XXXXXXXXXXXX", color: "#4BA94F" },
+  { id: "uob", name: "UOB", digits: 10, format: "XXX-XXX-XXXX", color: "#0B3B8E" },
+  { id: "cimb", name: "CIMB", digits: 10, format: "XXXXXXXXXX", color: "#EC1C24" },
+  { id: "lhbank", name: "LH Bank", digits: 10, format: "XXX-X-XXXXX-X", color: "#6D6E71" },
 ];
 
 function formatNumber(type: string, raw: string): string {
@@ -24,6 +38,9 @@ function formatNumber(type: string, raw: string): string {
       return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
     }
     case "bank": {
+      // 12-digit banks (GSB, BAAC) — no dash
+      if (digits.length > 10) return digits;
+      // 10-digit banks — XXX-X-XXXXX-X
       if (digits.length <= 3) return digits;
       if (digits.length <= 4) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
       if (digits.length <= 9) return `${digits.slice(0, 3)}-${digits.slice(3, 4)}-${digits.slice(4)}`;
@@ -41,7 +58,7 @@ function formatNumber(type: string, raw: string): string {
   }
 }
 
-function validateNumber(type: string, raw: string): string | null {
+function validateNumber(type: string, raw: string, bankId?: string | null): string | null {
   const digits = raw.replace(/[^0-9]/g, "");
   switch (type) {
     case "phone":
@@ -49,9 +66,12 @@ function validateNumber(type: string, raw: string): string | null {
       if (digits.length !== 10) return "เบอร์โทรต้องมี 10 หลัก";
       if (!digits.startsWith("0")) return "เบอร์โทรต้องขึ้นต้นด้วย 0";
       return null;
-    case "bank":
-      if (digits.length < 10 || digits.length > 12) return "เลขบัญชีต้องมี 10-12 หลัก";
+    case "bank": {
+      const bank = BANKS.find(b => b.id === bankId);
+      if (!bank) return "กรุณาเลือกธนาคาร";
+      if (digits.length !== bank.digits) return `เลขบัญชี${bank.name}ต้องมี ${bank.digits} หลัก`;
       return null;
+    }
     case "id":
       if (digits.length !== 13) return "เลขบัตรประชาชนต้องมี 13 หลัก";
       return null;
@@ -72,6 +92,7 @@ interface Result {
 
 export default function NumerologyPage() {
   const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [selectedBank, setSelectedBank] = useState<string | null>(null);
   const [number, setNumber] = useState("");
   const [result, setResult] = useState<Result | null>(null);
   const [loading, setLoading] = useState(false);
@@ -83,14 +104,19 @@ export default function NumerologyPage() {
       setNumber(val.slice(0, (TYPES.find(t => t.id === selectedType)?.maxLen || 10)));
     } else {
       const digits = val.replace(/[^0-9]/g, "");
-      const maxDigits = selectedType === "phone" || selectedType === "lucky" ? 10 : selectedType === "id" ? 13 : 12;
+      let maxDigits = selectedType === "phone" || selectedType === "lucky" ? 10 : selectedType === "id" ? 13 : 12;
+      if (selectedType === "bank" && selectedBank) {
+        const bank = BANKS.find(b => b.id === selectedBank);
+        if (bank) maxDigits = bank.digits;
+      }
       setNumber(formatNumber(selectedType, digits.slice(0, maxDigits)));
     }
   }
 
   async function handleAnalyze() {
     if (!selectedType || !number.trim()) return;
-    const validationError = validateNumber(selectedType, number);
+    if (selectedType === "bank" && !selectedBank) { setError("กรุณาเลือกธนาคาร"); return; }
+    const validationError = validateNumber(selectedType, number, selectedBank);
     if (validationError) { setError(validationError); return; }
     setLoading(true);
     setError("");
@@ -99,7 +125,7 @@ export default function NumerologyPage() {
       const res = await fetch("/api/numerology", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: selectedType, number: number.trim() }),
+        body: JSON.stringify({ type: selectedType, number: number.trim(), bank: selectedBank ? BANKS.find(b => b.id === selectedBank)?.name : undefined }),
       });
       const data = await res.json();
       if (data.error) { setError(data.error); }
@@ -110,6 +136,7 @@ export default function NumerologyPage() {
 
   function handleReset() {
     setSelectedType(null);
+    setSelectedBank(null);
     setNumber("");
     setResult(null);
     setError("");
@@ -153,6 +180,32 @@ export default function NumerologyPage() {
                 <span className="text-[#d4af37] text-xl">{activeType?.icon}</span>
                 <p className="text-[#E2D4A0] text-sm font-medium">{activeType?.name}</p>
               </div>
+
+              {/* Bank selector */}
+              {selectedType === "bank" && (
+                <div className="w-full max-w-[300px]">
+                  <p className="text-[#8B7A4A]/40 text-[0.6rem] mb-2 text-center">เลือกธนาคาร</p>
+                  <div className="grid grid-cols-3 gap-1.5 mb-3">
+                    {BANKS.map(bank => (
+                      <button key={bank.id} onClick={() => { setSelectedBank(bank.id); setNumber(""); }}
+                        className={`rounded-lg py-2 px-1 text-[0.6rem] text-center transition-all ${selectedBank === bank.id ? "text-[#E2D4A0]" : "text-[#8B7A4A]/50"}`}
+                        style={{
+                          background: selectedBank === bank.id ? "#3A0E0E" : "#1e0c0c",
+                          border: selectedBank === bank.id ? `1px solid ${bank.color}40` : "0.5px solid #8B7A4A10",
+                        }}
+                      >
+                        <span className="block w-2 h-2 rounded-full mx-auto mb-0.5" style={{ background: bank.color }} />
+                        {bank.name}
+                      </button>
+                    ))}
+                  </div>
+                  {selectedBank && (
+                    <p className="text-[#8B7A4A]/30 text-[0.55rem] text-center mb-1">
+                      {BANKS.find(b => b.id === selectedBank)?.digits} หลัก · {BANKS.find(b => b.id === selectedBank)?.format}
+                    </p>
+                  )}
+                </div>
+              )}
 
               <input
                 type="text"

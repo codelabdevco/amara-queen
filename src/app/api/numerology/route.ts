@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     if (creditError) return creditError;
 
     const settings = getSettings();
-    const { type, number } = await req.json();
+    const { type, number, bank } = await req.json();
 
     const typeLabels: Record<string, string> = {
       phone: "เบอร์โทรศัพท์",
@@ -23,7 +23,8 @@ export async function POST(req: NextRequest) {
       id: "เลขบัตรประชาชน",
     };
 
-    const typeLabel = typeLabels[type] || "ตัวเลข";
+    let typeLabel = typeLabels[type] || "ตัวเลข";
+    if (type === "bank" && bank) typeLabel = `เลขบัญชีธนาคาร${bank}`;
     const user = getUserFromRequest(req);
     let userContext = "";
     if (user) {
