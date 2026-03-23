@@ -51,7 +51,7 @@ export default function ProfilePage() {
   return (
     <AppShell>
       <motion.div
-        className="flex flex-col h-full px-4 pt-2 pb-2 overflow-hidden"
+        className="flex flex-col justify-center h-full px-4 py-2 overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, ease: EASE }}
