@@ -61,7 +61,7 @@ body {
   border: 1px solid rgba(212,175,55,0.15);
   z-index: 3;
   pointer-events: none;
-  animation: circleRotate 60s linear infinite;
+  animation: circleRotate 60s linear infinite, circleSpin 120s linear infinite;
 }
 .mystic-circle::before {
   content: "";
@@ -69,7 +69,7 @@ body {
   inset: 12%;
   border-radius: 50%;
   border: 1px solid rgba(212,175,55,0.10);
-  animation: circleRotate 45s linear infinite reverse;
+  animation: circleSpin 80s linear infinite reverse;
 }
 .mystic-circle::after {
   content: "";
@@ -77,7 +77,7 @@ body {
   inset: 25%;
   border-radius: 50%;
   border: 1px dashed rgba(212,175,55,0.07);
-  animation: circleRotate 30s linear infinite;
+  animation: circleSpin 50s linear infinite;
 }
 .mystic-circle-marks {
   position: fixed;
@@ -90,12 +90,17 @@ body {
   max-height: 500px;
   z-index: 3;
   pointer-events: none;
-  animation: circleRotate 90s linear infinite;
+  animation: circleRotate 90s linear infinite, circleSpin 150s linear infinite reverse;
 }
 
 @keyframes circleRotate {
   from { transform: translateY(-50%) rotate(0deg); }
   to { transform: translateY(-50%) rotate(360deg); }
+}
+
+@keyframes circleSpin {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
 }
 
 /* ===== SPARKLE ===== */
