@@ -187,7 +187,7 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                   <label className="block text-white/40 text-xs mb-1.5">ชื่อเล่น *</label>
                   <input type="text" placeholder="เช่น มายด์, เบส, แพร" value={form.nickname}
                     onChange={e => update("nickname", e.target.value)}
-                    className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none"
+                    className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 outline-none border border-[#8B7A4A]/10 focus:border-[#8B7A4A]/25"
                     autoFocus
                   />
                 </div>
@@ -198,14 +198,14 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                     <label className="block text-white/40 text-xs mb-1.5">ชื่อจริง</label>
                     <input type="text" placeholder="ชื่อ" value={form.firstName}
                       onChange={e => update("firstName", e.target.value)}
-                      className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none"
+                      className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 outline-none border border-[#8B7A4A]/10 focus:border-[#8B7A4A]/25"
                     />
                   </div>
                   <div>
                     <label className="block text-white/40 text-xs mb-1.5">นามสกุล</label>
                     <input type="text" placeholder="นามสกุล" value={form.lastName}
                       onChange={e => update("lastName", e.target.value)}
-                      className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none"
+                      className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 outline-none border border-[#8B7A4A]/10 focus:border-[#8B7A4A]/25"
                     />
                   </div>
                 </div>
@@ -231,8 +231,8 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                         onClick={() => update("gender", g.value)}
                         className={`py-2 rounded-lg border text-sm transition-all ${
                           form.gender === g.value
-                            ? "bg-gold/10 border-gold/10 text-gold"
-                            : "bg-[#1e0c0c] border-gold/[0.02] text-white/40 hover:border-gold/[0.02]"
+                            ? "bg-[#3A0E0E] border-[#8B7A4A]/30 text-gold"
+                            : "bg-[#1e0c0c] border-[#8B7A4A]/10 text-white/40 hover:border-[#8B7A4A]/20"
                         }`}
                       >
                         <span className="mr-1">{g.icon}</span> {g.label}
@@ -247,14 +247,14 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                     <label className="block text-white/40 text-xs mb-1.5">เบอร์โทร</label>
                     <input type="tel" inputMode="numeric" placeholder="0812345678" value={form.phone}
                       onChange={e => update("phone", e.target.value)}
-                      className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none font-mono tracking-wider"
+                      className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 outline-none border border-[#8B7A4A]/10 focus:border-[#8B7A4A]/25 font-mono tracking-wider"
                     />
                   </div>
                   <div>
                     <label className="block text-white/40 text-xs mb-1.5">อีเมล</label>
                     <input type="email" inputMode="email" placeholder="email@mail.com" value={form.email}
                       onChange={e => update("email", e.target.value.trim())}
-                      className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none"
+                      className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 outline-none border border-[#8B7A4A]/10 focus:border-[#8B7A4A]/25"
                     />
                   </div>
                 </div>
@@ -268,8 +268,8 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                         onClick={() => update("relationshipStatus", form.relationshipStatus === s.value ? "" : s.value)}
                         className={`py-2 rounded-lg border text-xs transition-all ${
                           form.relationshipStatus === s.value
-                            ? "bg-gold/10 border-gold/10 text-gold"
-                            : "bg-[#1e0c0c] border-gold/[0.02] text-white/40 hover:border-gold/[0.02]"
+                            ? "bg-[#3A0E0E] border-[#8B7A4A]/30 text-gold"
+                            : "bg-[#1e0c0c] border-[#8B7A4A]/10 text-white/40 hover:border-[#8B7A4A]/20"
                         }`}
                       >
                         {s.label}
@@ -283,7 +283,7 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
                   <label className="block text-white/40 text-xs mb-1.5">อาชีพ</label>
                   <input type="text" placeholder="เช่น พนักงานบริษัท, นักศึกษา" value={form.occupation}
                     onChange={e => update("occupation", e.target.value)}
-                    className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 focus:border-gold/10 outline-none"
+                    className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/15 outline-none border border-[#8B7A4A]/10 focus:border-[#8B7A4A]/25"
                   />
                 </div>
 
