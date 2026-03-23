@@ -16,7 +16,7 @@ const FORTUNE_SERVICES = [
 const OTHER_SERVICES = [
   { href: "/auspicious", icon: "☆", name: "ฤกษ์ยามมงคล", cost: 2 },
   { href: "/calendar", icon: "☼", name: "วันดีวันร้าย", cost: 0 },
-  { href: "/booking", icon: "☷", name: "นัดหมอดู", cost: 0 },
+  { href: "/subscription", icon: "✦", name: "แพ็กเกจดวง", cost: 0 },
   { href: "/shop", icon: "❖", name: "ร้านค้ามงคล", cost: 0 },
 ];
 

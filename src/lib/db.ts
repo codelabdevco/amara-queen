@@ -481,6 +481,71 @@ export interface ShopProduct {
   active: boolean;
 }
 
+// ── SUBSCRIPTIONS ──
+export interface Subscription {
+  id: string;
+  userId: string;
+  username: string;
+  lineUserId: string;
+  package: "daily" | "weekly" | "monthly" | "all";
+  status: "active" | "expired" | "cancelled";
+  startDate: number;
+  endDate: number;
+  autoRenew: boolean;
+  paidCredits: number;
+  createdAt: number;
+}
+
+export const SUB_PACKAGES = {
+  daily: { name: "ดวงรายวัน", credits: 99, desc: "ส่งทุกเช้า 06:00", content: "ดวง 5 ด้าน + สีมงคล + เลขมงคล + คำแนะนำ" },
+  weekly: { name: "ดวงรายสัปดาห์", credits: 49, desc: "ส่งทุกจันทร์ 06:00", content: "ภาพรวมสัปดาห์ + วันดี/วันร้าย" },
+  monthly: { name: "ดวงรายเดือน", credits: 29, desc: "ส่งวันที่ 1 ของเดือน", content: "ภาพรวมเดือน + เรื่องเด่น + ข้อควรระวัง" },
+  all: { name: "แพ็กรวมทั้งหมด", credits: 149, desc: "รายวัน+สัปดาห์+เดือน", content: "ครบทุกแพ็ก ประหยัด 18%" },
+};
+
+function getSubscriptions(): Subscription[] { return readJSON("subscriptions.json", []); }
+function saveSubscriptionsData(subs: Subscription[]): void { writeJSON("subscriptions.json", subs); }
+
+export function getUserSubscription(userId: string): Subscription | null {
+  const subs = getSubscriptions();
+  const now = Date.now();
+  subs.forEach(s => { if (s.userId === userId && s.status === "active" && s.endDate <= now) s.status = "expired"; });
+  saveSubscriptionsData(subs);
+  return subs.find(s => s.userId === userId && s.status === "active" && s.endDate > now) || null;
+}
+
+export function createSubscription(userId: string, username: string, lineUserId: string, pkg: keyof typeof SUB_PACKAGES): Subscription {
+  const subs = getSubscriptions();
+  subs.forEach(s => { if (s.userId === userId && s.status === "active") s.status = "cancelled"; });
+  const now = Date.now();
+  const sub: Subscription = {
+    id: crypto.randomUUID(), userId, username, lineUserId, package: pkg,
+    status: "active", startDate: now, endDate: now + 30 * 24 * 60 * 60 * 1000,
+    autoRenew: true, paidCredits: SUB_PACKAGES[pkg].credits, createdAt: now,
+  };
+  subs.push(sub);
+  saveSubscriptionsData(subs);
+  return sub;
+}
+
+export function toggleAutoRenew(subId: string): boolean {
+  const subs = getSubscriptions();
+  const sub = subs.find(s => s.id === subId);
+  if (!sub) return false;
+  sub.autoRenew = !sub.autoRenew;
+  saveSubscriptionsData(subs);
+  return sub.autoRenew;
+}
+
+export function getAllSubscriptions(): Subscription[] {
+  return getSubscriptions().sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export function getActiveSubscribersForType(type: "daily" | "weekly" | "monthly"): Subscription[] {
+  const now = Date.now();
+  return getSubscriptions().filter(s => s.status === "active" && s.endDate > now && (s.package === type || s.package === "all"));
+}
+
 // ── CATEGORIES ──
 export function getCategories(): string[] {
   return readJSON("categories.json", ["พระเครื่อง", "เครื่องประดับ", "ยันต์", "น้ำมนต์", "ของมงคล", "เทียน"]);
