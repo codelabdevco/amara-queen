@@ -7,12 +7,60 @@ import LaurelButton from "@/components/ui/LaurelButton";
 import { EASE } from "@/constants/animation";
 
 const TYPES = [
-  { id: "phone", icon: "☎", name: "เบอร์โทรศัพท์", placeholder: "08XXXXXXXX", inputMode: "tel" as const },
-  { id: "lucky", icon: "★", name: "เบอร์มงคล", placeholder: "08XXXXXXXX", inputMode: "tel" as const },
-  { id: "bank", icon: "฿", name: "เลขบัญชีธนาคาร", placeholder: "XXX-X-XXXXX-X", inputMode: "numeric" as const },
-  { id: "car", icon: "◈", name: "ทะเบียนรถ", placeholder: "กข 1234", inputMode: "text" as const },
-  { id: "id", icon: "♦", name: "บัตรประชาชน", placeholder: "X-XXXX-XXXXX-XX-X", inputMode: "numeric" as const },
+  { id: "phone", icon: "☎", name: "เบอร์โทรศัพท์", placeholder: "0XX-XXX-XXXX", inputMode: "tel" as const, maxLen: 12 },
+  { id: "lucky", icon: "★", name: "เบอร์มงคล", placeholder: "0XX-XXX-XXXX", inputMode: "tel" as const, maxLen: 12 },
+  { id: "bank", icon: "฿", name: "เลขบัญชีธนาคาร", placeholder: "XXX-X-XXXXX-X", inputMode: "numeric" as const, maxLen: 15 },
+  { id: "car", icon: "◈", name: "ทะเบียนรถ", placeholder: "กข 1234", inputMode: "text" as const, maxLen: 10 },
+  { id: "id", icon: "♦", name: "บัตรประชาชน", placeholder: "X-XXXX-XXXXX-XX-X", inputMode: "numeric" as const, maxLen: 17 },
 ];
+
+function formatNumber(type: string, raw: string): string {
+  const digits = raw.replace(/[^0-9]/g, "");
+  switch (type) {
+    case "phone":
+    case "lucky": {
+      if (digits.length <= 3) return digits;
+      if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+      return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+    }
+    case "bank": {
+      if (digits.length <= 3) return digits;
+      if (digits.length <= 4) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+      if (digits.length <= 9) return `${digits.slice(0, 3)}-${digits.slice(3, 4)}-${digits.slice(4)}`;
+      return `${digits.slice(0, 3)}-${digits.slice(3, 4)}-${digits.slice(4, 9)}-${digits.slice(9, 10)}`;
+    }
+    case "id": {
+      if (digits.length <= 1) return digits;
+      if (digits.length <= 5) return `${digits.slice(0, 1)}-${digits.slice(1)}`;
+      if (digits.length <= 10) return `${digits.slice(0, 1)}-${digits.slice(1, 5)}-${digits.slice(5)}`;
+      if (digits.length <= 12) return `${digits.slice(0, 1)}-${digits.slice(1, 5)}-${digits.slice(5, 10)}-${digits.slice(10)}`;
+      return `${digits.slice(0, 1)}-${digits.slice(1, 5)}-${digits.slice(5, 10)}-${digits.slice(10, 12)}-${digits.slice(12, 13)}`;
+    }
+    case "car": return raw; // Allow Thai + numbers
+    default: return raw;
+  }
+}
+
+function validateNumber(type: string, raw: string): string | null {
+  const digits = raw.replace(/[^0-9]/g, "");
+  switch (type) {
+    case "phone":
+    case "lucky":
+      if (digits.length !== 10) return "เบอร์โทรต้องมี 10 หลัก";
+      if (!digits.startsWith("0")) return "เบอร์โทรต้องขึ้นต้นด้วย 0";
+      return null;
+    case "bank":
+      if (digits.length < 10 || digits.length > 12) return "เลขบัญชีต้องมี 10-12 หลัก";
+      return null;
+    case "id":
+      if (digits.length !== 13) return "เลขบัตรประชาชนต้องมี 13 หลัก";
+      return null;
+    case "car":
+      if (raw.trim().length < 2) return "กรุณากรอกทะเบียนรถ";
+      return null;
+    default: return null;
+  }
+}
 
 const LEVEL_COLOR: Record<string, string> = { excellent: "#d4af37", good: "#C4AD72", neutral: "#8B7A4A", caution: "#7a4020", bad: "#7a2020" };
 
@@ -29,8 +77,21 @@ export default function NumerologyPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  function handleInput(val: string) {
+    if (!selectedType) return;
+    if (selectedType === "car") {
+      setNumber(val.slice(0, (TYPES.find(t => t.id === selectedType)?.maxLen || 10)));
+    } else {
+      const digits = val.replace(/[^0-9]/g, "");
+      const maxDigits = selectedType === "phone" || selectedType === "lucky" ? 10 : selectedType === "id" ? 13 : 12;
+      setNumber(formatNumber(selectedType, digits.slice(0, maxDigits)));
+    }
+  }
+
   async function handleAnalyze() {
     if (!selectedType || !number.trim()) return;
+    const validationError = validateNumber(selectedType, number);
+    if (validationError) { setError(validationError); return; }
     setLoading(true);
     setError("");
     setResult(null);
@@ -97,8 +158,9 @@ export default function NumerologyPage() {
                 type="text"
                 inputMode={activeType?.inputMode}
                 value={number}
-                onChange={e => setNumber(e.target.value)}
+                onChange={e => handleInput(e.target.value)}
                 placeholder={activeType?.placeholder}
+                maxLength={activeType?.maxLen}
                 className="w-full max-w-[300px] text-center rounded-lg px-4 py-3 text-lg text-[#E2D4A0] placeholder:text-[#8B7A4A]/25 outline-none tracking-wider font-mono"
                 style={{ background: "#1e0c0c", border: "1px solid #8B7A4A15" }}
                 autoFocus
