@@ -1,15 +1,21 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 export default function AnimatedBg() {
   const particlesRef = useRef<HTMLDivElement>(null);
   const sparklesRef = useRef<HTMLDivElement>(null);
+  const [lottieData, setLottieData] = useState<object | null>(null);
+
+  useEffect(() => {
+    fetch("/galdrastafur.json").then(r => r.json()).then(setLottieData).catch(() => {});
+  }, []);
 
   useEffect(() => {
     const container = particlesRef.current;
     if (!container) return;
-
     for (let i = 0; i < 15; i++) {
       const p = document.createElement("div");
       p.className = "bg-particle";
@@ -21,15 +27,12 @@ export default function AnimatedBg() {
       p.style.opacity = "0";
       container.appendChild(p);
     }
-
     return () => { container.innerHTML = ""; };
   }, []);
 
-  // Sparkles
   useEffect(() => {
     const container = sparklesRef.current;
     if (!container) return;
-
     function createSparkle() {
       if (!container) return;
       const s = document.createElement("div");
@@ -46,7 +49,6 @@ export default function AnimatedBg() {
       container.appendChild(s);
       setTimeout(() => s.remove(), dur * 1000);
     }
-
     const interval = setInterval(createSparkle, 800);
     return () => clearInterval(interval);
   }, []);
@@ -55,51 +57,47 @@ export default function AnimatedBg() {
     <>
       {/* Layer 1: Curtain */}
       <div className="fixed z-0 overflow-hidden" style={{ inset: "-5%" }}>
-        <img src="/curtain.svg" alt=""
-          className="w-full h-full object-cover"
-          style={{ animation: "curtainSway 12s ease-in-out infinite" }}
-          draggable={false}
-        />
+        <img src="/curtain.svg" alt="" className="w-full h-full object-cover"
+          style={{ animation: "curtainSway 12s ease-in-out infinite" }} draggable={false} />
       </div>
 
       {/* Layer 2: Globe */}
       <div className="fixed z-[1] overflow-hidden" style={{ inset: "-5%" }}>
-        <img src="/globe.svg" alt=""
-          className="w-full h-full object-cover opacity-[0.25]"
-          style={{ animation: "globeFloat 25s ease-in-out infinite" }}
-          draggable={false}
-        />
+        <img src="/globe.svg" alt="" className="w-full h-full object-cover opacity-[0.25]"
+          style={{ animation: "globeFloat 25s ease-in-out infinite" }} draggable={false} />
       </div>
 
       {/* Layer 3: Dark overlay */}
       <div className="fixed inset-0 z-[2] pointer-events-none"
-        style={{ background: "linear-gradient(180deg, rgba(26,10,10,0.3) 0%, rgba(26,10,10,0.6) 50%, rgba(26,10,10,0.8) 100%)" }}
-      />
+        style={{ background: "linear-gradient(180deg, rgba(26,10,10,0.3) 0%, rgba(26,10,10,0.6) 50%, rgba(26,10,10,0.8) 100%)" }} />
 
-      {/* Layer 4: Mystic circles */}
-      <div className="mystic-circle" />
-      <svg className="mystic-circle-marks" viewBox="0 0 200 200">
-        {Array.from({ length: 12 }, (_, i) => {
-          const angle = (i * 30) * Math.PI / 180;
-          const x = 100 + 95 * Math.cos(angle);
-          const y = 100 + 95 * Math.sin(angle);
-          return <line key={i} x1={100 + 85 * Math.cos(angle)} y1={100 + 85 * Math.sin(angle)} x2={x} y2={y} stroke="#d4af37" strokeWidth="0.5" opacity="0.2" />;
-        })}
-        {Array.from({ length: 36 }, (_, i) => {
-          const angle = (i * 10) * Math.PI / 180;
-          const x = 100 + 92 * Math.cos(angle);
-          const y = 100 + 92 * Math.sin(angle);
-          return <circle key={`d${i}`} cx={x} cy={y} r="0.7" fill="#d4af37" opacity="0.12" />;
-        })}
-      </svg>
+      {/* Layer 4: Rune circles — left */}
+      {lottieData && (
+        <div className="fixed z-[3] pointer-events-none"
+          style={{ left: "-15%", top: "50%", transform: "translateY(-50%)", width: "65vw", height: "65vw", maxWidth: "550px", maxHeight: "550px", animation: "circleRotate 60s linear infinite" }}
+        >
+          <Lottie animationData={lottieData} loop autoplay
+            style={{ width: "100%", height: "100%", filter: "sepia(1) hue-rotate(10deg) brightness(1.5)", opacity: 0.12 }} />
+        </div>
+      )}
+
+      {/* Layer 4b: Rune circles — right (smaller, opposite spin) */}
+      {lottieData && (
+        <div className="fixed z-[3] pointer-events-none"
+          style={{ right: "-20%", top: "30%", transform: "translateY(-50%)", width: "45vw", height: "45vw", maxWidth: "400px", maxHeight: "400px", animation: "circleRotate 80s linear infinite reverse" }}
+        >
+          <Lottie animationData={lottieData} loop autoplay
+            style={{ width: "100%", height: "100%", filter: "sepia(1) hue-rotate(10deg) brightness(1.5)", opacity: 0.07 }} />
+        </div>
+      )}
 
       {/* Layer 5: Particles */}
-      <div className="fixed inset-0 z-[3] pointer-events-none">
+      <div className="fixed inset-0 z-[4] pointer-events-none">
         <div ref={particlesRef} />
       </div>
 
-      {/* Layer 5: Sparkles */}
-      <div ref={sparklesRef} className="fixed inset-0 z-[4] pointer-events-none overflow-hidden" />
+      {/* Layer 6: Sparkles */}
+      <div ref={sparklesRef} className="fixed inset-0 z-[5] pointer-events-none overflow-hidden" />
     </>
   );
 }

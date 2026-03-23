@@ -47,60 +47,10 @@ body {
   80% { transform: translate(-1.2%, 0.5%) scale(1.04) rotate(-0.3deg); }
 }
 
-/* ===== MYSTIC CIRCLE ===== */
-.mystic-circle {
-  position: fixed;
-  left: -20%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 60vw;
-  height: 60vw;
-  max-width: 500px;
-  max-height: 500px;
-  border-radius: 50%;
-  border: 1px solid rgba(212,175,55,0.15);
-  z-index: 3;
-  pointer-events: none;
-  animation: circleRotate 60s linear infinite, circleSpin 120s linear infinite;
-}
-.mystic-circle::before {
-  content: "";
-  position: absolute;
-  inset: 12%;
-  border-radius: 50%;
-  border: 1px solid rgba(212,175,55,0.10);
-  animation: circleSpin 80s linear infinite reverse;
-}
-.mystic-circle::after {
-  content: "";
-  position: absolute;
-  inset: 25%;
-  border-radius: 50%;
-  border: 1px dashed rgba(212,175,55,0.07);
-  animation: circleSpin 50s linear infinite;
-}
-.mystic-circle-marks {
-  position: fixed;
-  left: -20%;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 60vw;
-  height: 60vw;
-  max-width: 500px;
-  max-height: 500px;
-  z-index: 3;
-  pointer-events: none;
-  animation: circleRotate 90s linear infinite, circleSpin 150s linear infinite reverse;
-}
-
+/* ===== RUNE CIRCLE ===== */
 @keyframes circleRotate {
   from { transform: translateY(-50%) rotate(0deg); }
   to { transform: translateY(-50%) rotate(360deg); }
-}
-
-@keyframes circleSpin {
-  from { rotate: 0deg; }
-  to { rotate: 360deg; }
 }
 
 /* ===== SPARKLE ===== */
