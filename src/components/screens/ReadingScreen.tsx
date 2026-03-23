@@ -464,7 +464,7 @@ export default function ReadingScreen() {
               {errorType === "server" && (
                 <Button variant="outline" onClick={() => { setHasError(false); setErrorMsg(""); fetchReading(); }}>ลองใหม่</Button>
               )}
-              <Button variant="outline" onClick={reset}>กลับหน้าหลัก</Button>
+              <Button variant="outline" onClick={() => { window.location.href = "/home"; }}>กลับหน้าหลัก</Button>
             </div>
           </motion.div>
         )}
@@ -605,7 +605,7 @@ export default function ReadingScreen() {
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.5 }}
         >
-          <Button variant="outline" onClick={reset}>จั่วไพ่ใหม่</Button>
+          <Button variant="outline" onClick={() => { window.location.href = window.location.pathname; }}>จั่วไพ่ใหม่</Button>
           <Button variant="outline" onClick={async () => {
             const text = `Amara Queen — ${selectedTopic?.nameTH || "ดูดวง"}\n\n"${userQuestion || "ดูดวงทั่วไป"}"\n\nแนวโน้ม: ${TREND_CONFIG[aiReading.trend]?.label || "กลางๆ"}\n${aiReading.summary}\n\nคำแนะนำ: ${aiReading.advice}`;
             if (navigator.share) {
