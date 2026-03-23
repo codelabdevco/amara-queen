@@ -122,11 +122,9 @@ export default function HomeScreen() {
               transition={{ delay: 0.75 + idx * 0.08, duration: 0.4, ease: EASE }}
             >
               <LaurelButton variant="crimson" href={svc.href} className="w-full h-[60px]">
-                <span className="flex flex-col items-center gap-0.5">
-                  <span className="opacity-70">{svc.icon}</span>
+                <span className="flex flex-col items-center justify-center gap-0 leading-tight w-full text-center">
                   <span className="text-[0.65rem]">{svc.name}</span>
-                  {svc.cost > 0 && <span className="opacity-25 text-[0.45rem]">&#9733;{svc.cost} เครดิต</span>}
-                  {svc.cost === 0 && <span className="opacity-20 text-[0.45rem]">ฟรี</span>}
+                  <span className="opacity-30 text-[0.45rem]">{svc.cost > 0 ? `★${svc.cost} เครดิต` : "ฟรี"}</span>
                 </span>
               </LaurelButton>
             </motion.div>
