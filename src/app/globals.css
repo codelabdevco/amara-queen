@@ -47,6 +47,57 @@ body {
   80% { transform: translate(-1.2%, 0.5%) scale(1.04) rotate(-0.3deg); }
 }
 
+/* ===== MYSTIC CIRCLE ===== */
+.mystic-circle {
+  position: fixed;
+  left: -20%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60vw;
+  height: 60vw;
+  max-width: 500px;
+  max-height: 500px;
+  border-radius: 50%;
+  border: 1px solid rgba(139,122,74,0.06);
+  z-index: 3;
+  pointer-events: none;
+  animation: circleRotate 60s linear infinite;
+}
+.mystic-circle::before {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  border: 1px solid rgba(139,122,74,0.04);
+  animation: circleRotate 45s linear infinite reverse;
+}
+.mystic-circle::after {
+  content: "";
+  position: absolute;
+  inset: 25%;
+  border-radius: 50%;
+  border: 1px dashed rgba(139,122,74,0.03);
+  animation: circleRotate 30s linear infinite;
+}
+.mystic-circle-marks {
+  position: fixed;
+  left: -20%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60vw;
+  height: 60vw;
+  max-width: 500px;
+  max-height: 500px;
+  z-index: 3;
+  pointer-events: none;
+  animation: circleRotate 90s linear infinite;
+}
+
+@keyframes circleRotate {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
 /* ===== SPARKLE ===== */
 .sparkle {
   position: fixed;
