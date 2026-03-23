@@ -122,9 +122,9 @@ export default function HomeScreen() {
               transition={{ delay: 0.75 + idx * 0.08, duration: 0.4, ease: EASE }}
             >
               <LaurelButton variant="crimson" href={svc.href} className="w-full h-[60px]">
-                <span className="flex flex-col items-center justify-center gap-0 leading-tight w-full text-center">
-                  <span className="text-[0.65rem]">{svc.name}</span>
-                  <span className="opacity-30 text-[0.45rem]">{svc.cost > 0 ? `★${svc.cost} เครดิต` : "ฟรี"}</span>
+                <span className="flex flex-col items-center justify-center gap-0.5 leading-tight w-full text-center">
+                  <span className="opacity-50 text-base leading-none">{svc.icon}</span>
+                  <span className="text-[0.65rem] leading-none">{svc.name}</span>
                 </span>
               </LaurelButton>
             </motion.div>
