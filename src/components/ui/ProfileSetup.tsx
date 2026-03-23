@@ -59,11 +59,15 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
 
   useEffect(() => {
     if (open) {
-      setShowSummary(false);
       fetch("/api/auth/profile").then(r => r.json()).then(data => {
         if (data.profile) {
           setForm(data.profile);
           setZodiac(data.zodiac);
+          // If already filled, show summary instead of form
+          if (data.profile.birthdate) setShowSummary(true);
+          else setShowSummary(false);
+        } else {
+          setShowSummary(false);
         }
       }).catch(() => {});
     }
@@ -116,7 +120,8 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
       >
         <div className="absolute inset-0 bg-black/85 backdrop-blur-sm" />
         <motion.div
-          className="relative bg-[#2a1215] rounded-2xl p-6 w-full max-w-[400px] max-h-[90vh] overflow-y-auto"
+          className="relative rounded-lg p-5 w-full max-w-[380px] max-h-[85vh] overflow-y-auto"
+          style={{ background: "linear-gradient(135deg, #2D0A0A, #3A0E0E)", border: "1px solid #8B7A4A15" }}
           initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
         >
           <AnimatePresence mode="wait">
