@@ -74,20 +74,20 @@ export default function AnimatedBg() {
       {/* Layer 4: Rune circles — left */}
       {lottieData && (
         <div className="fixed z-[3] pointer-events-none"
-          style={{ left: "-15%", top: "50%", transform: "translateY(-50%)", width: "65vw", height: "65vw", maxWidth: "550px", maxHeight: "550px", animation: "circleRotate 60s linear infinite" }}
+          style={{ left: "-15%", top: "50%", transform: "translateY(-50%)", width: "65vw", height: "65vw", maxWidth: "550px", maxHeight: "550px", animation: "circleRotate 180s linear infinite" }}
         >
           <Lottie animationData={lottieData} loop autoplay
-            style={{ width: "100%", height: "100%", filter: "sepia(1) hue-rotate(10deg) brightness(1.5)", opacity: 0.12 }} />
+            style={{ width: "100%", height: "100%", filter: "sepia(1) hue-rotate(10deg) brightness(1.2)", opacity: 0.05 }} />
         </div>
       )}
 
       {/* Layer 4b: Rune circles — right (smaller, opposite spin) */}
       {lottieData && (
         <div className="fixed z-[3] pointer-events-none"
-          style={{ right: "-20%", top: "30%", transform: "translateY(-50%)", width: "45vw", height: "45vw", maxWidth: "400px", maxHeight: "400px", animation: "circleRotate 80s linear infinite reverse" }}
+          style={{ right: "-20%", top: "30%", transform: "translateY(-50%)", width: "45vw", height: "45vw", maxWidth: "400px", maxHeight: "400px", animation: "circleRotate 240s linear infinite reverse" }}
         >
           <Lottie animationData={lottieData} loop autoplay
-            style={{ width: "100%", height: "100%", filter: "sepia(1) hue-rotate(10deg) brightness(1.5)", opacity: 0.07 }} />
+            style={{ width: "100%", height: "100%", filter: "sepia(1) hue-rotate(10deg) brightness(1.2)", opacity: 0.03 }} />
         </div>
       )}
 
