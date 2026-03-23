@@ -83,13 +83,13 @@ export default function AnimatedBg() {
           const angle = (i * 30) * Math.PI / 180;
           const x = 100 + 95 * Math.cos(angle);
           const y = 100 + 95 * Math.sin(angle);
-          return <line key={i} x1={100 + 85 * Math.cos(angle)} y1={100 + 85 * Math.sin(angle)} x2={x} y2={y} stroke="#8B7A4A" strokeWidth="0.3" opacity="0.08" />;
+          return <line key={i} x1={100 + 85 * Math.cos(angle)} y1={100 + 85 * Math.sin(angle)} x2={x} y2={y} stroke="#d4af37" strokeWidth="0.5" opacity="0.2" />;
         })}
         {Array.from({ length: 36 }, (_, i) => {
           const angle = (i * 10) * Math.PI / 180;
           const x = 100 + 92 * Math.cos(angle);
           const y = 100 + 92 * Math.sin(angle);
-          return <circle key={`d${i}`} cx={x} cy={y} r="0.5" fill="#8B7A4A" opacity="0.05" />;
+          return <circle key={`d${i}`} cx={x} cy={y} r="0.7" fill="#d4af37" opacity="0.12" />;
         })}
       </svg>
 

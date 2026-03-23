@@ -58,7 +58,7 @@ body {
   max-width: 500px;
   max-height: 500px;
   border-radius: 50%;
-  border: 1px solid rgba(139,122,74,0.06);
+  border: 1px solid rgba(212,175,55,0.15);
   z-index: 3;
   pointer-events: none;
   animation: circleRotate 60s linear infinite;
@@ -68,7 +68,7 @@ body {
   position: absolute;
   inset: 12%;
   border-radius: 50%;
-  border: 1px solid rgba(139,122,74,0.04);
+  border: 1px solid rgba(212,175,55,0.10);
   animation: circleRotate 45s linear infinite reverse;
 }
 .mystic-circle::after {
@@ -76,7 +76,7 @@ body {
   position: absolute;
   inset: 25%;
   border-radius: 50%;
-  border: 1px dashed rgba(139,122,74,0.03);
+  border: 1px dashed rgba(212,175,55,0.07);
   animation: circleRotate 30s linear infinite;
 }
 .mystic-circle-marks {
