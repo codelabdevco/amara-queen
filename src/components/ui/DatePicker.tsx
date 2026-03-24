@@ -53,7 +53,7 @@ export default function DatePicker({ value, onChange }: Props) {
   return (
     <div className="grid grid-cols-3 gap-2">
       <div className="relative">
-        <select value={parsed.day} onChange={e => handleChange("day", e.target.value)} className={`${selectClass} w-full`} style={selectStyle}>
+        <select value={parsed.day ? String(parseInt(parsed.day)) : ""} onChange={e => handleChange("day", e.target.value)} className={`${selectClass} w-full`} style={selectStyle}>
           <option value="" className="bg-[#1e0c0c] text-white/30">วัน</option>
           {Array.from({ length: daysInMonth }, (_, i) => i + 1).map(d => (
             <option key={d} value={String(d)} className="bg-[#1e0c0c]">{d}</option>

@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
   if (product.salePrice === undefined) product.salePrice = 0;
   if (product.weight === undefined) product.weight = 0;
   if (product.sortOrder === undefined) product.sortOrder = 0;
+  if (product.active === undefined) product.active = true;
   saveProduct(product);
   return NextResponse.json({ ok: true, product });
 }

@@ -325,6 +325,17 @@ export default function ReadingScreen() {
           })),
         }),
       });
+      if (!res.ok) {
+        let data = { error: "", needLogin: false, needCredits: false };
+        try { data = await res.json(); } catch {}
+        setHasError(true);
+        setErrorMsg(data.error || (res.status === 503 ? "ระบบกำลังปรับปรุง กรุณากลับมาใหม่" : res.status === 429 ? "คำขอบ่อยเกินไป กรุณารอสักครู่" : "เกิดข้อผิดพลาด กรุณาลองใหม่"));
+        if (data.needLogin) setErrorType("login");
+        else if (data.needCredits) setErrorType("credit");
+        else setErrorType("server");
+        setLoadingAI(false);
+        return;
+      }
       const data = await res.json();
       if (data.error) {
         setHasError(true);

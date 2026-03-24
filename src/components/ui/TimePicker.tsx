@@ -16,10 +16,15 @@ export default function TimePicker({ value, onChange }: Props) {
 
   function handleChange(part: "hour" | "minute", val: string) {
     const next = { ...parsed, [part]: val };
-    if (next.hour && next.minute) {
+    if (next.hour !== "" && next.minute !== "") {
       onChange(`${next.hour.padStart(2, "0")}:${next.minute.padStart(2, "0")}`);
-    } else if (!next.hour && !next.minute) {
+    } else if (next.hour === "" && next.minute === "") {
       onChange("");
+    } else {
+      // Partial — store what we have with default
+      const h = (next.hour || "0").padStart(2, "0");
+      const m = (next.minute || "0").padStart(2, "0");
+      onChange(`${h}:${m}`);
     }
   }
 

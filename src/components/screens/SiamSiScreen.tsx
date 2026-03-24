@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 import { EASE } from "@/constants/animation";
 import LaurelButton from "@/components/ui/LaurelButton";
@@ -141,10 +141,18 @@ type FortuneResult = {
 type ScreenState = "idle" | "shaking" | "revealing" | "loading" | "result";
 
 export default function SiamSiScreen() {
-  
+
   const [state, setState] = useState<ScreenState>("idle");
   const [stickNumber, setStickNumber] = useState<number | null>(null);
   const [fortune, setFortune] = useState<FortuneResult | null>(null);
+  const [user, setUser] = useState<{ id: string } | null>(null);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/auth/me").then(r => r.json()).then(d => {
+      if (d.user) setUser(d.user);
+    }).catch(() => {});
+  }, []);
 
   const fetchFortune = useCallback(async (num: number) => {
     setState("loading");
@@ -173,6 +181,10 @@ export default function SiamSiScreen() {
   }, []);
 
   const handleShake = useCallback(() => {
+    if (!user) {
+      setShowLoginPrompt(true);
+      return;
+    }
     setState("shaking");
 
     // After 2 second shake, reveal number
@@ -559,6 +571,33 @@ export default function SiamSiScreen() {
               <LaurelButton variant="crimson" onClick={handleRetry}>
                 เสี่ยงใหม่
               </LaurelButton>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Login prompt */}
+      <AnimatePresence>
+        {showLoginPrompt && (
+          <motion.div
+            className="fixed inset-0 z-[200] flex items-center justify-center px-4"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          >
+            <div className="absolute inset-0 bg-black/85 backdrop-blur-sm" onClick={() => setShowLoginPrompt(false)} />
+            <motion.div
+              className="relative rounded-lg p-6 w-full max-w-[320px] text-center"
+              style={{ background: "linear-gradient(135deg, #2D0A0A, #3A0E0E)", border: "1px solid #8B7A4A15" }}
+              initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
+            >
+              <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-3">
+                <span className="text-gold text-xl">♦</span>
+              </div>
+              <h3 className="text-gold text-base font-semibold mb-1">กรุณาเข้าสู่ระบบ</h3>
+              <p className="text-[#8B7A4A]/50 text-xs mb-4">เข้าสู่ระบบก่อนเพื่อเสี่ยงเซียมซี</p>
+              <div className="flex gap-3 justify-center">
+                <LaurelButton variant="crimson" onClick={() => setShowLoginPrompt(false)}>ปิด</LaurelButton>
+                <LaurelButton variant="gold" href="/api/auth/line">เข้าสู่ระบบ</LaurelButton>
+              </div>
             </motion.div>
           </motion.div>
         )}

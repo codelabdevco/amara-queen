@@ -102,7 +102,7 @@ export default function ProfileSetup({ open, onClose, onSaved }: Props) {
   function update(key: keyof ProfileData, value: string) {
     // Input sanitization
     if (key === "phone") {
-      value = value.replace(/[^0-9-]/g, "").slice(0, 12);
+      value = value.replace(/[^0-9]/g, "").slice(0, 10);
     }
     if (key === "nickname" || key === "firstName" || key === "lastName") {
       value = value.replace(/[0-9]/g, "").slice(0, 50);

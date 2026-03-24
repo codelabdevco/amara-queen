@@ -33,10 +33,9 @@ body {
 /* ===== BACKGROUND ANIMATIONS ===== */
 @keyframes curtainSway {
   0%, 100% { transform: translate(0, 0) scale(1.06); }
-  20% { transform: translate(1.2%, -0.8%) scale(1.07); }
-  40% { transform: translate(-0.8%, 1%) scale(1.05); }
-  60% { transform: translate(0.6%, 0.5%) scale(1.07); }
-  80% { transform: translate(-1%, -0.6%) scale(1.05); }
+  25% { transform: translate(0, -0.8%) scale(1.07); }
+  50% { transform: translate(0, 0.8%) scale(1.05); }
+  75% { transform: translate(0, -0.5%) scale(1.07); }
 }
 
 @keyframes globeFloat {

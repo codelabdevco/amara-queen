@@ -50,10 +50,15 @@ export default function ProfilePage() {
   useEffect(() => {
     fetchProfile();
     fetch("/api/credits/topup").then(r => r.json()).then(d => setPayments(d.requests || [])).catch(() => {});
-    fetch("/api/shop/order").then(r => r.json()).then(d => {
-      // Use readings from admin API if available, otherwise empty
-    }).catch(() => {});
+    fetch("/api/shop/order").then(r => r.json()).then(() => {}).catch(() => {});
   }, []);
+
+  // Auto-open profile setup when logged in but profile incomplete
+  useEffect(() => {
+    if (!loading && data?.profile && !data.profile.birthdate) {
+      setShowEdit(true);
+    }
+  }, [loading, data]);
 
   // Fetch reading history
   useEffect(() => {
