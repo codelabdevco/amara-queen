@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 const LINE_CLIENT_ID = process.env.LINE_CHANNEL_ID || "";
 const REDIRECT_URI = process.env.LINE_CALLBACK_URL || "";
 

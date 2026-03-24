@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { findUserByLineId, createLineUser } from "@/lib/db";
 import { signUserToken } from "@/lib/admin-auth";
 
+export const dynamic = "force-dynamic";
+
 const LINE_CLIENT_ID = process.env.LINE_CHANNEL_ID || "";
 const LINE_CLIENT_SECRET = process.env.LINE_CHANNEL_SECRET || "";
 const REDIRECT_URI = process.env.LINE_CALLBACK_URL || "";
