@@ -219,7 +219,7 @@ export default function SiamSiScreen() {
             animation: "shimmer-text 4s ease-in-out infinite",
           }}
         >เซียมซี</h2>
-        <p className="text-[#8B7A4A]/50 text-xs mt-1">เสี่ยงเซียมซี 1-100 พร้อม AI ตีความ</p>
+        <p className="text-[#8B7A4A]/50 text-xs mt-1">เสี่ยงเซียมซี 1-100 พร้อมตีความโดยราชินี</p>
       </motion.div>
 
       <AnimatePresence mode="wait">
@@ -415,7 +415,7 @@ export default function SiamSiScreen() {
                 animate={{ opacity: [0.3, 0.7, 0.3] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                AI กำลังตีความเซียมซี...
+                ราชินีกำลังตีความเซียมซี...
               </motion.p>
             </div>
           </motion.div>
@@ -540,7 +540,7 @@ export default function SiamSiScreen() {
                   <span className="text-gold text-sm">✦</span>
                 </motion.div>
                 <div>
-                  <p className="text-xs text-gold/50 font-semibold mb-1.5 tracking-wider uppercase">AI ตีความ</p>
+                  <p className="text-xs text-gold/50 font-semibold mb-1.5 tracking-wider uppercase">ราชินีตีความ</p>
                   <p className="text-sm leading-8 text-white/75">{fortune.interpretation}</p>
                 </div>
               </div>

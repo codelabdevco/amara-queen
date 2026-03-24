@@ -236,7 +236,7 @@ export default function NumerologyPage() {
           {loading && (
             <motion.div key="loading" className="flex flex-col items-center py-10" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <div className="w-10 h-10 border-2 border-[#8B7A4A]/30 border-t-[#d4af37] rounded-full animate-spin mb-4" />
-              <p className="text-[#8B7A4A]/50 text-xs">AI กำลังวิเคราะห์ตัวเลข...</p>
+              <p className="text-[#8B7A4A]/50 text-xs">กำลังถอดรหัสตัวเลข...</p>
             </motion.div>
           )}
 

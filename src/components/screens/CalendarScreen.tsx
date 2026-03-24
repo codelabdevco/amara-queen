@@ -234,12 +234,12 @@ export default function CalendarScreen() {
               ) : loadingAI ? (
                 <div className="flex items-center justify-center gap-2 py-2">
                   <div className="w-3 h-3 border border-[#d4af37]/30 border-t-[#d4af37] rounded-full animate-spin" />
-                  <span className="text-[#8B7A4A]/50 text-xs">AI กำลังวิเคราะห์...</span>
+                  <span className="text-[#8B7A4A]/50 text-xs">กำลังอ่านดวงชะตา...</span>
                 </div>
               ) : (
                 <div className="flex justify-center">
                   <LaurelButton variant="crimson" onClick={() => fetchAIFortune(selected.date)} className="w-full h-[42px]">
-                    ★1 วิเคราะห์ดวงละเอียดด้วย AI
+                    ★1 เปิดดวงชะตาละเอียด
                   </LaurelButton>
                 </div>
               )}

@@ -196,7 +196,7 @@ export default function ProfilePage() {
                   <div className="rounded-lg p-3" style={{ background: "#2a1215", border: "0.5px solid #8B7A4A10" }}>
                     <p className="text-[#8B7A4A]/40 text-[0.5rem] uppercase tracking-wider mb-2">ค่าบริการ</p>
                     <div className="space-y-1">
-                      {[{ name: "ไพ่ทาโร่", cost: 3 }, { name: "ไพ่ยิปซี", cost: 2 }, { name: "เซียมซี", cost: 1 }, { name: "ฤกษ์ยาม", cost: 2 }, { name: "วิเคราะห์ AI", cost: 1 }].map(s => (
+                      {[{ name: "ไพ่ทาโร่", cost: 3 }, { name: "ไพ่ยิปซี", cost: 2 }, { name: "เซียมซี", cost: 1 }, { name: "ฤกษ์ยาม", cost: 2 }, { name: "ถอดรหัสดวงชะตา", cost: 1 }].map(s => (
                         <div key={s.name} className="flex justify-between text-[0.65rem]">
                           <span className="text-[#E2D4A0]/40">{s.name}</span>
                           <span className="text-[#d4af37]/60">★{s.cost}</span>

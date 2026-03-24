@@ -11,7 +11,7 @@ const notoSansThai = Noto_Sans_Thai({
 
 export const metadata: Metadata = {
   title: "Amara Queen — ดูดวงไพ่ทาโร่",
-  description: "เปิดไพ่ทาโร่เพื่อค้นหาคำตอบที่จักรวาลมีให้คุณ ดูดวงความรัก การงาน การเงิน สุขภาพ ด้วย AI",
+  description: "เปิดไพ่ทาโร่เพื่อค้นหาคำตอบที่จักรวาลมีให้คุณ ดูดวงความรัก การงาน การเงิน สุขภาพ ด้วยศาสตร์แห่งดวงดาว",
   keywords: ["ดูดวง", "ไพ่ทาโร่", "tarot", "ดวง", "ทำนาย", "Amara Queen", "amara-queen"],
   authors: [{ name: "Amara Queen" }],
   manifest: "/manifest.json",
