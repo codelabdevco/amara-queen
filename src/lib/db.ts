@@ -216,6 +216,7 @@ export function findUserByLineId(lineUserId: string): User | null {
 export function createLineUser(lineUserId: string, displayName: string, pictureUrl: string): User {
   const users = getUsers();
   const settings = getSettings();
+  const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
   const user: User = {
     id: crypto.randomUUID(),
     username: displayName,
@@ -226,7 +227,7 @@ export function createLineUser(lineUserId: string, displayName: string, pictureU
     createdAt: Date.now(),
     readingsToday: 0,
     lastReadingDate: "",
-    lastFreeMonth: "",
+    lastFreeMonth: currentMonth,
     credits: settings.welcomeCredits,
   };
   users.push(user);
@@ -285,6 +286,7 @@ export function deleteAddress(userId: string, addressId: string): SavedAddress[]
 export function createUser(username: string, passwordHash: string): User {
   const users = getUsers();
   const settings = getSettings();
+  const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
   const user: User = {
     id: crypto.randomUUID(),
     username,
@@ -292,7 +294,7 @@ export function createUser(username: string, passwordHash: string): User {
     createdAt: Date.now(),
     readingsToday: 0,
     lastReadingDate: "",
-    lastFreeMonth: "",
+    lastFreeMonth: currentMonth,
     credits: settings.welcomeCredits,
   };
   users.push(user);
@@ -559,7 +561,7 @@ const DEFAULT_PRODUCTS: ShopProduct[] = [];
 
 export function getProducts(): ShopProduct[] {
   const products = readJSON<ShopProduct[]>("products.json", []);
-  return products.length > 0 ? products.filter(p => p.active) : DEFAULT_PRODUCTS;
+  return products.length > 0 ? products.filter(p => p.active !== false) : DEFAULT_PRODUCTS;
 }
 
 export function getAllProducts(): ShopProduct[] {
