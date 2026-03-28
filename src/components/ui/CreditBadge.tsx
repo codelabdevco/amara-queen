@@ -51,6 +51,24 @@ export default function CreditBadge() {
     } catch { setErrorMsg("ไม่สามารถเชื่อมต่อระบบชำระเงินได้"); setStep("error"); }
   }
 
+  async function handleTestTopup() {
+    if (!info) return;
+    setStep("processing");
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/test-topup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ packageIndex: selectedPkg }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setErrorMsg(data.error || "เกิดข้อผิดพลาด"); setStep("error"); return; }
+      setAddedCredits(data.credits);
+      setStep("success");
+      fetchBalance();
+    } catch { setErrorMsg("ไม่สามารถเติมเครดิตทดสอบได้"); setStep("error"); }
+  }
+
   function startPolling(cId: string, credits: number) {
     if (pollRef.current) clearInterval(pollRef.current);
     let attempts = 0;
@@ -165,6 +183,13 @@ export default function CreditBadge() {
                     <LaurelButton variant="gold" onClick={handlePay} className="w-full">
                       ชำระเงิน ฿{info.packages[selectedPkg]?.price}
                     </LaurelButton>
+
+                    {/* ปุ่ม bypass สำหรับการทดสอบ (เฉพาะ development mode) */}
+                    {(process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_ENABLE_TEST_TOPUP === 'true') && (
+                      <LaurelButton variant="crimson" onClick={handleTestTopup} className="w-full">
+                        ⚡ เติมเครดิตทดสอบ ({info.packages[selectedPkg]?.credits} เครดิต)
+                      </LaurelButton>
+                    )}
 
                     <p className="text-[#8B7A4A]/25 text-[0.5rem] text-center">PromptPay QR · เครดิตเข้าอัตโนมัติเมื่อชำระสำเร็จ</p>
                   </motion.div>
