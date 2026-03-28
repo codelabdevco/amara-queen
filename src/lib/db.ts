@@ -330,12 +330,33 @@ export function getUserCredits(userId: string): number {
   return user?.credits ?? 0;
 }
 
-export function addCredits(userId: string, amount: number): { success: boolean; newBalance: number } {
+export function addCredits(
+  userId: string,
+  amount: number,
+  reason?: string,
+  service?: string
+): { success: boolean; newBalance: number } {
   const users = getUsers();
   const user = users.find((u) => u.id === userId);
   if (!user) return { success: false, newBalance: 0 };
-  user.credits = (user.credits || 0) + amount;
+
+  const oldBalance = user.credits || 0;
+  user.credits = oldBalance + amount;
   saveUsers(users);
+
+  // Log transaction if reason provided (skip for legacy calls without reason)
+  if (reason) {
+    logCreditTransaction(
+      userId,
+      user.lineDisplayName || user.username || "ผู้ใช้",
+      amount > 0 ? "earn" : "spend",
+      amount,
+      user.credits,
+      reason,
+      service
+    );
+  }
+
   return { success: true, newBalance: user.credits };
 }
 
@@ -452,6 +473,58 @@ export function completeTransaction(chargeId: string, status: "successful" | "fa
 
   saveTransactions(txns);
   return txn;
+}
+
+// ── CREDIT TRANSACTIONS (Usage History) ──
+export interface CreditTransaction {
+  id: string;
+  userId: string;
+  username: string;
+  type: "earn" | "spend";
+  amount: number; // positive for earn, negative for spend
+  balance: number; // balance after transaction
+  reason: string; // e.g., "ไพ่ทาโร่ - ความรัก", "เติมเครดิต", "เครดิตฟรีรายเดือน"
+  service?: string; // tarot, gypsy, siamsi, auspicious, general
+  createdAt: number;
+}
+
+function getCreditTransactions(): CreditTransaction[] {
+  return readJSON("credit-transactions.json", []);
+}
+
+function saveCreditTransactions(txns: CreditTransaction[]): void {
+  writeJSON("credit-transactions.json", txns);
+}
+
+export function logCreditTransaction(
+  userId: string,
+  username: string,
+  type: "earn" | "spend",
+  amount: number,
+  balance: number,
+  reason: string,
+  service?: string
+): void {
+  const txns = getCreditTransactions();
+  const transaction: CreditTransaction = {
+    id: crypto.randomUUID(),
+    userId,
+    username,
+    type,
+    amount,
+    balance,
+    reason,
+    service,
+    createdAt: Date.now(),
+  };
+  txns.push(transaction);
+  saveCreditTransactions(txns);
+}
+
+export function getUserCreditTransactions(userId: string, limit = 50, offset = 0): { transactions: CreditTransaction[]; total: number } {
+  let txns = getCreditTransactions().filter(t => t.userId === userId).sort((a, b) => b.createdAt - a.createdAt);
+  const total = txns.length;
+  return { transactions: txns.slice(offset, offset + limit), total };
 }
 
 export function getPaymentHistory(userId: string): PaymentTransaction[] {

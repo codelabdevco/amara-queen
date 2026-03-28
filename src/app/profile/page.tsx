@@ -31,6 +31,11 @@ interface PaymentRecord {
   id: string; createdAt: number; method: string; amount: number; credits: number; status: string;
 }
 
+interface CreditTransaction {
+  id: string; userId: string; username: string; type: "earn" | "spend";
+  amount: number; balance: number; reason: string; service?: string; createdAt: number;
+}
+
 type Tab = "profile" | "history" | "credits";
 
 const TREND_LABEL: Record<string, string> = { very_positive: "ดีมาก", positive: "ดี", neutral: "กลางๆ", caution: "ระวัง", challenging: "ท้าทาย" };
@@ -42,6 +47,7 @@ export default function ProfilePage() {
   const [tab, setTab] = useState<Tab>("profile");
   const [readings, setReadings] = useState<ReadingRecord[]>([]);
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
+  const [creditHistory, setCreditHistory] = useState<CreditTransaction[]>([]);
 
   function fetchProfile() {
     fetch("/api/auth/profile").then(r => r.ok ? r.json() : null).then(d => { setData(d); setLoading(false); }).catch(() => setLoading(false));
@@ -50,6 +56,7 @@ export default function ProfilePage() {
   useEffect(() => {
     fetchProfile();
     fetch("/api/credits/topup").then(r => r.json()).then(d => setPayments(d.requests || [])).catch(() => {});
+    fetch("/api/credits/history").then(r => r.json()).then(d => setCreditHistory(d.transactions || [])).catch(() => {});
     fetch("/api/shop/order").then(r => r.json()).then(() => {}).catch(() => {});
   }, []);
 
@@ -73,6 +80,49 @@ export default function ProfilePage() {
 
   function formatDate(ts: number) {
     return new Date(ts).toLocaleDateString("th-TH", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  }
+
+  // Combine credit transactions and payment records into unified history
+  function getCombinedCreditHistory() {
+    const combined: Array<{
+      id: string;
+      createdAt: number;
+      type: "earn" | "spend";
+      amount: number;
+      reason: string;
+      status?: string;
+      source: "payment" | "transaction";
+    }> = [];
+
+    // Add payment records (earn)
+    payments.forEach((p) => {
+      if (p.status === "successful" || p.status === "approved") {
+        combined.push({
+          id: p.id,
+          createdAt: p.createdAt,
+          type: "earn",
+          amount: p.credits,
+          reason: p.method === "transfer" ? "โอนเงิน" : "เติมเครดิต",
+          status: p.status,
+          source: "payment",
+        });
+      }
+    });
+
+    // Add credit transactions (both earn and spend)
+    creditHistory.forEach((t) => {
+      combined.push({
+        id: t.id,
+        createdAt: t.createdAt,
+        type: t.type,
+        amount: Math.abs(t.amount),
+        reason: t.reason,
+        source: "transaction",
+      });
+    });
+
+    // Sort by date (newest first)
+    return combined.sort((a, b) => b.createdAt - a.createdAt);
   }
 
   const tabs: { id: Tab; label: string }[] = [
@@ -210,27 +260,33 @@ export default function ProfilePage() {
                     </div>
                   </div>
 
-                  {/* Transaction history */}
+                  {/* Credit history (earn + spend) */}
                   <p className="text-[#8B7A4A]/40 text-[0.55rem] uppercase tracking-wider pt-1">ประวัติเครดิต</p>
-                  {payments.length === 0 ? (
-                    <p className="text-[#8B7A4A]/30 text-xs text-center py-4">ยังไม่มีประวัติ</p>
-                  ) : (
-                    payments.map((p, i) => (
-                      <div key={p.id || i} className="rounded-lg p-3 flex items-center justify-between" style={{ background: "#2a1215", border: "0.5px solid #8B7A4A10" }}>
-                        <div>
-                          <p className="text-[#E2D4A0]/60 text-xs">{p.method === "credit" ? "ใช้เครดิต" : p.method === "transfer" ? "โอนเงิน" : "เติมเครดิต"}</p>
-                          <p className="text-[#8B7A4A]/30 text-[0.55rem]">{formatDate(p.createdAt)}</p>
+                  {(() => {
+                    const combinedHistory = getCombinedCreditHistory();
+                    return combinedHistory.length === 0 ? (
+                      <p className="text-[#8B7A4A]/30 text-xs text-center py-4">ยังไม่มีประวัติ</p>
+                    ) : (
+                      combinedHistory.map((item, i) => (
+                        <div key={item.id || i} className="rounded-lg p-3 flex items-center justify-between" style={{ background: "#2a1215", border: "0.5px solid #8B7A4A10" }}>
+                          <div className="flex-1">
+                            <p className="text-[#E2D4A0]/60 text-xs">{item.reason}</p>
+                            <p className="text-[#8B7A4A]/30 text-[0.55rem]">{formatDate(item.createdAt)}</p>
+                            {item.status && (
+                              <span className={`text-[0.5rem] ${item.status === "successful" || item.status === "approved" ? "text-green-400/50" : item.status === "pending" ? "text-yellow-400/50" : "text-red-400/50"}`}>
+                                {item.status === "successful" || item.status === "approved" ? "สำเร็จ" : item.status === "pending" ? "รอ" : "ไม่สำเร็จ"}
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-right ml-2">
+                            <p className={`text-sm font-semibold ${item.type === "earn" ? "text-[#d4af37]" : "text-red-400/70"}`}>
+                              {item.type === "earn" ? "+" : "-"}{item.amount}
+                            </p>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-[#d4af37] text-sm font-semibold">+{p.credits}</p>
-                          {p.amount > 0 && <p className="text-[#8B7A4A]/30 text-[0.55rem]">฿{p.amount / 100}</p>}
-                          <span className={`text-[0.5rem] ${p.status === "successful" || p.status === "approved" ? "text-green-400/50" : p.status === "pending" ? "text-yellow-400/50" : "text-red-400/50"}`}>
-                            {p.status === "successful" || p.status === "approved" ? "สำเร็จ" : p.status === "pending" ? "รอ" : "ไม่สำเร็จ"}
-                          </span>
-                        </div>
-                      </div>
-                    ))
-                  )}
+                      ))
+                    );
+                  })()}
                 </div>
               )}
             </div>

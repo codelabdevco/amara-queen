@@ -10,12 +10,12 @@ const client = new Anthropic();
 // POST — get AI daily fortune for a specific date
 export async function POST(req: NextRequest) {
   try {
-    // Credit check — 1 เครดิต
-    const creditError = requireCredits(req, "siamsi"); // same cost as siamsi (1)
-    if (creditError) return creditError;
-
     const settings = getSettings();
     const { date } = await req.json();
+
+    // Credit check — 1 เครดิต
+    const creditError = requireCredits(req, "siamsi", "ดวงชะตาประจำวัน"); // same cost as siamsi (1)
+    if (creditError) return creditError;
     const user = getUserFromRequest(req);
 
     const d = new Date(date);

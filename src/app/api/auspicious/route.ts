@@ -10,12 +10,12 @@ const client = new Anthropic();
 
 export async function POST(req: NextRequest) {
   try {
-    // Credit check — 2 เครดิต
-    const creditError = requireCredits(req, "auspicious");
-    if (creditError) return creditError;
-
     const settings = getSettings();
     const { event, date } = await req.json();
+
+    // Credit check — 2 เครดิต
+    const creditError = requireCredits(req, "auspicious", `ฤกษ์ยาม - ${event}`);
+    if (creditError) return creditError;
 
     const d = new Date(date);
     const dayNames = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];

@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
 
     // Credit check — tarot 3 เครดิต, gypsy 2 เครดิต
     const service = body.service === "gypsy" ? "gypsy" as const : "tarot" as const;
-    const creditError = requireCredits(req, service);
+    const creditError = requireCredits(req, service, topic);
     if (creditError) return creditError;
 
     const user = getUserFromRequest(req);

@@ -9,9 +9,6 @@ const client = new Anthropic();
 
 export async function POST(req: NextRequest) {
   try {
-    const creditError = requireCredits(req, "siamsi"); // 1 credit
-    if (creditError) return creditError;
-
     const settings = getSettings();
     const { type, number, bank } = await req.json();
 
@@ -25,6 +22,9 @@ export async function POST(req: NextRequest) {
 
     let typeLabel = typeLabels[type] || "ตัวเลข";
     if (type === "bank" && bank) typeLabel = `เลขบัญชีธนาคาร${bank}`;
+
+    const creditError = requireCredits(req, "siamsi", `ถอดรหัสตัวเลข - ${typeLabel}`); // 1 credit
+    if (creditError) return creditError;
     const user = getUserFromRequest(req);
     let userContext = "";
     if (user) {

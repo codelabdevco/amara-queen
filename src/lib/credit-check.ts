@@ -38,7 +38,11 @@ function giveMonthlyCreditsIfNeeded(userId: string): void {
   } catch {}
 }
 
-export function requireCredits(req: NextRequest, service: ServiceName = "general"): NextResponse | null {
+export function requireCredits(
+  req: NextRequest,
+  service: ServiceName = "general",
+  topic?: string
+): NextResponse | null {
   const user = getUserFromRequest(req);
   const cost = getServiceCost(service);
 
@@ -67,7 +71,19 @@ export function requireCredits(req: NextRequest, service: ServiceName = "general
     );
   }
 
-  // Deduct
-  addCredits(user.userId, -cost);
+  // Deduct with reason
+  const serviceName = {
+    tarot: "ไพ่ทาโร่",
+    gypsy: "ไพ่ยิปซี",
+    siamsi: "เซียมซี",
+    auspicious: "ฤกษ์ยาม",
+    general: "ถอดรหัสดวงชะตา"
+  };
+
+  const reason = topic
+    ? `${serviceName[service]} - ${topic}`
+    : serviceName[service];
+
+  addCredits(user.userId, -cost, reason, service);
   return null;
 }

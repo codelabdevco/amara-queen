@@ -11,7 +11,7 @@ const client = new Anthropic();
 export async function POST(req: NextRequest) {
   try {
     // Credit check — 1 เครดิต
-    const creditError = requireCredits(req, "siamsi");
+    const creditError = requireCredits(req, "siamsi", "เซียมซี");
     if (creditError) return creditError;
 
     const settings = getSettings();

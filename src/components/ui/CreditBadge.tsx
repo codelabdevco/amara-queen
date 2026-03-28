@@ -22,16 +22,51 @@ export default function CreditBadge() {
   const [qrUrl, setQrUrl] = useState("");
   const [addedCredits, setAddedCredits] = useState(0);
   const [errorMsg, setErrorMsg] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  useEffect(() => { fetchBalance(); }, []);
+  useEffect(() => {
+    fetchBalance();
+    checkAdminStatus();
+  }, []);
   useEffect(() => { return () => { if (pollRef.current) clearInterval(pollRef.current); }; }, []);
 
   function fetchBalance() {
     fetch("/api/credits/balance").then(r => r.json()).then(setInfo).catch(() => {});
   }
 
+  function checkAdminStatus() {
+    fetch("/api/admin/verify").then(r => r.ok).then(setIsAdmin).catch(() => setIsAdmin(false));
+  }
+
   function openTopUp() { setShowTopUp(true); setStep("packages"); setErrorMsg(""); fetchBalance(); }
+
+  async function handleTestTopUp() {
+    if (!info) return;
+    try {
+      const pkg = info.packages[selectedPkg];
+      const res = await fetch("/api/test-topup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: pkg.credits,
+          reason: `เทสเติม ${pkg.credits} เครดิต`
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setErrorMsg(data.error || "เกิดข้อผิดพลาด");
+        setStep("error");
+        return;
+      }
+      setAddedCredits(data.addedAmount);
+      setStep("success");
+      fetchBalance();
+    } catch {
+      setErrorMsg("ไม่สามารถเติมเครดิตได้");
+      setStep("error");
+    }
+  }
 
   async function handlePay() {
     if (!info) return;
@@ -162,9 +197,17 @@ export default function CreditBadge() {
                       </div>
                     </div>
 
-                    <LaurelButton variant="gold" onClick={handlePay} className="w-full">
-                      ชำระเงิน ฿{info.packages[selectedPkg]?.price}
-                    </LaurelButton>
+                    <div className="space-y-2">
+                      <LaurelButton variant="gold" onClick={handlePay} className="w-full">
+                        ชำระเงิน ฿{info.packages[selectedPkg]?.price}
+                      </LaurelButton>
+
+                      {isAdmin && (
+                        <LaurelButton variant="crimson" onClick={handleTestTopUp} className="w-full">
+                          🧪 เทสเติมเครดิต ({info.packages[selectedPkg]?.credits} เครดิต)
+                        </LaurelButton>
+                      )}
+                    </div>
 
                     <p className="text-[#8B7A4A]/25 text-[0.5rem] text-center">PromptPay QR · เครดิตเข้าอัตโนมัติเมื่อชำระสำเร็จ</p>
                   </motion.div>
