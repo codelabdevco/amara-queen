@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Icon from "@/components/ui/Icon";
 
 interface ZodiacData {
   western: { signTh: string; elementTh: string };
@@ -36,7 +37,7 @@ export default function PersonalDataBadge({ enabled, onToggle }: Props) {
           <div className="w-4 h-4 rounded flex items-center justify-center text-[0.5rem]"
             style={{ background: enabled ? "#d4af37" : "#8B7A4A30", color: enabled ? "#1e0c0c" : "#8B7A4A", transition: "all 0.3s" }}
           >
-            {enabled ? "✓" : ""}
+            {enabled ? <Icon name="check" size={12} /> : null}
           </div>
           <span className="text-[#E2D4A0]/60 text-[0.65rem]">ใช้ข้อมูลส่วนตัวร่วมวิเคราะห์</span>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Icon from "@/components/ui/Icon";
 
 const MONTHS = [
   "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
@@ -59,7 +60,7 @@ export default function DatePicker({ value, onChange }: Props) {
             <option key={d} value={String(d)} className="bg-[#1e0c0c]">{d}</option>
           ))}
         </select>
-        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white/20 text-[0.5rem] pointer-events-none">▼</span>
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"><Icon name="chevron-down" size={10} className="text-white/20" /></span>
       </div>
       <div className="relative">
         <select value={parsed.month ? String(parseInt(parsed.month)) : ""} onChange={e => handleChange("month", e.target.value)} className={`${selectClass} w-full`} style={selectStyle}>
@@ -68,7 +69,7 @@ export default function DatePicker({ value, onChange }: Props) {
             <option key={i} value={String(i + 1)} className="bg-[#1e0c0c]">{m}</option>
           ))}
         </select>
-        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white/20 text-[0.5rem] pointer-events-none">▼</span>
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"><Icon name="chevron-down" size={10} className="text-white/20" /></span>
       </div>
       <div className="relative">
         <select value={parsed.year ? String(parseInt(parsed.year)) : ""} onChange={e => handleChange("year", e.target.value)} className={`${selectClass} w-full`} style={selectStyle}>
@@ -77,7 +78,7 @@ export default function DatePicker({ value, onChange }: Props) {
             <option key={y} value={String(y)} className="bg-[#1e0c0c]">{y + 543} ({y})</option>
           ))}
         </select>
-        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white/20 text-[0.5rem] pointer-events-none">▼</span>
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"><Icon name="chevron-down" size={10} className="text-white/20" /></span>
       </div>
     </div>
   );

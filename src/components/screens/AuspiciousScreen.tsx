@@ -4,21 +4,25 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useCallback } from "react";
 
 import { EASE } from "@/constants/animation";
+import PageHeader from "@/components/ui/PageHeader";
 import LaurelButton from "@/components/ui/LaurelButton";
+import Icon from "@/components/ui/Icon";
+import LineIcon from "@/components/ui/LineIcon";
 
 // ── Event types ──
 const EVENT_TYPES = [
-  { id: "wedding", icon: "♥", name: "แต่งงาน", desc: "พิธีมงคลสมรส", color: "#c44a5a" },
-  { id: "housewarming", icon: "⌂", name: "ขึ้นบ้านใหม่", desc: "ย้ายเข้าบ้าน ทำบุญบ้าน", color: "#d4a84b" },
-  { id: "business", icon: "⚙", name: "เปิดกิจการ", desc: "เริ่มธุรกิจ เปิดร้าน", color: "#e8d48b" },
-  { id: "car", icon: "☆", name: "ออกรถใหม่", desc: "รับรถ จดทะเบียน", color: "#a8d48b" },
-  { id: "travel", icon: "✈", name: "เดินทาง", desc: "ท่องเที่ยว เดินทางไกล", color: "#8bb8d4" },
-  { id: "exam", icon: "✎", name: "สอบ/สัมภาษณ์", desc: "สอบเข้า สัมภาษณ์งาน", color: "#b48bd4" },
-  { id: "medical", icon: "✚", name: "ผ่าตัด/รักษา", desc: "นัดหมอ ผ่าตัด", color: "#5ab4a8" },
-  { id: "merit", icon: "☸", name: "ทำบุญ", desc: "ทำบุญ ถวายสังฆทาน", color: "#d4884b" },
+  { id: "wedding", icon: "heart", name: "แต่งงาน", desc: "พิธีมงคลสมรส", color: "#c44a5a" },
+  { id: "housewarming", icon: "home", name: "ขึ้นบ้านใหม่", desc: "ย้ายเข้าบ้าน ทำบุญบ้าน", color: "#d4a84b" },
+  { id: "business", icon: "briefcase", name: "เปิดกิจการ", desc: "เริ่มธุรกิจ เปิดร้าน", color: "#e8d48b" },
+  { id: "car", icon: "car", name: "ออกรถใหม่", desc: "รับรถ จดทะเบียน", color: "#a8d48b" },
+  { id: "travel", icon: "compass", name: "เดินทาง", desc: "ท่องเที่ยว เดินทางไกล", color: "#8bb8d4" },
+  { id: "exam", icon: "book-open", name: "สอบ/สัมภาษณ์", desc: "สอบเข้า สัมภาษณ์งาน", color: "#b48bd4" },
+  { id: "medical", icon: "heart-pulse", name: "ผ่าตัด/รักษา", desc: "นัดหมอ ผ่าตัด", color: "#5ab4a8" },
+  { id: "merit", icon: "flame", name: "ทำบุญ", desc: "ทำบุญ ถวายสังฆทาน", color: "#d4884b" },
 ];
 
 // ── Thai days of week ──
+const THAI_DAYS_SHORT = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
 const THAI_DAYS = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
 const THAI_MONTHS = [
   "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
@@ -36,10 +40,10 @@ function formatThaiDate(dateStr: string): string {
 
 // ── Auspicious level config ──
 const AUSPICIOUS_CONFIG: Record<string, { label: string; color: string; icon: string; bg: string; gradient: string }> = {
-  excellent: { label: "ดีมาก", color: "#e8d48b", icon: "✦", bg: "rgba(232,212,139,0.08)", gradient: "from-[#e8d48b]/20 via-[#e8d48b]/5 to-transparent" },
-  good:      { label: "ดี",    color: "#a8d48b", icon: "✦", bg: "rgba(168,212,139,0.06)", gradient: "from-[#a8d48b]/15 via-[#a8d48b]/5 to-transparent" },
-  fair:      { label: "กลาง",  color: "#8bb8d4", icon: "☯", bg: "rgba(139,184,212,0.06)", gradient: "from-[#8bb8d4]/15 via-[#8bb8d4]/5 to-transparent" },
-  poor:      { label: "ไม่ดี", color: "#c44a5a", icon: "⚡", bg: "rgba(196,74,90,0.06)",  gradient: "from-[#c44a5a]/15 via-[#c44a5a]/5 to-transparent" },
+  excellent: { label: "ดีมาก", color: "#e8d48b", icon: "sparkles", bg: "rgba(232,212,139,0.08)", gradient: "from-[#e8d48b]/20 via-[#e8d48b]/5 to-transparent" },
+  good:      { label: "ดี",    color: "#a8d48b", icon: "sparkles", bg: "rgba(168,212,139,0.06)", gradient: "from-[#a8d48b]/15 via-[#a8d48b]/5 to-transparent" },
+  fair:      { label: "กลาง",  color: "#8bb8d4", icon: "circle-dot", bg: "rgba(139,184,212,0.06)", gradient: "from-[#8bb8d4]/15 via-[#8bb8d4]/5 to-transparent" },
+  poor:      { label: "ไม่ดี", color: "#c44a5a", icon: "zap", bg: "rgba(196,74,90,0.06)",  gradient: "from-[#c44a5a]/15 via-[#c44a5a]/5 to-transparent" },
 };
 
 // ── Mock response generator ──
@@ -111,6 +115,7 @@ type AuspiciousResult = {
   analysis: string;
   timeSlots: string[];
   avoidances: string[];
+  recommendation?: string;
 };
 
 type ScreenState = "select" | "date" | "loading" | "result";
@@ -125,9 +130,105 @@ function GoldDivider({ delay = 0 }: { delay?: number }) {
       transition={{ delay, duration: 0.5 }}
     >
       <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent to-gold/15" />
-      <span className="text-gold/20 text-[0.5rem]">✦</span>
+      <Icon name="sparkles" size={8} className="text-gold/20" />
       <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent to-gold/15" />
     </motion.div>
+  );
+}
+
+
+// ── Custom themed date picker ──
+function AuspiciousDatePicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [viewDate, setViewDate] = useState(() => {
+    if (value) return new Date(value + "T00:00:00");
+    return new Date();
+  });
+
+  const year = viewDate.getFullYear();
+  const month = viewDate.getMonth();
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  const cells: (number | null)[] = [];
+  for (let i = 0; i < firstDay; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+
+  const selectedDay = value ? new Date(value + "T00:00:00") : null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  function pick(day: number) {
+    const m = String(month + 1).padStart(2, "0");
+    const d = String(day).padStart(2, "0");
+    onChange(`${year}-${m}-${d}`);
+  }
+
+  function prevMonth() { setViewDate(new Date(year, month - 1, 1)); }
+  function nextMonth() { setViewDate(new Date(year, month + 1, 1)); }
+
+  const monthName = THAI_MONTHS[month];
+  const thaiYear = year + 543;
+
+  return (
+    <div className="rounded-2xl border overflow-hidden" style={{ background: "#2a1215", borderColor: "rgba(212,175,55,0.12)" }}>
+      {/* Month nav */}
+      <div className="flex items-center justify-between px-4 py-3" style={{ background: "#3A0E0E" }}>
+        <button onClick={prevMonth} className="w-8 h-8 rounded-lg flex items-center justify-center text-[#d4af37]/50 hover:text-[#d4af37] transition-colors" style={{ background: "rgba(212,175,55,0.06)" }}>
+          <Icon name="chevron-left" size={14} />
+        </button>
+        <span className="text-sm text-[#d4af37]/80 font-medium tracking-wide">{monthName} {thaiYear}</span>
+        <button onClick={nextMonth} className="w-8 h-8 rounded-lg flex items-center justify-center text-[#d4af37]/50 hover:text-[#d4af37] transition-colors" style={{ background: "rgba(212,175,55,0.06)" }}>
+          <Icon name="chevron-right" size={14} />
+        </button>
+      </div>
+
+      {/* Day headers */}
+      <div className="grid grid-cols-7 text-center py-2 px-2" style={{ borderBottom: "1px solid rgba(212,175,55,0.06)" }}>
+        {THAI_DAYS_SHORT.map((d) => (
+          <span key={d} className="text-[0.55rem] text-[#8B7A4A]/40">{d}</span>
+        ))}
+      </div>
+
+      {/* Days grid */}
+      <div className="grid grid-cols-7 gap-0.5 p-2">
+        {cells.map((day, i) => {
+          if (day === null) return <div key={`e${i}`} />;
+          const dateObj = new Date(year, month, day);
+          dateObj.setHours(0, 0, 0, 0);
+          const isSelected = selectedDay && dateObj.getTime() === selectedDay.getTime();
+          const isToday = dateObj.getTime() === today.getTime();
+          const isPast = dateObj.getTime() < today.getTime();
+
+          return (
+            <button
+              key={day}
+              onClick={() => !isPast && pick(day)}
+              disabled={isPast}
+              className={`w-full aspect-square rounded-lg text-xs font-medium transition-all ${
+                isPast
+                  ? "text-[#8B7A4A]/15 cursor-not-allowed"
+                  : isSelected
+                    ? "text-[#2A0C10] font-bold"
+                    : isToday
+                      ? "text-[#d4af37]"
+                      : "text-[#E2D4A0]/50 hover:text-[#E2D4A0]/80"
+              }`}
+              style={{
+                background: isSelected
+                  ? "linear-gradient(135deg, #d4af37, #f0d78c)"
+                  : isToday
+                    ? "rgba(212,175,55,0.08)"
+                    : "transparent",
+                boxShadow: isSelected ? "0 0 12px rgba(212,175,55,0.3)" : "none",
+              }}
+            >
+              {day}
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
@@ -137,30 +238,52 @@ export default function AuspiciousScreen() {
   const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [result, setResult] = useState<AuspiciousResult | null>(null);
+  const [error, setError] = useState<{ type: "login" | "credit" | "server"; msg: string } | null>(null);
 
   const selectedEventObj = EVENT_TYPES.find((e) => e.id === selectedEvent);
 
   const fetchAuspicious = useCallback(async (event: string, date: string) => {
     setState("loading");
+    setError(null);
     try {
       const res = await fetch("/api/auspicious", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ event, date }),
       });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.result) {
-          setResult(data.result);
-          setState("result");
-          return;
+      if (!res.ok) {
+        let data = { error: "", needLogin: false, needCredits: false };
+        try { data = await res.json(); } catch {}
+        if (data.needLogin) {
+          setError({ type: "login", msg: data.error || "กรุณาเข้าสู่ระบบเพื่อใช้บริการ" });
+        } else if (data.needCredits) {
+          setError({ type: "credit", msg: data.error || "เครดิตไม่เพียงพอ" });
+        } else {
+          setError({ type: "server", msg: data.error || "เกิดข้อผิดพลาด" });
         }
+        setState("date");
+        return;
+      }
+      const data = await res.json();
+      if (data.result) {
+        const r = data.result;
+        setResult({
+          level: r.level || "fair",
+          dayOfWeek: r.dayName || "",
+          thaiDate: formatThaiDate(date),
+          analysis: r.analysis || "",
+          timeSlots: r.goodTimes || r.timeSlots || [],
+          avoidances: r.avoid || r.avoidances || [],
+          recommendation: r.recommendation || "",
+        });
+        setState("result");
+        window.dispatchEvent(new Event("credit-changed"));
+        return;
       }
       // Fallback to mock
       setResult(generateMockAuspicious(event, date));
       setState("result");
     } catch {
-      // Fallback to mock
       setResult(generateMockAuspicious(event, date));
       setState("result");
     }
@@ -181,6 +304,7 @@ export default function AuspiciousScreen() {
     setSelectedEvent(null);
     setSelectedDate("");
     setResult(null);
+    setError(null);
   }, []);
 
   return (
@@ -191,25 +315,7 @@ export default function AuspiciousScreen() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6, ease: EASE }}
     >
-      {/* Title */}
-      <motion.div
-        className="text-center mb-6"
-        initial={{ opacity: 0, y: -15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
-      >
-        <h2
-          className="text-lg font-semibold tracking-[0.1em] mb-1"
-          style={{
-            background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
-            backgroundSize: "200% 200%",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            animation: "shimmer-text 4s ease-in-out infinite",
-          }}
-        >ฤกษ์ยามมงคล</h2>
-        <p className="text-[#8B7A4A]/50 text-xs mt-1">ดูฤกษ์ดี วันมงคล สำหรับงานสำคัญ</p>
-      </motion.div>
+      <PageHeader title="ฤกษ์ยามมงคล" subtitle="ดูฤกษ์ดี วันมงคล สำหรับงานสำคัญ" />
 
       <AnimatePresence mode="wait">
         {/* ── SELECT EVENT ── */}
@@ -244,7 +350,7 @@ export default function AuspiciousScreen() {
                     onClick={() => handleSelectEvent(evt.id)}
                     className="w-full h-[56px]"
                   >
-                    <span style={{ color: evt.color }}>{evt.icon}</span> {evt.name}
+                    <span className="flex items-center gap-2"><Icon name={evt.icon} size={14} className="text-[#d4af37]" />{evt.name}</span>
                   </LaurelButton>
                 </motion.div>
               ))}
@@ -266,18 +372,18 @@ export default function AuspiciousScreen() {
             <motion.div
               className="flex items-center gap-3 px-5 py-3 rounded-2xl border"
               style={{
-                borderColor: `${selectedEventObj.color}30`,
-                background: `${selectedEventObj.color}08`,
+                borderColor: "rgba(212,175,55,0.15)",
+                background: "rgba(212,175,55,0.04)",
               }}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
             >
               <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
-                style={{ background: `${selectedEventObj.color}15`, border: `1px solid ${selectedEventObj.color}30` }}
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{ background: "rgba(212,175,55,0.08)", border: "1px solid rgba(212,175,55,0.2)" }}
               >
-                <span style={{ color: selectedEventObj.color }}>{selectedEventObj.icon}</span>
+                <Icon name={selectedEventObj.icon} size={16} className="text-[#d4af37]" />
               </div>
               <div>
                 <p className="text-sm text-white/80 font-medium">{selectedEventObj.name}</p>
@@ -285,7 +391,7 @@ export default function AuspiciousScreen() {
               </div>
             </motion.div>
 
-            {/* Date input */}
+            {/* Date picker */}
             <motion.div
               className="w-full max-w-xs"
               initial={{ opacity: 0, y: 15 }}
@@ -295,18 +401,7 @@ export default function AuspiciousScreen() {
               <label className="block text-xs text-gold/50 font-semibold tracking-wider uppercase mb-3 text-center">
                 เลือกวันที่
               </label>
-              <input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                className="w-full px-4 py-3.5 rounded-xl border text-sm text-white/80 outline-none focus:border-gold/15 transition-colors"
-                style={{
-                  colorScheme: "dark",
-                  background: "#2a1215",
-                  borderColor: "rgba(232,212,139,0.15)",
-                }}
-                min={new Date().toISOString().split("T")[0]}
-              />
+              <AuspiciousDatePicker value={selectedDate} onChange={setSelectedDate} />
               {selectedDate && (
                 <motion.p
                   className="text-xs text-gold/40 text-center mt-2"
@@ -317,6 +412,26 @@ export default function AuspiciousScreen() {
                 </motion.p>
               )}
             </motion.div>
+
+            {/* Error message */}
+            {error && (
+              <motion.div
+                className="w-full max-w-xs rounded-xl border p-4 text-center"
+                style={{ borderColor: "rgba(196,74,90,0.2)", background: "rgba(196,74,90,0.06)" }}
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <p className="text-xs text-[#c44a5a]/80 mb-2">{error.msg}</p>
+                {error.type === "login" && (
+                  <a href="/api/auth/line" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium text-white" style={{ background: "#06C755" }}>
+                    <LineIcon size={14} /> เข้าสู่ระบบด้วย LINE
+                  </a>
+                )}
+                {error.type === "credit" && (
+                  <p className="text-[#d4af37]/50 text-[0.65rem]">กดที่ปุ่มเครดิตด้านบนเพื่อเติม</p>
+                )}
+              </motion.div>
+            )}
 
             {/* Submit button */}
             <motion.div
@@ -329,7 +444,7 @@ export default function AuspiciousScreen() {
                 onClick={handleSubmit}
                 className={!selectedDate ? "opacity-40 pointer-events-none" : ""}
               >
-                วิเคราะห์ฤกษ์
+                <span className="flex items-center gap-1.5"><Icon name="star" size={12} />2 วิเคราะห์ฤกษ์</span>
               </LaurelButton>
             </motion.div>
           </motion.div>
@@ -375,7 +490,7 @@ export default function AuspiciousScreen() {
                 animate={{ scale: [0.9, 1.1, 0.9], opacity: [0.4, 0.8, 0.4] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               >
-                <span className="text-3xl text-gold/50">☸</span>
+                <Icon name="flower" size={32} className="text-gold/50" />
               </motion.div>
             </div>
 
@@ -421,7 +536,7 @@ export default function AuspiciousScreen() {
                 transition={{ delay: 0.1 }}
               >
                 <div className="flex items-center justify-center gap-2 mb-1">
-                  <span style={{ color: selectedEventObj.color }}>{selectedEventObj.icon}</span>
+                  <Icon name={selectedEventObj.icon} size={16} className="text-[#d4af37]" />
                   <span className="text-sm text-white/70 font-medium">{selectedEventObj.name}</span>
                 </div>
                 <p className="text-xs text-gold/40">{result.thaiDate}</p>
@@ -470,7 +585,7 @@ export default function AuspiciousScreen() {
                       }}
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                     >
-                      <span style={{ color: config.color }}>{config.icon}</span>
+                      <Icon name={config.icon} size={16} style={{ color: config.color }} />
                     </motion.div>
                     <div>
                       <p className="text-[0.65rem] text-white/35 tracking-wider uppercase">ระดับฤกษ์</p>
@@ -529,7 +644,7 @@ export default function AuspiciousScreen() {
             >
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center">
-                  <span className="text-gold/60 text-[0.6rem]">✦</span>
+                  <Icon name="sparkles" size={10} className="text-gold/60" />
                 </div>
                 <p className="text-xs text-gold/50 font-semibold tracking-wider uppercase">วิเคราะห์ฤกษ์</p>
               </div>
@@ -550,7 +665,7 @@ export default function AuspiciousScreen() {
               >
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-6 h-6 rounded-full bg-[#a8d48b]/10 flex items-center justify-center">
-                    <span className="text-[#a8d48b]/60 text-[0.6rem]">☆</span>
+                    <Icon name="star" size={10} className="text-[#a8d48b]/60" />
                   </div>
                   <p className="text-xs text-[#a8d48b]/50 font-semibold tracking-wider uppercase">ช่วงเวลาที่เหมาะสม</p>
                 </div>
@@ -589,7 +704,7 @@ export default function AuspiciousScreen() {
               >
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-6 h-6 rounded-full bg-[#d4a84b]/10 flex items-center justify-center">
-                    <span className="text-[#d4a84b]/60 text-[0.6rem]">⚡</span>
+                    <Icon name="zap" size={10} className="text-[#d4a84b]/60" />
                   </div>
                   <p className="text-xs text-[#d4a84b]/50 font-semibold tracking-wider uppercase">สิ่งที่ควรหลีกเลี่ยง</p>
                 </div>
@@ -617,7 +732,7 @@ export default function AuspiciousScreen() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7, duration: 0.5 }}
             >
-              <LaurelButton variant="crimson" onClick={() => window.location.href = "/home"}>
+              <LaurelButton variant="crimson" href="/home">
                 กลับหน้าหลัก
               </LaurelButton>
               <LaurelButton variant="gold" onClick={handleRetry}>

@@ -7,6 +7,7 @@ import { GYPSY_TOPICS } from "@/types/gypsy";
 import { EASE } from "@/constants/animation";
 import LaurelButton from "@/components/ui/LaurelButton";
 import { useState, useEffect } from "react";
+import Icon from "@/components/ui/Icon";
 
 export default function TopicScreen() {
   const service = useTarotStore((s) => s.service);
@@ -70,7 +71,7 @@ export default function TopicScreen() {
                 className="w-full h-[46px]"
               >
                 <span className="flex items-center gap-1.5">
-                  <span className={`text-xs ${isSelected ? "" : "opacity-50"}`}>{t.icon}</span>
+                  <Icon name={t.icon} size={14} className={isSelected ? "text-[#d4af37]" : "opacity-50"} />
                   <span className="text-[0.65rem]">{t.nameTH}</span>
                 </span>
               </LaurelButton>

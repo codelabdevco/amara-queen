@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { EASE } from "@/constants/animation";
 import { getHistory, deleteReading, ReadingRecord } from "@/lib/history";
 import Button from "@/components/ui/Button";
+import Icon from "@/components/ui/Icon";
 
 const TREND_LABEL: Record<string, string> = {
   very_positive: "ดีมาก",
@@ -111,7 +112,7 @@ export default function HistoryScreen({ onClose }: Props) {
                         </div>
                         <p className="text-[0.65rem] text-gold/25 mt-0.5">{formatDate(r.timestamp)} · {r.spread}</p>
                       </div>
-                      <span className={`text-white/20 text-xs transition-transform ${isOpen ? "rotate-180" : ""}`}>▼</span>
+                      <Icon name="chevron-down" size={12} className={`text-white/20 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                     </div>
                     {r.question && (
                       <p className="text-xs text-white/35 mt-2 italic truncate pl-11">"{r.question}"</p>

@@ -1,11 +1,11 @@
-import type { Topic, Spread, SpreadPosition } from "./tarot";
+import type { Topic, Spread } from "./tarot";
 
 export const GYPSY_TOPICS: Topic[] = [
-  { id: "love", icon: "♥", nameTH: "ความรัก / คู่ครอง", nameEN: "Love", color: "#c44a5a", desc: "เนื้อคู่ แอบชอบ คืนดี", examples: ["เขาคิดอย่างไรกับฉัน", "จะเจอเนื้อคู่เมื่อไร", "ความรักจะไปรอดไหม"] },
-  { id: "career", icon: "⚙", nameTH: "การงาน / อาชีพ", nameEN: "Career", color: "#c9a84c", desc: "เลื่อนขั้น เปลี่ยนงาน", examples: ["ควรเปลี่ยนงานไหม", "จะได้เลื่อนตำแหน่งไหม"] },
-  { id: "money", icon: "★", nameTH: "การเงิน / โชคลาภ", nameEN: "Money", color: "#4a9e6e", desc: "รายได้ หนี้ ลงทุน", examples: ["การเงินช่วงนี้เป็นอย่างไร", "ควรลงทุนไหม"] },
-  { id: "health", icon: "✚", nameTH: "สุขภาพ", nameEN: "Health", color: "#9b7dd4", desc: "กาย จิต ความเครียด", examples: ["สุขภาพช่วงนี้เป็นอย่างไร"] },
-  { id: "general", icon: "✦", nameTH: "ดวงรวม", nameEN: "General", color: "#888780", desc: "ภาพรวม สัปดาห์ เดือน", examples: ["ดวงช่วงนี้เป็นอย่างไร", "มีข้อความอะไรจากจักรวาล"] },
+  { id: "love", icon: "heart", nameTH: "ความรัก / คู่ครอง", nameEN: "Love", color: "#c44a5a", desc: "เนื้อคู่ แอบชอบ คืนดี", examples: ["เขาคิดอย่างไรกับฉัน", "จะเจอเนื้อคู่เมื่อไร", "ความรักจะไปรอดไหม"] },
+  { id: "career", icon: "briefcase", nameTH: "การงาน / อาชีพ", nameEN: "Career", color: "#c9a84c", desc: "เลื่อนขั้น เปลี่ยนงาน", examples: ["ควรเปลี่ยนงานไหม", "จะได้เลื่อนตำแหน่งไหม"] },
+  { id: "money", icon: "coins", nameTH: "การเงิน / โชคลาภ", nameEN: "Money", color: "#4a9e6e", desc: "รายได้ หนี้ ลงทุน", examples: ["การเงินช่วงนี้เป็นอย่างไร", "ควรลงทุนไหม"] },
+  { id: "health", icon: "heart-pulse", nameTH: "สุขภาพ", nameEN: "Health", color: "#9b7dd4", desc: "กาย จิต ความเครียด", examples: ["สุขภาพช่วงนี้เป็นอย่างไร"] },
+  { id: "general", icon: "sparkles", nameTH: "ดวงรวม", nameEN: "General", color: "#888780", desc: "ภาพรวม สัปดาห์ เดือน", examples: ["ดวงช่วงนี้เป็นอย่างไร", "มีข้อความอะไรจากจักรวาล"] },
 ];
 
 export const GYPSY_SPREADS: Spread[] = [

@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import LaurelButton from "@/components/ui/LaurelButton";
 import ProfileSetup from "@/components/ui/ProfileSetup";
+import LineIcon from "@/components/ui/LineIcon";
 
 interface UserInfo {
   role: string;
@@ -12,61 +12,47 @@ interface UserInfo {
   linePictureUrl?: string | null;
 }
 
+const LINE_ERROR_MSGS: Record<string, string> = {
+  line_developing: "LINE Login ยังอยู่ในโหมดพัฒนา กรุณาติดต่อผู้ดูแลระบบ",
+  line_not_configured: "ระบบ LINE Login ยังไม่ได้ตั้งค่า",
+  line_denied: "คุณปฏิเสธการเข้าสู่ระบบ",
+  line_auth_failed: "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่",
+  line_token_failed: "ไม่สามารถเชื่อมต่อ LINE ได้",
+  line_profile_failed: "ไม่สามารถดึงข้อมูล LINE ได้",
+  line_error: "เกิดข้อผิดพลาด กรุณาลองใหม่",
+};
+
 export default function UserAuth() {
   const [user, setUser] = useState<UserInfo | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loginError, setLoginError] = useState("");
 
   useEffect(() => {
     fetch("/api/auth/me").then((r) => r.json()).then((d) => {
       if (d.user) setUser(d.user);
     }).catch(() => {});
 
-    // Check if redirected from LINE with setup=profile
-    if (typeof window !== "undefined" && window.location.search.includes("setup=profile")) {
-      fetch("/api/auth/me").then(r => r.json()).then(d => {
-        if (d.user) { setUser(d.user); setShowProfile(true); }
-      });
-      window.history.replaceState({}, "", "/");
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+
+      // Handle LINE login errors
+      const err = params.get("error");
+      if (err) {
+        setLoginError(LINE_ERROR_MSGS[err] || "เกิดข้อผิดพลาด");
+        setShowModal(true);
+        window.history.replaceState({}, "", window.location.pathname);
+      }
+
+      // Handle profile setup redirect
+      if (params.get("setup") === "profile") {
+        fetch("/api/auth/me").then(r => r.json()).then(d => {
+          if (d.user) { setUser(d.user); setShowProfile(true); }
+        });
+        window.history.replaceState({}, "", window.location.pathname);
+      }
     }
   }, []);
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      const endpoint = isLogin ? "/api/auth/login" : "/api/auth/register";
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error);
-      } else {
-        setUser({ role: "user", userId: data.user.id, username: data.user.username });
-        setShowModal(false);
-        setUsername("");
-        setPassword("");
-        if (!isLogin) setShowProfile(true); // Show profile setup after registration
-      }
-    } catch {
-      setError("เกิดข้อผิดพลาด");
-    }
-    setLoading(false);
-  }
-
-  async function handleLogout() {
-    await fetch("/api/auth/logout", { method: "POST" });
-    setUser(null);
-  }
 
   if (user) {
     return (
@@ -101,69 +87,41 @@ export default function UserAuth() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setShowModal(false)}
+            onClick={() => { setShowModal(false); setLoginError(""); }}
           >
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
             <motion.div
-              className="relative bg-[#2a1215] rounded-2xl p-6 w-full max-w-[320px] space-y-4"
+              className="relative bg-[#2a1215] rounded-2xl p-6 w-full max-w-[320px]"
+              style={{ border: "1px solid rgba(212,175,55,0.1)" }}
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h3 className="text-gold text-center font-semibold">
-                {isLogin ? "เข้าสู่ระบบ" : "สมัครสมาชิก"}
-              </h3>
+              <h3 className="text-[#d4af37] text-center font-semibold mb-2">เข้าสู่ระบบ</h3>
+              <p className="text-[#8B7A4A]/40 text-xs text-center mb-5">เข้าสู่ระบบเพื่อดูดวงและสะสมเครดิต</p>
 
-              {/* LINE Login */}
+              {loginError && (
+                <div className="mb-4 px-3 py-2.5 rounded-lg bg-red-400/10 border border-red-400/20">
+                  <p className="text-red-400/80 text-xs text-center">{loginError}</p>
+                </div>
+              )}
+
               <a
                 href="/api/auth/line"
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg text-sm font-medium transition-colors"
+                className="flex items-center justify-center gap-2.5 w-full py-3 rounded-full text-sm font-semibold tracking-wide transition-all hover:brightness-110"
                 style={{ background: "#06C755", color: "#fff" }}
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.81 2 10.44c0 3.7 3.04 6.9 7.34 7.93-.1.38-.66 2.44-.68 2.6 0 0-.01.1.05.14.06.03.13.01.13.01.17-.02 2-1.3 2.32-1.53.61.09 1.24.14 1.84.14 5.52 0 10-3.81 10-8.44C22 5.81 17.52 2 12 2z"/></svg>
-                LINE Login
+                <LineIcon size={20} />
+                เข้าสู่ระบบด้วย LINE
               </a>
 
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-[1px] bg-white/[0.06]" />
-                <span className="text-white/20 text-[0.6rem]">หรือ</span>
-                <div className="flex-1 h-[1px] bg-white/[0.06]" />
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-3">
-                <input
-                  type="text"
-                  placeholder="ชื่อผู้ใช้"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-gold/10 outline-none"
-                />
-                <input
-                  type="password"
-                  placeholder="รหัสผ่าน"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[#1e0c0c] rounded-lg px-3 py-2.5 text-sm text-white placeholder:text-white/20 focus:border-gold/10 outline-none"
-                />
-
-                {error && <p className="text-red-400/80 text-xs text-center">{error}</p>}
-
-                <LaurelButton variant="gold" className="w-full">
-                  {loading ? "..." : isLogin ? "เข้าสู่ระบบ" : "สมัครสมาชิก"}
-                </LaurelButton>
-              </form>
-
-              <p className="text-center text-[0.65rem] text-white/30">
-                {isLogin ? "ยังไม่มีบัญชี?" : "มีบัญชีแล้ว?"}{" "}
-                <button
-                  type="button"
-                  onClick={() => { setIsLogin(!isLogin); setError(""); }}
-                  className="text-gold/50 hover:text-gold/80"
-                >
-                  {isLogin ? "สมัครสมาชิก" : "เข้าสู่ระบบ"}
-                </button>
-              </p>
+              <button
+                onClick={() => { setShowModal(false); setLoginError(""); }}
+                className="w-full text-center text-[#8B7A4A]/30 text-xs mt-4 hover:text-[#8B7A4A]/50 transition-colors"
+              >
+                ปิด
+              </button>
             </motion.div>
           </motion.div>
         )}

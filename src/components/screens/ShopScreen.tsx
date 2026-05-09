@@ -3,8 +3,11 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { EASE } from "@/constants/animation";
+import PageHeader from "@/components/ui/PageHeader";
 import LaurelButton from "@/components/ui/LaurelButton";
 import { PROVINCES } from "@/lib/thai-provinces";
+import Icon from "@/components/ui/Icon";
+import LineIcon from "@/components/ui/LineIcon";
 
 interface Product {
   id: string;
@@ -179,21 +182,7 @@ export default function ShopScreen() {
       className="flex flex-col items-center min-h-full px-4 pt-2 pb-10 relative"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, ease: EASE }}
     >
-      {/* Header */}
-      <motion.div className="text-center mb-5" initial={{ opacity: 0, y: -15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.6, ease: EASE }}>
-        <h2
-          className="text-lg font-semibold tracking-[0.1em] mb-1"
-          style={{
-            background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
-            backgroundSize: "200% 200%",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            animation: "shimmer-text 4s ease-in-out infinite",
-          }}
-        >ร้านค้ามงคล</h2>
-        <p className="text-[#8B7A4A]/50 text-xs mt-1">วัตถุมงคล เครื่องราง ของดี เสริมดวง</p>
-        <motion.div className="w-16 h-[1px] mx-auto mt-3" style={{ background: "linear-gradient(90deg, transparent, #8B7A4A, transparent)" }} initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.3, duration: 0.6 }} />
-      </motion.div>
+      <PageHeader title="ร้านค้ามงคล" subtitle="วัตถุมงคล เครื่องราง ของดี เสริมดวง" divider />
 
       {/* Cart floating button */}
       {cartCount > 0 && step === "browse" && (
@@ -227,7 +216,7 @@ export default function ShopScreen() {
             onClick={() => setViewProduct(product)}
           >
             <div className="aspect-square bg-[#1e0c0c] flex items-center justify-center relative">
-              <span className="text-3xl text-[#8B7A4A]/40">{product.icon}</span>
+              <Icon name={product.icon || "sparkles"} size={32} className="text-[#8B7A4A]/40" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#2a1215] via-transparent to-transparent" />
             </div>
             <div className="p-3">
@@ -266,7 +255,7 @@ export default function ShopScreen() {
             >
               {/* Product image */}
               <div className="aspect-[4/3] bg-[#1e0c0c] flex items-center justify-center relative">
-                <span className="text-6xl text-[#8B7A4A]/30">{viewProduct.icon}</span>
+                <Icon name={viewProduct.icon || "sparkles"} size={48} className="text-[#8B7A4A]/30" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#2a1215] via-transparent to-transparent" />
                 <button
                   className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#2a1215]/80 flex items-center justify-center text-[#E2D4A0]/50 hover:text-[#E2D4A0]"
@@ -342,7 +331,7 @@ export default function ShopScreen() {
                             {cart.map(item => (
                               <div key={item.id} className="flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                  <span className="text-gold/50 text-lg">{item.icon}</span>
+                                  <Icon name={item.icon || "sparkles"} size={18} className="text-gold/50" />
                                   <div>
                                     <p className="text-white/70 text-xs">{item.name}</p>
                                     <p className="text-gold/50 text-[0.65rem]">฿{item.price} x {item.qty} = ฿{item.price * item.qty}</p>
@@ -370,16 +359,13 @@ export default function ShopScreen() {
                   {step === "login" && (
                     <motion.div key="login" className="text-center py-6 space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                       <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mx-auto">
-                        <span className="text-gold text-xl">♦</span>
+                        <Icon name="diamond" size={24} className="text-gold" />
                       </div>
                       <p className="text-white/60 text-sm">กรุณาเข้าสู่ระบบก่อนสั่งซื้อ</p>
-                      <a href="/api/auth/line"
-                        className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold"
-                        style={{ background: "#06C755", color: "#fff" }}
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.81 2 10.44c0 3.7 3.04 6.9 7.34 7.93-.1.38-.66 2.44-.68 2.6 0 0-.01.1.05.14.06.03.13.01.13.01.17-.02 2-1.3 2.32-1.53.61.09 1.24.14 1.84.14 5.52 0 10-3.81 10-8.44C22 5.81 17.52 2 12 2z"/></svg>
-                        LINE Login
-                      </a>
+                      <a href="/api/auth/line" className="flex items-center justify-center gap-2 w-[200px] py-2.5 rounded-full text-sm font-semibold tracking-wide transition-all hover:brightness-110" style={{ background: "#06C755", color: "#fff" }}>
+                          <LineIcon size={18} />
+                          เข้าสู่ระบบด้วย LINE
+                        </a>
                       <a href="/api/auth/line" className="block text-gold/40 text-xs hover:text-gold/70">Demo — ทดลองใช้งาน</a>
                       <button onClick={() => setStep("browse")} className="text-white/30 text-xs">ย้อนกลับ</button>
                     </motion.div>
@@ -438,7 +424,7 @@ export default function ShopScreen() {
                             <option value="" className="bg-[#1e0c0c]">เลือกจังหวัด</option>
                             {PROVINCES.map(p => <option key={p} value={p} className="bg-[#1e0c0c]">{p}</option>)}
                           </select>
-                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 text-[0.5rem] pointer-events-none">▼</span>
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"><Icon name="chevron-down" size={12} className="text-white/20" /></span>
                         </div>
                       </div>
 
@@ -454,7 +440,7 @@ export default function ShopScreen() {
                               <option value="" className="bg-[#1e0c0c]">เลือกอำเภอ</option>
                               {amphoeList.map(a => <option key={a} value={a} className="bg-[#1e0c0c]">{a}</option>)}
                             </select>
-                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 text-[0.5rem] pointer-events-none">▼</span>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"><Icon name="chevron-down" size={12} className="text-white/20" /></span>
                           </div>
                         </div>
 
@@ -469,7 +455,7 @@ export default function ShopScreen() {
                               <option value="" className="bg-[#1e0c0c]">เลือกตำบล</option>
                               {subDistrictList.map(s => <option key={s} value={s} className="bg-[#1e0c0c]">{s}</option>)}
                             </select>
-                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 text-[0.5rem] pointer-events-none">▼</span>
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"><Icon name="chevron-down" size={12} className="text-white/20" /></span>
                           </div>
                         </div>
                       </div>

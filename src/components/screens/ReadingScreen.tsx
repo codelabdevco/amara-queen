@@ -11,6 +11,8 @@ import { saveReading } from "@/lib/history";
 
 import Candle from "@/components/ui/Candle";
 import dynamic from "next/dynamic";
+import Icon from "@/components/ui/Icon";
+import LineIcon from "@/components/ui/LineIcon";
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 // ── Loading messages (mystical quotes) ──
@@ -147,11 +149,11 @@ function LoadingCandles() {
 
 // ── Trend config ──
 const TREND_CONFIG: Record<string, { icon: string; label: string; color: string; bg: string; gradient: string }> = {
-  very_positive: { icon: "✦", label: "ดีมาก", color: "#d4af37", bg: "rgba(212,175,55,0.08)", gradient: "from-[#d4af37]/20 via-[#d4af37]/5 to-transparent" },
-  positive:      { icon: "✦", label: "ดี",     color: "#C4AD72", bg: "rgba(196,173,114,0.06)", gradient: "from-[#C4AD72]/15 via-[#C4AD72]/5 to-transparent" },
-  neutral:       { icon: "☯", label: "กลางๆ",  color: "#8B7A4A", bg: "rgba(139,122,74,0.06)", gradient: "from-[#8B7A4A]/15 via-[#8B7A4A]/5 to-transparent" },
-  caution:       { icon: "⚡", label: "ระวัง",  color: "#7a4020", bg: "rgba(122,64,32,0.06)", gradient: "from-[#7a4020]/15 via-[#7a4020]/5 to-transparent" },
-  challenging:   { icon: "☁", label: "ท้าทาย", color: "#7a2020", bg: "rgba(122,32,32,0.06)", gradient: "from-[#7a2020]/15 via-[#7a2020]/5 to-transparent" },
+  very_positive: { icon: "sparkles", label: "ดีมาก", color: "#d4af37", bg: "rgba(212,175,55,0.08)", gradient: "from-[#d4af37]/20 via-[#d4af37]/5 to-transparent" },
+  positive:      { icon: "sparkles", label: "ดี",     color: "#C4AD72", bg: "rgba(196,173,114,0.06)", gradient: "from-[#C4AD72]/15 via-[#C4AD72]/5 to-transparent" },
+  neutral:       { icon: "circle-dot", label: "กลางๆ",  color: "#8B7A4A", bg: "rgba(139,122,74,0.06)", gradient: "from-[#8B7A4A]/15 via-[#8B7A4A]/5 to-transparent" },
+  caution:       { icon: "zap", label: "ระวัง",  color: "#7a4020", bg: "rgba(122,64,32,0.06)", gradient: "from-[#7a4020]/15 via-[#7a4020]/5 to-transparent" },
+  challenging:   { icon: "cloud", label: "ท้าทาย", color: "#7a2020", bg: "rgba(122,32,32,0.06)", gradient: "from-[#7a2020]/15 via-[#7a2020]/5 to-transparent" },
 };
 
 // ── Decorative divider ──
@@ -161,7 +163,7 @@ function GoldDivider({ delay = 0 }: { delay?: number }) {
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay, duration: 0.5 }}
     >
       <div className="flex-1 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, #8B7A4A40, transparent)" }} />
-      <span className="text-[#8B7A4A]/30 text-[0.5rem]">✦</span>
+      <Icon name="sparkles" size={8} className="text-[#8B7A4A]/30" />
       <div className="flex-1 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, #8B7A4A40, transparent)" }} />
     </motion.div>
   );
@@ -198,7 +200,7 @@ function TrendMeter({ trend, trendText }: { trend: string; trendText: string }) 
           animate={{ boxShadow: [`0 0 10px ${config.color}10`, `0 0 20px ${config.color}20`, `0 0 10px ${config.color}10`] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
-          <span style={{ color: config.color }}>{config.icon}</span>
+          <Icon name={config.icon} size={16} style={{ color: config.color }} />
         </motion.div>
         <div>
           <p className="text-[0.65rem] text-[#8B7A4A]/50 tracking-wider uppercase">แนวโน้มโดยรวม</p>
@@ -261,7 +263,7 @@ function CardLightbox({ card, position, onClose }: { card: { id: number; nameTh:
             <img src={card.image} alt={card.nameEn} className="absolute inset-0 w-full h-full object-cover" />
           ) : (
             <div className="w-full h-full bg-[#2a1215] flex items-center justify-center">
-              <span className="text-[#8B7A4A]/40 text-4xl">✦</span>
+              <Icon name="sparkles" size={40} className="text-[#8B7A4A]/40" />
             </div>
           )}
         </div>
@@ -346,6 +348,7 @@ export default function ReadingScreen() {
         setLoadingAI(false);
       } else {
         setAiReading(data.reading as AIReading);
+        window.dispatchEvent(new Event("credit-changed"));
       }
     } catch {
       setHasError(true);
@@ -403,7 +406,7 @@ export default function ReadingScreen() {
       <div className="w-full max-w-full mb-4 text-center">
         {selectedTopic && (
           <p className="text-xs text-[#8B7A4A]/50">
-            <span style={{ color: selectedTopic.color }}>{selectedTopic.icon}</span>
+            <Icon name={selectedTopic.icon} size={16} className="text-[#d4af37]" />
             {" "}{selectedTopic.nameTH}
             {selectedSpread && <span className="text-[#8B7A4A]/30"> · {selectedSpread.nameTH}</span>}
           </p>
@@ -456,7 +459,7 @@ export default function ReadingScreen() {
               style={{ background: "#1e0c0c", border: "1px solid #8B7A4A15" }}
             >
               <span className="text-[#d4af37] text-lg">
-                {errorType === "login" ? "♦" : errorType === "credit" ? "★" : "!"}
+                {errorType === "login" ? <Icon name="diamond" size={24} /> : errorType === "credit" ? <Icon name="star" size={24} /> : "!"}
               </span>
             </div>
 
@@ -498,7 +501,7 @@ export default function ReadingScreen() {
             >
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-6 h-6 rounded-full bg-[#3A0E0E] flex items-center justify-center">
-                  <span className="text-[#d4af37]/60 text-[0.6rem]">✦</span>
+                  <Icon name="sparkles" size={10} className="text-[#d4af37]/60" />
                 </div>
                 <p className="text-xs text-[#d4af37]/50 font-semibold tracking-wider uppercase">สรุปภาพรวม</p>
               </div>
@@ -525,7 +528,7 @@ export default function ReadingScreen() {
                     animate={{ boxShadow: ["0 0 8px rgba(212,175,55,0.05)", "0 0 16px rgba(212,175,55,0.12)", "0 0 8px rgba(212,175,55,0.05)"] }}
                     transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                   >
-                    <span className="text-[#d4af37] text-sm">☆</span>
+                    <Icon name="star" size={14} className="text-[#d4af37]" />
                   </motion.div>
                   <div>
                     <p className="text-xs text-[#d4af37]/50 font-semibold mb-1.5 tracking-wider uppercase">คำแนะนำ</p>
@@ -542,7 +545,7 @@ export default function ReadingScreen() {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.5 }}
             >
               <div className="w-5 h-5 rounded-full bg-[#3A0E0E] flex items-center justify-center">
-                <span className="text-[#d4af37]/50 text-[0.5rem]">✦</span>
+                <Icon name="sparkles" size={8} className="text-[#d4af37]/50" />
               </div>
               <p className="text-xs text-[#d4af37]/45 font-semibold tracking-wider uppercase">รายละเอียดแต่ละใบ</p>
               <div className="flex-1 h-[1px]" style={{ background: "linear-gradient(90deg, #8B7A4A20, transparent)" }} />

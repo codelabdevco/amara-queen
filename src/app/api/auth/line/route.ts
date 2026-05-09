@@ -21,6 +21,6 @@ export async function GET(req: NextRequest) {
   url.searchParams.set("scope", "profile openid");
 
   const res = NextResponse.redirect(url.toString());
-  res.cookies.set("line_state", state, { httpOnly: true, path: "/", maxAge: 600, sameSite: "lax" });
+  res.cookies.set("line_state", state, { httpOnly: true, path: "/", maxAge: 600, sameSite: "lax", secure: true });
   return res;
 }

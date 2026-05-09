@@ -4,6 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useMemo } from "react";
 import { EASE } from "@/constants/animation";
 import LaurelButton from "@/components/ui/LaurelButton";
+import PageHeader from "@/components/ui/PageHeader";
+import Icon from "@/components/ui/Icon";
+import LineIcon from "@/components/ui/LineIcon";
 
 /* ── Types ── */
 interface DayFortune {
@@ -20,7 +23,7 @@ const THAI_DAYS_SHORT = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "
 const THAI_DAYS = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
 const DAY_COLORS = ["#c44a5a", "#d4af37", "#c44a8a", "#4a9e6e", "#d85a30", "#378add", "#7a4090"];
 const LEVEL_LABEL: Record<string, string> = { great: "ดีมาก", good: "ดี", neutral: "ปกติ", caution: "ระวัง" };
-const LEVEL_ICON: Record<string, string> = { great: "★", good: "☆", neutral: "◇", caution: "△" };
+const LEVEL_ICON: Record<string, string> = { great: "sparkles", good: "sun", neutral: "circle-dot", caution: "cloud" };
 
 function seededRandom(seed: number): number {
   const x = Math.sin(seed * 9301 + 49297) * 233280;
@@ -80,11 +83,11 @@ function RatingBar({ value, max = 5 }: { value: number; max?: number }) {
 }
 
 const CATEGORIES = [
-  { key: "overall" as const, label: "ดวงรวม", icon: "☆" },
-  { key: "love" as const, label: "ความรัก", icon: "♥" },
-  { key: "career" as const, label: "การงาน", icon: "⚙" },
-  { key: "money" as const, label: "การเงิน", icon: "✦" },
-  { key: "health" as const, label: "สุขภาพ", icon: "✚" },
+  { key: "overall" as const, label: "ดวงรวม", icon: "star" },
+  { key: "love" as const, label: "ความรัก", icon: "heart" },
+  { key: "career" as const, label: "การงาน", icon: "briefcase" },
+  { key: "money" as const, label: "การเงิน", icon: "coins" },
+  { key: "health" as const, label: "สุขภาพ", icon: "heart-pulse" },
 ];
 
 /* ── Component ── */
@@ -93,7 +96,7 @@ export default function CalendarScreen() {
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [aiDetail, setAiDetail] = useState<DayFortune | null>(null);
   const [loadingAI, setLoadingAI] = useState(false);
-  const [view, setView] = useState<"week" | "month">("week");
+  const [creditError, setCreditError] = useState<{ type: "login" | "credit" | "server"; msg: string } | null>(null);
 
   const monday = useMemo(() => {
     const m = getMonday(new Date());
@@ -106,14 +109,24 @@ export default function CalendarScreen() {
 
   async function fetchAIFortune(date: Date) {
     setLoadingAI(true);
+    setCreditError(null);
     try {
       const res = await fetch("/api/calendar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ date: date.toISOString().slice(0, 10) }),
       });
+      if (!res.ok) {
+        let data = { error: "", needLogin: false, needCredits: false };
+        try { data = await res.json(); } catch {}
+        if (data.needLogin) setCreditError({ type: "login", msg: data.error || "กรุณาเข้าสู่ระบบ" });
+        else if (data.needCredits) setCreditError({ type: "credit", msg: data.error || "เครดิตไม่พอ" });
+        else setCreditError({ type: "server", msg: data.error || "เกิดข้อผิดพลาด" });
+        setLoadingAI(false);
+        return;
+      }
       const data = await res.json();
-      if (data.fortune) setAiDetail(data.fortune);
+      if (data.fortune) { setAiDetail(data.fortune); window.dispatchEvent(new Event("credit-changed")); }
     } catch {}
     setLoadingAI(false);
   }
@@ -123,23 +136,17 @@ export default function CalendarScreen() {
       className="flex flex-col items-center h-full px-4 pt-2 overflow-y-auto pb-4"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, ease: EASE }}
     >
-      {/* Header */}
-      <motion.div className="text-center mb-3" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <h2 className="text-base font-semibold tracking-[0.1em] mb-0.5"
-          style={{ background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)", backgroundSize: "200% 200%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "shimmer-text 4s ease-in-out infinite" }}
-        >วันดีวันร้าย</h2>
-        <p className="text-[#8B7A4A]/50 text-[0.65rem]">ปฏิทินดวงรายสัปดาห์</p>
-      </motion.div>
+      <PageHeader title="วันดีวันร้าย" subtitle="ปฏิทินดวงรายสัปดาห์" />
 
       {/* Week nav */}
       <div className="flex items-center justify-between w-full max-w-md mb-3">
         <button className="px-2.5 py-1.5 rounded text-[#E2D4A0]/40 text-[0.65rem] active:text-[#d4af37]" style={{ background: "#3A0E0E", border: "0.5px solid #8B7A4A15" }}
-          onClick={() => { setWeekOffset(o => o - 1); setSelectedIdx(null); setAiDetail(null); }}>◂ ก่อน</button>
+          onClick={() => { setWeekOffset(o => o - 1); setSelectedIdx(null); setAiDetail(null); }}><span className="flex items-center gap-1"><Icon name="chevron-left" size={12} /> ก่อน</span></button>
         <span className="text-[#8B7A4A]/50 text-[0.65rem]">
           {monday.toLocaleDateString("th-TH", { day: "numeric", month: "short" })} — {new Date(monday.getTime() + 6 * 86400000).toLocaleDateString("th-TH", { day: "numeric", month: "short" })}
         </span>
         <button className="px-2.5 py-1.5 rounded text-[#E2D4A0]/40 text-[0.65rem] active:text-[#d4af37]" style={{ background: "#3A0E0E", border: "0.5px solid #8B7A4A15" }}
-          onClick={() => { setWeekOffset(o => o + 1); setSelectedIdx(null); setAiDetail(null); }}>ถัดไป ▸</button>
+          onClick={() => { setWeekOffset(o => o + 1); setSelectedIdx(null); setAiDetail(null); }}><span className="flex items-center gap-1">ถัดไป <Icon name="chevron-right" size={12} /></span></button>
       </div>
 
       {/* Day cards */}
@@ -157,7 +164,7 @@ export default function CalendarScreen() {
               <span className="text-[0.5rem]" style={{ color: dayColor }}>{THAI_DAYS_SHORT[day.date.getDay()]}</span>
               <span className={`text-sm font-semibold ${isSelected ? "text-[#d4af37]" : isToday ? "text-[#E2D4A0]" : "text-[#E2D4A0]/50"}`}>{day.date.getDate()}</span>
               <span className="text-[0.5rem]" style={{ color: day.level === "great" ? "#d4af37" : day.level === "good" ? "#C4AD72" : day.level === "neutral" ? "#8B7A4A" : "#7a2020" }}>
-                {LEVEL_ICON[day.level]}
+                <Icon name={LEVEL_ICON[day.level]} size={12} />
               </span>
               {day.specialDay && <span className="w-1 h-1 rounded-full bg-[#d4af37]" />}
             </button>
@@ -179,8 +186,8 @@ export default function CalendarScreen() {
                   วัน{THAI_DAYS[selected.date.getDay()]}ที่ {selected.date.getDate()} {selected.date.toLocaleDateString("th-TH", { month: "long" })}
                 </p>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-[0.6rem]" style={{ color: selected.level === "great" ? "#d4af37" : selected.level === "good" ? "#C4AD72" : "#8B7A4A" }}>
-                    {LEVEL_ICON[selected.level]} {LEVEL_LABEL[selected.level]}
+                  <span className="text-[0.6rem] flex items-center gap-1" style={{ color: selected.level === "great" ? "#d4af37" : selected.level === "good" ? "#C4AD72" : "#8B7A4A" }}>
+                    <Icon name={LEVEL_ICON[selected.level]} size={12} /> {LEVEL_LABEL[selected.level]}
                   </span>
                   {selected.specialDay && <span className="text-[#d4af37]/50 text-[0.55rem]">· {selected.specialDay}</span>}
                 </div>
@@ -212,7 +219,7 @@ export default function CalendarScreen() {
               {CATEGORIES.map(cat => (
                 <div key={cat.key} className="flex items-center justify-between">
                   <span className="text-[#8B7A4A]/50 text-[0.65rem] flex items-center gap-1">
-                    <span className="opacity-50">{cat.icon}</span> {cat.label}
+                    <Icon name={cat.icon} size={12} className="opacity-50" /> {cat.label}
                   </span>
                   <RatingBar value={selected[cat.key]} />
                 </div>
@@ -221,15 +228,28 @@ export default function CalendarScreen() {
 
             {/* Tip */}
             <div className="px-3 pb-2" style={{ borderTop: "0.5px solid #8B7A4A10" }}>
-              <p className="text-[#E2D4A0]/50 text-xs leading-5 py-2">💡 {selected.tip}</p>
+              <p className="text-[#E2D4A0]/50 text-xs leading-5 py-2 flex items-start gap-1"><Icon name="lightbulb" size={12} className="mt-0.5 flex-shrink-0" /> {selected.tip}</p>
             </div>
 
             {/* AI detail or button */}
             <div className="p-3" style={{ borderTop: "0.5px solid #8B7A4A10" }}>
-              {aiDetail ? (
+              {creditError ? (
+                <motion.div className="rounded-lg border p-3 text-center" style={{ borderColor: "rgba(196,74,90,0.2)", background: "rgba(196,74,90,0.06)" }}
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <p className="text-xs text-[#c44a5a]/80 mb-2">{creditError.msg}</p>
+                  {creditError.type === "login" && (
+                    <a href="/api/auth/line" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white" style={{ background: "#06C755" }}>
+                      <LineIcon size={14} /> เข้าสู่ระบบ
+                    </a>
+                  )}
+                  {creditError.type === "credit" && (
+                    <p className="text-[#d4af37]/50 text-[0.65rem]">กดเครดิตด้านบนเพื่อเติม</p>
+                  )}
+                </motion.div>
+              ) : aiDetail ? (
                 <motion.div className="space-y-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <p className="text-[#E2D4A0]/70 text-xs leading-5">{aiDetail.summary}</p>
-                  {aiDetail.avoid && <p className="text-[#7a2020]/60 text-[0.65rem]">⚠ {aiDetail.avoid}</p>}
+                  {aiDetail.avoid && <p className="text-[#7a2020]/60 text-[0.65rem] flex items-start gap-1"><Icon name="triangle-alert" size={10} className="mt-0.5 flex-shrink-0" /> {aiDetail.avoid}</p>}
                 </motion.div>
               ) : loadingAI ? (
                 <div className="flex items-center justify-center gap-2 py-2">
@@ -239,7 +259,7 @@ export default function CalendarScreen() {
               ) : (
                 <div className="flex justify-center">
                   <LaurelButton variant="crimson" onClick={() => fetchAIFortune(selected.date)} className="w-full h-[42px]">
-                    ★1 เปิดดวงชะตาละเอียด
+                    <span className="flex items-center gap-1"><Icon name="star" size={12} />1 เปิดดวงชะตาละเอียด</span>
                   </LaurelButton>
                 </div>
               )}
@@ -252,7 +272,7 @@ export default function CalendarScreen() {
       <div className="flex items-center gap-3 mt-3">
         {(["great", "good", "neutral", "caution"] as const).map(level => (
           <div key={level} className="flex items-center gap-1">
-            <span className="text-[0.55rem]" style={{ color: level === "great" ? "#d4af37" : level === "good" ? "#C4AD72" : level === "neutral" ? "#8B7A4A" : "#7a2020" }}>{LEVEL_ICON[level]}</span>
+            <Icon name={LEVEL_ICON[level]} size={10} style={{ color: level === "great" ? "#d4af37" : level === "good" ? "#C4AD72" : level === "neutral" ? "#8B7A4A" : "#7a2020" }} />
             <span className="text-[#8B7A4A]/40 text-[0.5rem]">{LEVEL_LABEL[level]}</span>
           </div>
         ))}

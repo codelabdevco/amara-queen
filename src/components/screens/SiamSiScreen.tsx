@@ -4,7 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useCallback, useEffect } from "react";
 
 import { EASE } from "@/constants/animation";
+import PageHeader from "@/components/ui/PageHeader";
 import LaurelButton from "@/components/ui/LaurelButton";
+import Icon from "@/components/ui/Icon";
+import LineIcon from "@/components/ui/LineIcon";
 
 // ── Fortune stick poems (mock data) ──
 const MOCK_POEMS: Record<string, { poem: string; luck: "great" | "good" | "fair" | "caution" }[]> = {
@@ -31,10 +34,10 @@ const MOCK_POEMS: Record<string, { poem: string; luck: "great" | "good" | "fair"
 };
 
 const LUCK_CONFIG: Record<string, { label: string; color: string; icon: string; bg: string }> = {
-  great:   { label: "ดีมาก",  color: "#e8d48b", icon: "✦", bg: "rgba(232,212,139,0.08)" },
-  good:    { label: "ดี",     color: "#a8d48b", icon: "✦", bg: "rgba(168,212,139,0.06)" },
-  fair:    { label: "กลางๆ",  color: "#8bb8d4", icon: "☯", bg: "rgba(139,184,212,0.06)" },
-  caution: { label: "ระวัง",  color: "#d4a84b", icon: "⚡", bg: "rgba(212,168,75,0.06)" },
+  great:   { label: "ดีมาก",  color: "#e8d48b", icon: "sparkles", bg: "rgba(232,212,139,0.08)" },
+  good:    { label: "ดี",     color: "#a8d48b", icon: "sparkles", bg: "rgba(168,212,139,0.06)" },
+  fair:    { label: "กลางๆ",  color: "#8bb8d4", icon: "circle-dot", bg: "rgba(139,184,212,0.06)" },
+  caution: { label: "ระวัง",  color: "#d4a84b", icon: "zap", bg: "rgba(212,168,75,0.06)" },
 };
 
 function getLuckCategory(n: number): "great" | "good" | "fair" | "caution" {
@@ -93,7 +96,7 @@ function GoldDivider({ delay = 0 }: { delay?: number }) {
       transition={{ delay, duration: 0.5 }}
     >
       <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent to-gold/15" />
-      <span className="text-gold/20 text-[0.5rem]">✦</span>
+      <Icon name="sparkles" size={8} className="text-gold/20" />
       <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent to-gold/15" />
     </motion.div>
   );
@@ -144,6 +147,7 @@ export default function SiamSiScreen() {
 
   const [state, setState] = useState<ScreenState>("idle");
   const [stickNumber, setStickNumber] = useState<number | null>(null);
+  const [creditError, setCreditError] = useState<{ type: "login" | "credit" | "server"; msg: string } | null>(null);
   const [fortune, setFortune] = useState<FortuneResult | null>(null);
   const [user, setUser] = useState<{ id: string } | null>(null);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
@@ -156,25 +160,26 @@ export default function SiamSiScreen() {
 
   const fetchFortune = useCallback(async (num: number) => {
     setState("loading");
+    setCreditError(null);
     try {
       const res = await fetch("/api/siamsi", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ stickNumber: num }),
       });
+      if (!res.ok) {
+        let data = { error: "", needLogin: false, needCredits: false };
+        try { data = await res.json(); } catch {}
+        if (data.needLogin) { setCreditError({ type: "login", msg: data.error || "กรุณาเข้าสู่ระบบ" }); setState("idle"); return; }
+        if (data.needCredits) { setCreditError({ type: "credit", msg: data.error || "เครดิตไม่พอ" }); setState("idle"); return; }
+      }
       if (res.ok) {
         const data = await res.json();
-        if (data.fortune) {
-          setFortune(data.fortune);
-          setState("result");
-          return;
-        }
+        if (data.fortune) { setFortune(data.fortune); setState("result"); window.dispatchEvent(new Event("credit-changed")); return; }
       }
-      // Fallback to mock
       setFortune(generateMockFortune(num));
       setState("result");
     } catch {
-      // Fallback to mock
       setFortune(generateMockFortune(num));
       setState("result");
     }
@@ -214,27 +219,26 @@ export default function SiamSiScreen() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6, ease: EASE }}
     >
-      {/* Title */}
-      <motion.div
-        className="text-center mb-6"
-        initial={{ opacity: 0, y: -15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.6, ease: EASE }}
-      >
-        <h2
-          className="text-lg font-semibold tracking-[0.1em] mb-1"
-          style={{
-            background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)",
-            backgroundSize: "200% 200%",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            animation: "shimmer-text 4s ease-in-out infinite",
-          }}
-        >เซียมซี</h2>
-        <p className="text-[#8B7A4A]/50 text-xs mt-1">เสี่ยงเซียมซี 1-100 พร้อมตีความโดยราชินี</p>
-      </motion.div>
+      <PageHeader title="เซียมซี" subtitle="เสี่ยงเซียมซี 1-100 พร้อมตีความโดยราชินี" />
 
       <AnimatePresence mode="wait">
+        {/* Credit error */}
+        {creditError && (
+          <motion.div className="w-full max-w-xs mx-auto rounded-xl border p-4 text-center mb-4"
+            style={{ borderColor: "rgba(196,74,90,0.2)", background: "rgba(196,74,90,0.06)" }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <p className="text-xs text-[#c44a5a]/80 mb-2">{creditError.msg}</p>
+            {creditError.type === "login" && (
+              <a href="/api/auth/line" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium text-white" style={{ background: "#06C755" }}>
+                <LineIcon size={14} /> เข้าสู่ระบบด้วย LINE
+              </a>
+            )}
+            {creditError.type === "credit" && (
+              <p className="text-[#d4af37]/50 text-[0.65rem]">กดที่ปุ่มเครดิตด้านบนเพื่อเติม</p>
+            )}
+          </motion.div>
+        )}
+
         {/* ── IDLE / SHAKING — Stick container ── */}
         {(state === "idle" || state === "shaking") && (
           <motion.div
@@ -474,7 +478,7 @@ export default function SiamSiScreen() {
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   >
-                    {LUCK_CONFIG[fortune.luck].icon}
+                    <Icon name={LUCK_CONFIG[fortune.luck].icon} size={14} />
                   </motion.span>
                   <span
                     className="text-base font-semibold"
@@ -515,7 +519,7 @@ export default function SiamSiScreen() {
 
               <div className="flex items-center gap-2 mb-3 relative">
                 <div className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center">
-                  <span className="text-gold/60 text-[0.6rem]">☰</span>
+                  <Icon name="bookmark" size={10} className="text-gold/60" />
                 </div>
                 <p className="text-xs text-gold/50 font-semibold tracking-wider uppercase">คำเซียมซี</p>
               </div>
@@ -549,7 +553,7 @@ export default function SiamSiScreen() {
                   }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <span className="text-gold text-sm">✦</span>
+                  <Icon name="sparkles" size={14} className="text-gold" />
                 </motion.div>
                 <div>
                   <p className="text-xs text-gold/50 font-semibold mb-1.5 tracking-wider uppercase">ราชินีตีความ</p>
@@ -565,7 +569,7 @@ export default function SiamSiScreen() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.5 }}
             >
-              <LaurelButton variant="crimson" onClick={() => window.location.href = "/home"}>
+              <LaurelButton variant="crimson" href="/home">
                 กลับหน้าหลัก
               </LaurelButton>
               <LaurelButton variant="crimson" onClick={handleRetry}>
@@ -590,7 +594,7 @@ export default function SiamSiScreen() {
               initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
             >
               <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mx-auto mb-3">
-                <span className="text-gold text-xl">♦</span>
+                <Icon name="diamond" size={24} className="text-gold" />
               </div>
               <h3 className="text-gold text-base font-semibold mb-1">กรุณาเข้าสู่ระบบ</h3>
               <p className="text-[#8B7A4A]/50 text-xs mb-4">เข้าสู่ระบบก่อนเพื่อเสี่ยงเซียมซี</p>

@@ -5,13 +5,15 @@ import { motion } from "framer-motion";
 import AppShell from "@/components/AppShell";
 import LaurelButton from "@/components/ui/LaurelButton";
 import { EASE } from "@/constants/animation";
+import PageHeader from "@/components/ui/PageHeader";
+import Icon from "@/components/ui/Icon";
 
 interface SubPackage { name: string; credits: number; desc: string; content: string }
 interface Subscription {
   id: string; package: string; status: string; startDate: number; endDate: number; autoRenew: boolean; paidCredits: number;
 }
 
-const PKG_ICONS: Record<string, string> = { daily: "☀", weekly: "☽", monthly: "☆", all: "✦" };
+const PKG_ICONS: Record<string, string> = { daily: "sun", weekly: "moon", monthly: "star", all: "sparkles" };
 
 export default function SubscriptionPage() {
   const [packages, setPackages] = useState<Record<string, SubPackage>>({});
@@ -65,13 +67,7 @@ export default function SubscriptionPage() {
       <motion.div className="flex flex-col h-full px-4 pt-2 overflow-y-auto pb-6"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, ease: EASE }}
       >
-        {/* Header */}
-        <div className="text-center mb-4">
-          <h2 className="text-base font-semibold tracking-[0.1em]"
-            style={{ background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)", backgroundSize: "200% 200%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "shimmer-text 4s ease-in-out infinite" }}
-          >แพ็กเกจดวงรายงวด</h2>
-          <p className="text-[#8B7A4A]/50 text-[0.65rem]">รับดวงส่งตรงถึง LINE ทุกเช้า</p>
-        </div>
+        <PageHeader title="แพ็กเกจดวงรายงวด" subtitle="รับดวงส่งตรงถึง LINE ทุกเช้า" animated={false} />
 
         {loading ? (
           <div className="flex items-center justify-center flex-1">
@@ -86,7 +82,7 @@ export default function SubscriptionPage() {
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-[#d4af37] text-lg">{PKG_ICONS[sub.package]}</span>
+                    <span className="text-[#d4af37] text-lg"><Icon name={PKG_ICONS[sub.package]} size={16} /></span>
                     <div>
                       <p className="text-[#E2D4A0] text-sm font-semibold">{packages[sub.package]?.name}</p>
                       <p className="text-[#8B7A4A]/40 text-[0.55rem]">ใช้งานอยู่</p>
@@ -124,7 +120,7 @@ export default function SubscriptionPage() {
 
                 {!sub.autoRenew && daysLeft(sub.endDate) <= 7 && (
                   <p className="text-[#7a2020]/60 text-[0.6rem] mt-2 text-center">
-                    ⚠ แพ็กเกจจะหมดอายุใน {daysLeft(sub.endDate)} วัน กรุณาต่ออายุ
+                    <Icon name="triangle-alert" size={12} className="inline" /> แพ็กเกจจะหมดอายุใน {daysLeft(sub.endDate)} วัน กรุณาต่ออายุ
                   </p>
                 )}
               </motion.div>
@@ -142,7 +138,7 @@ export default function SubscriptionPage() {
                     style={{ background: isActive ? "#3A0E0E" : "#2a1215", border: isActive ? "1px solid #8B7A4A30" : "0.5px solid #8B7A4A10" }}
                     initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                   >
-                    <span className="text-xl flex-shrink-0" style={{ color: isActive ? "#d4af37" : "#8B7A4A" }}>{PKG_ICONS[id]}</span>
+                    <span className="text-xl flex-shrink-0" style={{ color: isActive ? "#d4af37" : "#8B7A4A" }}><Icon name={PKG_ICONS[id]} size={16} /></span>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <p className="text-[#E2D4A0]/80 text-xs font-medium">{pkg.name}</p>
@@ -153,7 +149,7 @@ export default function SubscriptionPage() {
                       <p className="text-[#8B7A4A]/30 text-[0.5rem]">{pkg.content}</p>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <p className="text-[#d4af37] text-sm font-semibold">★{pkg.credits}</p>
+                      <p className="text-[#d4af37] text-sm font-semibold flex items-center gap-0.5"><Icon name="star" size={14} />{pkg.credits}</p>
                       <p className="text-[#8B7A4A]/30 text-[0.5rem]">/เดือน</p>
                     </div>
                   </motion.div>
@@ -166,7 +162,7 @@ export default function SubscriptionPage() {
               <div className="space-y-2">
                 {Object.entries(packages).map(([id, pkg]) => (
                   <LaurelButton key={id} variant={id === "all" ? "gold" : "crimson"} onClick={() => handleSubscribe(id)} className="w-full h-[46px]">
-                    {subscribing ? "..." : `สมัคร ${pkg.name} — ★${pkg.credits}`}
+                    {subscribing ? "..." : `สมัคร ${pkg.name} — ${pkg.credits} เครดิต`}
                   </LaurelButton>
                 ))}
               </div>

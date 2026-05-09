@@ -11,6 +11,7 @@ import Button from "@/components/ui/Button";
 import Candle from "@/components/ui/Candle";
 import { haptic, playPickSound, playShuffleSound, playFlipSound } from "@/lib/feedback";
 import dynamic from "next/dynamic";
+import Icon from "@/components/ui/Icon";
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 type Stage = "meditate" | "shuffle" | "dealing" | "pick" | "gather" | "layout";
@@ -552,7 +553,7 @@ export default function CardPickScreen() {
                   >
                     {isPicked ? (
                       <div className="w-full h-full rounded-md bg-gold/[0.04] flex items-center justify-center">
-                        <span className="text-gold/20 text-lg">✦</span>
+                        <Icon name="sparkles" size={18} className="text-gold/20" />
                       </div>
                     ) : (
                       <motion.div layoutId={isPickable ? `card-${card.id}` : undefined} transition={{ type: "spring", stiffness: 300, damping: 25 }}>

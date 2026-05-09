@@ -4,7 +4,7 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { getSettings, saveReading, getUserProfile } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/admin-auth";
 import { calculateZodiac } from "@/lib/zodiac";
-import { requireCredits } from "@/lib/credit-check";
+import { checkCredits, deductCredits } from "@/lib/credit-check";
 
 const client = new Anthropic();
 
@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
 
     // Credit check — tarot 3 เครดิต, gypsy 2 เครดิต
     const service = body.service === "gypsy" ? "gypsy" as const : "tarot" as const;
-    const creditError = requireCredits(req, service);
+    const creditError = checkCredits(req, service);
     if (creditError) return creditError;
 
     const user = getUserFromRequest(req);
@@ -198,6 +198,7 @@ export async function POST(req: NextRequest) {
       tokensUsed,
     });
 
+    deductCredits(req, service);
     return NextResponse.json({ reading: parsed });
   } catch (error) {
     console.error("Reading API error:", error);

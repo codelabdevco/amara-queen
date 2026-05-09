@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Icon from "@/components/ui/Icon";
 
 interface Props {
   value: string; // HH:mm
@@ -40,7 +41,7 @@ export default function TimePicker({ value, onChange }: Props) {
             <option key={i} value={String(i)} className="bg-[#1e0c0c]">{String(i).padStart(2, "0")} น.</option>
           ))}
         </select>
-        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white/20 text-[0.5rem] pointer-events-none">▼</span>
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"><Icon name="chevron-down" size={10} className="text-white/20" /></span>
       </div>
       <div className="relative">
         <select value={parsed.minute ? String(parseInt(parsed.minute)) : ""} onChange={e => handleChange("minute", e.target.value)} className={`${selectClass} w-full`} style={selectStyle}>
@@ -49,7 +50,7 @@ export default function TimePicker({ value, onChange }: Props) {
             <option key={i} value={String(i)} className="bg-[#1e0c0c]">{String(i).padStart(2, "0")} นาที</option>
           ))}
         </select>
-        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-white/20 text-[0.5rem] pointer-events-none">▼</span>
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"><Icon name="chevron-down" size={10} className="text-white/20" /></span>
       </div>
     </div>
   );

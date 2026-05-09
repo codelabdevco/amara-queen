@@ -11,6 +11,6 @@ export async function POST(req: NextRequest) {
   }
   const token = signUserToken(user.id, user.username);
   const res = NextResponse.json({ ok: true, user: { id: user.id, username: user.username } });
-  res.cookies.set("amara_token", token, { httpOnly: true, path: "/", maxAge: 7 * 86400, sameSite: "lax" });
+  res.cookies.set("amara_token", token, { httpOnly: true, path: "/", maxAge: 7 * 86400, sameSite: "lax", secure: true });
   return res;
 }

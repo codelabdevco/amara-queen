@@ -6,13 +6,15 @@ import AppShell from "@/components/AppShell";
 import LaurelButton from "@/components/ui/LaurelButton";
 import PersonalDataBadge from "@/components/ui/PersonalDataBadge";
 import { EASE } from "@/constants/animation";
+import PageHeader from "@/components/ui/PageHeader";
+import Icon from "@/components/ui/Icon";
 
 const TYPES = [
-  { id: "phone", icon: "☎", name: "เบอร์โทรศัพท์", placeholder: "0XX-XXX-XXXX", inputMode: "tel" as const, maxLen: 12 },
-  { id: "lucky", icon: "★", name: "เบอร์มงคล", placeholder: "0XX-XXX-XXXX", inputMode: "tel" as const, maxLen: 12 },
-  { id: "bank", icon: "฿", name: "เลขบัญชีธนาคาร", placeholder: "เลือกธนาคารก่อน", inputMode: "numeric" as const, maxLen: 15 },
-  { id: "car", icon: "◈", name: "ทะเบียนรถ", placeholder: "กข 1234", inputMode: "text" as const, maxLen: 10 },
-  { id: "id", icon: "♦", name: "บัตรประชาชน", placeholder: "X-XXXX-XXXXX-XX-X", inputMode: "numeric" as const, maxLen: 17 },
+  { id: "phone", icon: "phone", name: "เบอร์โทรศัพท์", placeholder: "0XX-XXX-XXXX", inputMode: "tel" as const, maxLen: 12 },
+  { id: "lucky", icon: "star", name: "เบอร์มงคล", placeholder: "0XX-XXX-XXXX", inputMode: "tel" as const, maxLen: 12 },
+  { id: "bank", icon: "wallet", name: "เลขบัญชีธนาคาร", placeholder: "เลือกธนาคารก่อน", inputMode: "numeric" as const, maxLen: 15 },
+  { id: "car", icon: "car", name: "ทะเบียนรถ", placeholder: "กข 1234", inputMode: "text" as const, maxLen: 10 },
+  { id: "id", icon: "diamond", name: "บัตรประชาชน", placeholder: "X-XXXX-XXXXX-XX-X", inputMode: "numeric" as const, maxLen: 17 },
 ];
 
 const BANKS = [
@@ -129,9 +131,16 @@ export default function NumerologyPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: selectedType, number: number.trim(), bank: selectedBank ? BANKS.find(b => b.id === selectedBank)?.name : undefined }),
       });
-      const data = await res.json();
-      if (data.error) { setError(data.error); }
-      else { setResult(data.result); }
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        if (data.needLogin) { setError("กรุณาเข้าสู่ระบบเพื่อใช้บริการ"); }
+        else if (data.needCredits) { setError(data.error || "เครดิตไม่เพียงพอ"); }
+        else { setError(data.error || "เกิดข้อผิดพลาด"); }
+      } else {
+        const data = await res.json();
+        if (data.error) { setError(data.error); }
+        else { setResult(data.result); window.dispatchEvent(new Event("credit-changed")); }
+      }
     } catch { setError("ไม่สามารถเชื่อมต่อได้"); }
     setLoading(false);
   }
@@ -155,7 +164,7 @@ export default function NumerologyPage() {
           <h2 className="text-base font-semibold tracking-[0.1em]"
             style={{ background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)", backgroundSize: "200% 200%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "shimmer-text 4s ease-in-out infinite" }}
           >เลขศาสตร์</h2>
-          <p className="text-[#8B7A4A]/50 text-[0.65rem]">วิเคราะห์ตัวเลขมงคล ★1 เครดิต/ครั้ง</p>
+          <p className="text-[#8B7A4A]/50 text-[0.65rem]">วิเคราะห์ตัวเลขมงคล 1 เครดิต/ครั้ง</p>
         </div>
 
         <AnimatePresence mode="wait">
@@ -166,7 +175,7 @@ export default function NumerologyPage() {
                 <motion.div key={t.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.05, duration: 0.3 }}>
                   <LaurelButton variant="crimson" onClick={() => setSelectedType(t.id)} className="w-full h-[46px]">
                     <span className="flex items-center gap-2">
-                      <span className="opacity-50">{t.icon}</span>
+                      <Icon name={t.icon} size={14} className="opacity-50" />
                       <span className="text-[0.7rem]">{t.name}</span>
                     </span>
                   </LaurelButton>
@@ -179,7 +188,7 @@ export default function NumerologyPage() {
           {selectedType && !result && !loading && (
             <motion.div key="input" className="flex flex-col items-center gap-4" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-[#d4af37] text-xl">{activeType?.icon}</span>
+                {activeType && <Icon name={activeType.icon} size={24} className="text-[#d4af37]" />}
                 <p className="text-[#E2D4A0] text-sm font-medium">{activeType?.name}</p>
               </div>
 
@@ -227,7 +236,7 @@ export default function NumerologyPage() {
 
               <div className="flex gap-3">
                 <LaurelButton variant="crimson" onClick={handleReset}>ย้อนกลับ</LaurelButton>
-                <LaurelButton variant="gold" onClick={handleAnalyze}>วิเคราะห์ ★1</LaurelButton>
+                <LaurelButton variant="gold" onClick={handleAnalyze}>วิเคราะห์ 1</LaurelButton>
               </div>
             </motion.div>
           )}
@@ -296,14 +305,14 @@ export default function NumerologyPage() {
               {/* Suggestion */}
               {result.suggestion && (
                 <div className="rounded-lg p-3" style={{ background: "#3A0E0E", border: "0.5px solid #8B7A4A15" }}>
-                  <p className="text-[#d4af37]/60 text-xs leading-5">💡 {result.suggestion}</p>
+                  <p className="text-[#d4af37]/60 text-xs leading-5 flex items-start gap-1"><Icon name="lightbulb" size={12} className="mt-0.5 flex-shrink-0" /> {result.suggestion}</p>
                 </div>
               )}
 
               {/* Actions */}
               <div className="flex gap-3 justify-center pt-2">
                 <LaurelButton variant="crimson" onClick={handleReset}>วิเคราะห์เลขอื่น</LaurelButton>
-                <LaurelButton variant="crimson" onClick={() => { window.location.href = "/home"; }}>กลับหน้าหลัก</LaurelButton>
+                <LaurelButton variant="crimson" href="/home">กลับหน้าหลัก</LaurelButton>
               </div>
             </motion.div>
           )}

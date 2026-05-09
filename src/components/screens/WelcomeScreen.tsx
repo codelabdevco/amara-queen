@@ -6,6 +6,7 @@ import CardBack from "@/components/ui/CardBack";
 import LaurelButton from "@/components/ui/LaurelButton";
 
 import { EASE } from "@/constants/animation";
+import LineLoginButton from "@/components/ui/LineLoginButton";
 
 const cardVariants = [
   { rotate: -12, x: -20, delay: 0 },
@@ -78,14 +79,7 @@ export default function WelcomeScreen() {
         <LaurelButton variant="gold" href="/home">เริ่มใช้งาน</LaurelButton>
 
         {!loggedIn && (
-          <a
-            href="/api/auth/line"
-            className="flex items-center justify-center gap-2 w-[220px] py-3 rounded-full text-sm font-semibold tracking-wide transition-all hover:brightness-110"
-            style={{ background: "#06C755", color: "#fff" }}
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 5.81 2 10.44c0 3.7 3.04 6.9 7.34 7.93-.1.38-.66 2.44-.68 2.6 0 0-.01.1.05.14.06.03.13.01.13.01.17-.02 2-1.3 2.32-1.53.61.09 1.24.14 1.84.14 5.52 0 10-3.81 10-8.44C22 5.81 17.52 2 12 2z"/></svg>
-            เข้าสู่ระบบด้วย LINE
-          </a>
+<LineLoginButton />
         )}
       </motion.div>
     </motion.div>

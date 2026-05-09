@@ -4,14 +4,26 @@ import { getSettings } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/admin-auth";
 import { getUserProfile } from "@/lib/db";
 import { calculateZodiac } from "@/lib/zodiac";
-import { requireCredits } from "@/lib/credit-check";
+import { checkCredits, deductCredits } from "@/lib/credit-check";
 
 const client = new Anthropic();
 
+const rateLimitMap = new Map<string, number[]>();
+function checkRate(key: string, maxPerMin = 5): boolean {
+  const now = Date.now();
+  const hits = (rateLimitMap.get(key) || []).filter(t => now - t < 60000);
+  if (hits.length >= maxPerMin) return false;
+  hits.push(now);
+  rateLimitMap.set(key, hits);
+  return true;
+}
+
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-real-ip") || req.headers.get("x-forwarded-for") || "unknown";
+    if (!checkRate(ip)) return NextResponse.json({ error: "คำขอบ่อยเกินไป กรุณารอสักครู่" }, { status: 429 });
     // Credit check — 1 เครดิต
-    const creditError = requireCredits(req, "siamsi");
+    const creditError = checkCredits(req, "siamsi");
     if (creditError) return creditError;
 
     const settings = getSettings();
@@ -47,6 +59,7 @@ export async function POST(req: NextRequest) {
       messages: [{ role: "user", content: prompt }],
     });
 
+    deductCredits(req, "siamsi");
     const text = message.content[0].type === "text" ? message.content[0].text : "";
     try {
       const start = text.indexOf("{");

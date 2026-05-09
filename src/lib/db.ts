@@ -234,6 +234,15 @@ export function createLineUser(lineUserId: string, displayName: string, pictureU
   return user;
 }
 
+export function updateLineProfile(lineUserId: string, displayName: string, pictureUrl: string): void {
+  const users = getUsers();
+  const user = users.find((u) => u.lineUserId === lineUserId);
+  if (!user) return;
+  user.lineDisplayName = displayName;
+  user.linePictureUrl = pictureUrl;
+  saveUsers(users);
+}
+
 export function updateUserProfile(userId: string, profile: UserProfile): User | null {
   const users = getUsers();
   const user = users.find((u) => u.id === userId);
@@ -334,7 +343,17 @@ export function addCredits(userId: string, amount: number): { success: boolean; 
   const users = getUsers();
   const user = users.find((u) => u.id === userId);
   if (!user) return { success: false, newBalance: 0 };
-  user.credits = (user.credits || 0) + amount;
+  const newCredits = (user.credits || 0) + amount;
+  user.credits = Math.max(0, newCredits);
+
+  // Update monthly free credits tracking
+  if (amount > 0) {
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    if ((user.lastFreeMonth || "") !== currentMonth) {
+      user.lastFreeMonth = currentMonth;
+    }
+  }
+
   saveUsers(users);
   return { success: true, newBalance: user.credits };
 }
@@ -663,6 +682,8 @@ export interface AppSettings {
   creditCostGypsy: number;
   creditCostSiamsi: number;
   creditCostAuspicious: number;
+  creditCostCalendar: number;
+  creditCostNumerology: number;
   creditPackages: { credits: number; price: number; label: string }[];
   promptPayNumber: string;
   promptPayName: string;
@@ -706,6 +727,8 @@ const DEFAULT_SETTINGS: AppSettings = {
   creditCostGypsy: 2,
   creditCostSiamsi: 1,
   creditCostAuspicious: 2,
+  creditCostCalendar: 1,
+  creditCostNumerology: 1,
   creditPackages: [
     { credits: 10, price: 29, label: "10 เครดิต" },
     { credits: 30, price: 69, label: "30 เครดิต" },
@@ -747,4 +770,213 @@ export function checkGuestLimit(ip: string): { allowed: boolean; remaining: numb
   writeJSON("guest-usage.json", cleaned);
 
   return { allowed: true, remaining: settings.dailyFreeLimit - used - 1 };
+}
+
+// ── HEALERS (หมอดู) ──
+export interface HealerTimeSlot {
+  start: string; // "HH:mm"
+  end: string;
+}
+
+export interface HealerAvailability {
+  dayOfWeek: number; // 0=Sun, 1=Mon, ..., 6=Sat
+  slots: HealerTimeSlot[];
+}
+
+export interface Healer {
+  id: string;
+  name: string;
+  title: string; // e.g. "อาจารย์", "แม่หมอ"
+  pictureUrl: string;
+  bio: string;
+  specialties: string[]; // e.g. ["ไพ่ทาโร่", "ดวงชะตา", "เนื้อคู่"]
+  priceCredits: number; // credits per session
+  sessionMinutes: number; // session duration
+  availability: HealerAvailability[];
+  blockedDates: string[]; // ISO dates healer is unavailable
+  rating: number;
+  totalBookings: number;
+  active: boolean;
+  sortOrder: number;
+  createdAt: number;
+}
+
+function getHealers(): Healer[] {
+  return readJSON("healers.json", []);
+}
+
+function saveHealersData(healers: Healer[]): void {
+  writeJSON("healers.json", healers);
+}
+
+export function getAllHealers(): Healer[] {
+  return getHealers().sort((a, b) => a.sortOrder - b.sortOrder);
+}
+
+export function getActiveHealers(): Healer[] {
+  return getAllHealers().filter((h) => h.active);
+}
+
+export function findHealerById(id: string): Healer | null {
+  return getHealers().find((h) => h.id === id) || null;
+}
+
+export function saveHealer(healer: Healer): Healer {
+  const healers = getHealers();
+  const idx = healers.findIndex((h) => h.id === healer.id);
+  if (idx >= 0) healers[idx] = healer;
+  else healers.push(healer);
+  saveHealersData(healers);
+  return healer;
+}
+
+export function deleteHealer(id: string): boolean {
+  const healers = getHealers();
+  const filtered = healers.filter((h) => h.id !== id);
+  if (filtered.length === healers.length) return false;
+  saveHealersData(filtered);
+  return true;
+}
+
+// ── BOOKINGS (การจองคิว) ──
+export type BookingStatus = "pending" | "confirmed" | "completed" | "cancelled" | "no_show";
+
+export interface Booking {
+  id: string;
+  userId: string;
+  healerId: string;
+  date: string; // ISO date "YYYY-MM-DD"
+  timeSlot: string; // "HH:mm"
+  sessionMinutes: number;
+  creditCost: number;
+  status: BookingStatus;
+  note: string; // user's note/question
+  adminNote: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+function getBookings(): Booking[] {
+  return readJSON("bookings.json", []);
+}
+
+function saveBookingsData(bookings: Booking[]): void {
+  writeJSON("bookings.json", bookings);
+}
+
+export function createBooking(data: {
+  userId: string;
+  healerId: string;
+  date: string;
+  timeSlot: string;
+  note?: string;
+}): { success: boolean; booking?: Booking; error?: string } {
+  const healer = findHealerById(data.healerId);
+  if (!healer || !healer.active) return { success: false, error: "หมอดูไม่พร้อมให้บริการ" };
+
+  // Check if slot is already booked
+  const bookings = getBookings();
+  const conflict = bookings.find(
+    (b) =>
+      b.healerId === data.healerId &&
+      b.date === data.date &&
+      b.timeSlot === data.timeSlot &&
+      b.status !== "cancelled"
+  );
+  if (conflict) return { success: false, error: "ช่วงเวลานี้ถูกจองแล้ว" };
+
+  // Check blocked dates
+  if (healer.blockedDates.includes(data.date)) {
+    return { success: false, error: "หมอดูไม่ว่างในวันที่เลือก" };
+  }
+
+  // Deduct credits
+  const result = deductCreditsForBooking(data.userId, healer.priceCredits);
+  if (!result.success) return { success: false, error: "เครดิตไม่เพียงพอ" };
+
+  const booking: Booking = {
+    id: crypto.randomUUID(),
+    userId: data.userId,
+    healerId: data.healerId,
+    date: data.date,
+    timeSlot: data.timeSlot,
+    sessionMinutes: healer.sessionMinutes,
+    creditCost: healer.priceCredits,
+    status: "confirmed",
+    note: data.note || "",
+    adminNote: "",
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
+
+  bookings.push(booking);
+  saveBookingsData(bookings);
+
+  // Update healer stats
+  healer.totalBookings++;
+  saveHealer(healer);
+
+  return { success: true, booking };
+}
+
+function deductCreditsForBooking(userId: string, amount: number): { success: boolean; remaining: number } {
+  const user = findUserById(userId);
+  if (!user || (user.credits || 0) < amount) return { success: false, remaining: user?.credits || 0 };
+  const result = addCredits(userId, -amount);
+  return { success: result.success, remaining: result.newBalance };
+}
+
+export function getUserBookings(userId: string): Booking[] {
+  return getBookings()
+    .filter((b) => b.userId === userId)
+    .sort((a, b) => b.createdAt - a.createdAt);
+}
+
+export function getHealerBookings(healerId: string, date?: string): Booking[] {
+  let bookings = getBookings().filter((b) => b.healerId === healerId && b.status !== "cancelled");
+  if (date) bookings = bookings.filter((b) => b.date === date);
+  return bookings.sort((a, b) => a.timeSlot.localeCompare(b.timeSlot));
+}
+
+export function getAllBookings(
+  limit = 50,
+  offset = 0,
+  filters?: { status?: BookingStatus; healerId?: string; date?: string; userId?: string }
+): { bookings: Booking[]; total: number } {
+  let bookings = getBookings().sort((a, b) => b.createdAt - a.createdAt);
+  if (filters?.status) bookings = bookings.filter((b) => b.status === filters.status);
+  if (filters?.healerId) bookings = bookings.filter((b) => b.healerId === filters.healerId);
+  if (filters?.date) bookings = bookings.filter((b) => b.date === filters.date);
+  if (filters?.userId) bookings = bookings.filter((b) => b.userId === filters.userId);
+  const total = bookings.length;
+  return { bookings: bookings.slice(offset, offset + limit), total };
+}
+
+export function updateBookingStatus(
+  bookingId: string,
+  status: BookingStatus,
+  adminNote?: string
+): { success: boolean; booking?: Booking } {
+  const bookings = getBookings();
+  const booking = bookings.find((b) => b.id === bookingId);
+  if (!booking) return { success: false };
+
+  const oldStatus = booking.status;
+  booking.status = status;
+  booking.updatedAt = Date.now();
+  if (adminNote !== undefined) booking.adminNote = adminNote;
+
+  // Refund credits if cancelled (and was confirmed/pending)
+  if (status === "cancelled" && (oldStatus === "confirmed" || oldStatus === "pending")) {
+    addCredits(booking.userId, booking.creditCost);
+  }
+
+  saveBookingsData(bookings);
+  return { success: true, booking };
+}
+
+export function getBookedSlots(healerId: string, date: string): string[] {
+  return getBookings()
+    .filter((b) => b.healerId === healerId && b.date === date && b.status !== "cancelled")
+    .map((b) => b.timeSlot);
 }

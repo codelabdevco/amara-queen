@@ -15,7 +15,7 @@ export interface Topic {
 }
 
 export const TOPICS: Topic[] = [
-  { id: "love", icon: "♥", nameTH: "ความรัก / คู่ครอง", nameEN: "Love & Relationships", color: "#c44a5a", desc: "เนื้อคู่ แอบชอบ คืนดี คู่รัก", examples: [
+  { id: "love", icon: "heart", nameTH: "ความรัก / คู่ครอง", nameEN: "Love & Relationships", color: "#c44a5a", desc: "เนื้อคู่ แอบชอบ คืนดี คู่รัก", examples: [
     "เขาคิดอย่างไรกับฉัน",
     "จะเจอเนื้อคู่เมื่อไร",
     "ความรักครั้งนี้จะไปรอดไหม",
@@ -25,7 +25,7 @@ export const TOPICS: Topic[] = [
     "คนที่แอบชอบเขารู้สึกอย่างไร",
     "ความสัมพันธ์จะก้าวหน้าไหม",
   ] },
-  { id: "career", icon: "⚙", nameTH: "การงาน / อาชีพ", nameEN: "Career", color: "#c9a84c", desc: "เลื่อนขั้น เปลี่ยนงาน เพื่อนร่วมงาน", examples: [
+  { id: "career", icon: "briefcase", nameTH: "การงาน / อาชีพ", nameEN: "Career", color: "#c9a84c", desc: "เลื่อนขั้น เปลี่ยนงาน เพื่อนร่วมงาน", examples: [
     "ควรเปลี่ยนงานไหม",
     "จะได้เลื่อนตำแหน่งไหม",
     "งานที่ทำอยู่เหมาะกับเราไหม",
@@ -35,7 +35,7 @@ export const TOPICS: Topic[] = [
     "เพื่อนร่วมงานไว้ใจได้ไหม",
     "จะได้งานใหม่เมื่อไร",
   ] },
-  { id: "money", icon: "★", nameTH: "การเงิน / โชคลาภ", nameEN: "Money & Fortune", color: "#4a9e6e", desc: "รายได้ หนี้สิน ลงทุน ค้าขาย", examples: [
+  { id: "money", icon: "coins", nameTH: "การเงิน / โชคลาภ", nameEN: "Money & Fortune", color: "#4a9e6e", desc: "รายได้ หนี้สิน ลงทุน ค้าขาย", examples: [
     "การเงินช่วงนี้เป็นอย่างไร",
     "ควรลงทุนตอนนี้ไหม",
     "จะปลดหนี้ได้เมื่อไร",
@@ -45,7 +45,7 @@ export const TOPICS: Topic[] = [
     "ควรออมเงินหรือใช้จ่าย",
     "หุ้นที่ถืออยู่จะเป็นอย่างไร",
   ] },
-  { id: "health", icon: "✚", nameTH: "สุขภาพ / พลังงาน", nameEN: "Health & Energy", color: "#9b7dd4", desc: "กาย จิต ความเครียด สมดุลชีวิต", examples: [
+  { id: "health", icon: "heart-pulse", nameTH: "สุขภาพ / พลังงาน", nameEN: "Health & Energy", color: "#9b7dd4", desc: "กาย จิต ความเครียด สมดุลชีวิต", examples: [
     "สุขภาพช่วงนี้เป็นอย่างไร",
     "ควรดูแลสุขภาพเรื่องอะไร",
     "ความเครียดจะลดลงเมื่อไร",
@@ -54,7 +54,7 @@ export const TOPICS: Topic[] = [
     "สุขภาพจิตจะดีขึ้นไหม",
     "สมดุลชีวิตกับงานเป็นอย่างไร",
   ] },
-  { id: "education", icon: "✎", nameTH: "การเรียน / สอบ", nameEN: "Education", color: "#378add", desc: "เรียนต่อ ทุน สอบ ทักษะใหม่", examples: [
+  { id: "education", icon: "book-open", nameTH: "การเรียน / สอบ", nameEN: "Education", color: "#378add", desc: "เรียนต่อ ทุน สอบ ทักษะใหม่", examples: [
     "จะสอบผ่านไหม",
     "ควรเรียนต่อไหม",
     "จะได้ทุนการศึกษาไหม",
@@ -63,7 +63,7 @@ export const TOPICS: Topic[] = [
     "ควรเรียนทักษะใหม่อะไรดี",
     "จะสอบติดมหาวิทยาลัยไหม",
   ] },
-  { id: "family", icon: "⌂", nameTH: "ครอบครัว / บ้าน", nameEN: "Family & Home", color: "#d4537e", desc: "พ่อแม่ ลูก คู่สมรส ย้ายบ้าน", examples: [
+  { id: "family", icon: "home", nameTH: "ครอบครัว / บ้าน", nameEN: "Family & Home", color: "#d4537e", desc: "พ่อแม่ ลูก คู่สมรส ย้ายบ้าน", examples: [
     "ความสัมพันธ์ในครอบครัวจะเป็นอย่างไร",
     "ควรย้ายบ้านตอนนี้ดีไหม",
     "ลูกจะเป็นอย่างไรในอนาคต",
@@ -72,7 +72,7 @@ export const TOPICS: Topic[] = [
     "พ่อแม่สุขภาพจะเป็นอย่างไร",
     "ควรซื้อบ้านตอนนี้ไหม",
   ] },
-  { id: "spiritual", icon: "☀", nameTH: "จิตวิญญาณ / ค้นหาตัวเอง", nameEN: "Spiritual Growth", color: "#639922", desc: "เป้าหมายชีวิต กรรม บทเรียน", examples: [
+  { id: "spiritual", icon: "sun", nameTH: "จิตวิญญาณ / ค้นหาตัวเอง", nameEN: "Spiritual Growth", color: "#639922", desc: "เป้าหมายชีวิต กรรม บทเรียน", examples: [
     "บทเรียนชีวิตตอนนี้คืออะไร",
     "เป้าหมายแท้จริงของชีวิตคืออะไร",
     "กรรมที่ส่งผลอยู่ตอนนี้คืออะไร",
@@ -81,7 +81,7 @@ export const TOPICS: Topic[] = [
     "สิ่งที่ควรปล่อยวางคืออะไร",
     "จักรวาลกำลังบอกอะไร",
   ] },
-  { id: "decision", icon: "⚖", nameTH: "การตัดสินใจ", nameEN: "Decision Making", color: "#d85a30", desc: "ทางสองแพร่ง เลือก A หรือ B", examples: [
+  { id: "decision", icon: "scale", nameTH: "การตัดสินใจ", nameEN: "Decision Making", color: "#d85a30", desc: "ทางสองแพร่ง เลือก A หรือ B", examples: [
     "ควรเลือกทางไหนดี",
     "ตัดสินใจแบบนี้ถูกไหม",
     "ควรรอหรือลงมือทำเลย",
@@ -90,7 +90,7 @@ export const TOPICS: Topic[] = [
     "จะเสียใจกับการตัดสินใจนี้ไหม",
     "อะไรคือสิ่งที่ควรพิจารณา",
   ] },
-  { id: "travel", icon: "✈", nameTH: "การเดินทาง / ย้ายถิ่น", nameEN: "Travel & Relocation", color: "#1d9e75", desc: "ต่างประเทศ ย้ายเมือง เที่ยว", examples: [
+  { id: "travel", icon: "compass", nameTH: "การเดินทาง / ย้ายถิ่น", nameEN: "Travel & Relocation", color: "#1d9e75", desc: "ต่างประเทศ ย้ายเมือง เที่ยว", examples: [
     "ควรย้ายไปเมืองใหม่ไหม",
     "การเดินทางครั้งนี้จะราบรื่นไหม",
     "ควรไปต่างประเทศตอนนี้ไหม",
@@ -99,7 +99,7 @@ export const TOPICS: Topic[] = [
     "การเดินทางจะเปลี่ยนชีวิตไหม",
     "ที่ไหนเหมาะกับเราที่สุด",
   ] },
-  { id: "general", icon: "✦", nameTH: "ดวงรวม / ภาพรวม", nameEN: "General Reading", color: "#888780", desc: "วันนี้ สัปดาห์ เดือน ปี", examples: [
+  { id: "general", icon: "sparkles", nameTH: "ดวงรวม / ภาพรวม", nameEN: "General Reading", color: "#888780", desc: "วันนี้ สัปดาห์ เดือน ปี", examples: [
     "ดวงช่วงนี้เป็นอย่างไร",
     "สัปดาห์นี้ควรระวังเรื่องอะไร",
     "พลังงานวันนี้เป็นอย่างไร",

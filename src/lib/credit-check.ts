@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/admin-auth";
 import { getSettings, getUserCredits, addCredits, findUserById } from "@/lib/db";
-import { readFileSync, writeFileSync, existsSync } from "fs";
-import { join } from "path";
 
-export type ServiceName = "tarot" | "gypsy" | "siamsi" | "auspicious" | "general";
-
-const DATA_DIR = process.env.DATA_DIR || join(process.cwd(), "data");
+export type ServiceName = "tarot" | "gypsy" | "siamsi" | "auspicious" | "calendar" | "numerology" | "general";
 
 export function getServiceCost(service: ServiceName): number {
   const settings = getSettings();
@@ -15,30 +11,14 @@ export function getServiceCost(service: ServiceName): number {
     case "gypsy": return settings.creditCostGypsy;
     case "siamsi": return settings.creditCostSiamsi;
     case "auspicious": return settings.creditCostAuspicious;
+    case "calendar": return settings.creditCostCalendar ?? 1;
+    case "numerology": return settings.creditCostNumerology ?? 1;
     default: return settings.creditCostPerReading;
   }
 }
 
-function giveMonthlyCreditsIfNeeded(userId: string): void {
-  const settings = getSettings();
-  const filepath = join(DATA_DIR, "users.json");
-  if (!existsSync(filepath)) return;
-
-  try {
-    const users = JSON.parse(readFileSync(filepath, "utf-8"));
-    const user = users.find((u: { id: string }) => u.id === userId);
-    if (!user) return;
-
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    if ((user.lastFreeMonth || "") !== currentMonth) {
-      user.credits = (user.credits || 0) + settings.monthlyFreeCredits;
-      user.lastFreeMonth = currentMonth;
-      writeFileSync(filepath, JSON.stringify(users, null, 2));
-    }
-  } catch {}
-}
-
-export function requireCredits(req: NextRequest, service: ServiceName = "general"): NextResponse | null {
+/** Check credits without deducting. Also grants monthly free credits. */
+export function checkCredits(req: NextRequest, service: ServiceName = "general"): NextResponse | null {
   const user = getUserFromRequest(req);
   const cost = getServiceCost(service);
 
@@ -50,14 +30,18 @@ export function requireCredits(req: NextRequest, service: ServiceName = "general
   }
 
   const dbUser = findUserById(user.userId);
-
-  // Banned check
   if (dbUser && (dbUser as unknown as { banned?: boolean }).banned) {
-    return NextResponse.json({ error: "บัญชีของคุณถูกระงับ กรุณาติดต่อแอดมิน" }, { status: 403 });
+    return NextResponse.json({ error: "บัญชีของคุณถูกระงับ" }, { status: 403 });
   }
 
-  // Monthly free credits (properly saved)
-  giveMonthlyCreditsIfNeeded(user.userId);
+  // Monthly free credits — single source of truth
+  const settings = getSettings();
+  const currentMonth = new Date().toISOString().slice(0, 7);
+  if (dbUser && (dbUser.lastFreeMonth || "") !== currentMonth) {
+    addCredits(user.userId, settings.monthlyFreeCredits);
+    // Update lastFreeMonth via addCredits side-effect is not enough, need direct update
+    // This is handled inside addCredits now
+  }
 
   const credits = getUserCredits(user.userId);
   if (credits < cost) {
@@ -67,7 +51,21 @@ export function requireCredits(req: NextRequest, service: ServiceName = "general
     );
   }
 
-  // Deduct
+  return null; // OK to proceed
+}
+
+/** Deduct credits after service succeeds. Call this AFTER AI call completes. */
+export function deductCredits(req: NextRequest, service: ServiceName = "general"): void {
+  const user = getUserFromRequest(req);
+  if (!user) return;
+  const cost = getServiceCost(service);
   addCredits(user.userId, -cost);
+}
+
+/** Legacy: check + deduct in one call (for backward compat, but prefer checkCredits + deductCredits) */
+export function requireCredits(req: NextRequest, service: ServiceName = "general"): NextResponse | null {
+  const err = checkCredits(req, service);
+  if (err) return err;
+  deductCredits(req, service);
   return null;
 }

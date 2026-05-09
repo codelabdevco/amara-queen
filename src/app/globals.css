@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: dark;
   --gold: #d4af37;
   --gold-light: #f0d78c;
   --gold-dim: rgba(212, 175, 55, 0.2);
@@ -195,3 +196,90 @@ body {
 ::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.15); border-radius: 9999px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(212, 175, 55, 0.3); }
 ::-webkit-scrollbar-corner { background: transparent; }
+
+/* ===== ADMIN FORM ELEMENTS — DARK+GOLD THEME ===== */
+
+/* Force dark color scheme globally for native popups (date picker, select, etc.) */
+html {
+  color-scheme: dark;
+}
+
+/* Date inputs */
+input[type=date],
+input[type=datetime-local],
+input[type=time],
+input[type=month],
+input[type=week] {
+  color-scheme: dark;
+  background-color: #111111;
+}
+
+input[type=date]::-webkit-calendar-picker-indicator,
+input[type=datetime-local]::-webkit-calendar-picker-indicator,
+input[type=time]::-webkit-calendar-picker-indicator,
+input[type=month]::-webkit-calendar-picker-indicator,
+input[type=week]::-webkit-calendar-picker-indicator {
+  filter: invert(0.75) sepia(1) saturate(3) hue-rotate(10deg) brightness(1.1);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+input[type=date]::-webkit-calendar-picker-indicator:hover,
+input[type=datetime-local]::-webkit-calendar-picker-indicator:hover,
+input[type=time]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* Select dropdowns */
+select {
+  color-scheme: dark;
+  background-color: #111111;
+}
+
+select option {
+  background: #1a1a1a;
+  color: #e8dcc8;
+  padding: 8px;
+}
+
+/* Number input spinner */
+input[type=number] {
+  color-scheme: dark;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  filter: invert(0.7) sepia(1) saturate(2) hue-rotate(10deg);
+  opacity: 0.5;
+}
+
+/* Text & password inputs placeholder */
+input::placeholder,
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+/* Checkbox & radio gold accent */
+input[type=checkbox],
+input[type=radio] {
+  accent-color: #d4af37;
+}
+
+/* Focus ring gold */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: rgba(212, 175, 55, 0.3) !important;
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.1);
+}
+
+/* Autofill dark background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #e8dcc8;
+  -webkit-box-shadow: 0 0 0 1000px #111111 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}

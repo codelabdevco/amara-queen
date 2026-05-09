@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
+import Icon from "@/components/ui/Icon";
 
 const TABS = [
-  { href: "/home", label: "หน้าแรก", icon: "◉" },
-  { href: "/tarot", label: "ดูดวง", icon: "☽" },
-  { href: "/shop", label: "ร้านค้า", icon: "❖" },
-  { href: "/booking", label: "นัดหมอ", icon: "☷" },
-  { href: "/profile", label: "โปรไฟล์", icon: "♦" },
+  { href: "/home", label: "หน้าแรก", icon: "home" },
+  { href: "/tarot", label: "ดูดวง", icon: "moon" },
+  { href: "/shop", label: "ร้านค้า", icon: "store" },
+  { href: "/booking", label: "นัดหมอ", icon: "calendar" },
+  { href: "/profile", label: "โปรไฟล์", icon: "diamond" },
 ];
 
 export default function BottomNav() {
@@ -47,11 +48,11 @@ export default function BottomNav() {
                 />
               )}
               <span
-                className={`text-base transition-all duration-300 ${
+                className={`transition-all duration-300 ${
                   isActive ? "text-[#d4af37] drop-shadow-[0_0_6px_rgba(212,175,55,0.3)]" : "text-[#5A4E34]"
                 }`}
               >
-                {tab.icon}
+                <Icon name={tab.icon} size={18} />
               </span>
               <span
                 className={`text-[0.5rem] transition-colors duration-300 ${

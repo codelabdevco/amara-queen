@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import AdminNav from "@/components/admin/AdminNav";
+import Icon from "@/components/ui/Icon";
 
 interface Product {
   id: string;
@@ -23,7 +24,7 @@ interface Product {
 
 const EMPTY: Product = {
   id: "", sku: "", name: "", description: "", longDescription: "",
-  price: 0, salePrice: 0, icon: "✦", images: [], category: "",
+  price: 0, salePrice: 0, icon: "sparkles", images: [], category: "",
   stock: 0, weight: 0, sortOrder: 0, active: true,
 };
 
@@ -34,6 +35,7 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Product | null>(null);
   const [newImageUrl, setNewImageUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
   const [showCatManager, setShowCatManager] = useState(false);
   const [newCat, setNewCat] = useState("");
 
@@ -172,7 +174,7 @@ export default function AdminProductsPage() {
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
                 </select></div>
               <div><label className={labelClass}>ไอคอน</label>
-                <input value={editing.icon} onChange={e => setEditing({ ...editing, icon: e.target.value })} placeholder="✦" className={inputClass} style={inputStyle} /></div>
+                <input value={editing.icon} onChange={e => setEditing({ ...editing, icon: e.target.value })} placeholder="sparkles" className={inputClass} style={inputStyle} /></div>
               <div><label className={labelClass}>ลำดับ</label>
                 <input type="number" value={editing.sortOrder || ""} onChange={e => setEditing({ ...editing, sortOrder: Number(e.target.value) })} className={inputClass} style={inputStyle} /></div>
             </div>
@@ -190,9 +192,33 @@ export default function AdminProductsPage() {
                 {editing.images.length === 0 && <div className="w-20 h-20 rounded flex items-center justify-center text-white/10 text-xs" style={{ background: "#0a0a0a", border: "1px dashed #ffffff10" }}>ไม่มีรูป</div>}
               </div>
               <div className="flex gap-2">
-                <input value={newImageUrl} onChange={e => setNewImageUrl(e.target.value)} placeholder="https://example.com/image.jpg" className={`flex-1 ${inputClass}`} style={inputStyle} onKeyDown={e => e.key === "Enter" && addImage()} />
-                <button onClick={addImage} className="px-3 py-1.5 rounded text-xs" style={{ background: "#d4af37", color: "#0a0a0a" }}>เพิ่มรูป</button>
+                <label className="px-3 py-1.5 rounded text-xs font-medium cursor-pointer flex items-center gap-1.5" style={{ background: "#d4af37", color: "#0a0a0a" }}>
+                  {uploading ? "กำลังอัปโหลด..." : "📷 อัปโหลดรูป"}
+                  <input type="file" accept="image/*" multiple className="hidden" disabled={uploading}
+                    onChange={async (e) => {
+                      const files = e.target.files;
+                      if (!files || !editing) return;
+                      setUploading(true);
+                      const newImages = [...editing.images];
+                      for (let i = 0; i < files.length; i++) {
+                        const fd = new FormData();
+                        fd.append("file", files[i]);
+                        try {
+                          const res = await fetch("/api/upload", { method: "POST", body: fd });
+                          const data = await res.json();
+                          if (data.url) newImages.push(data.url);
+                        } catch {}
+                      }
+                      setEditing({ ...editing, images: newImages });
+                      setUploading(false);
+                      e.target.value = "";
+                    }} />
+                </label>
+                <span className="text-white/15 text-xs self-center">หรือ</span>
+                <input value={newImageUrl} onChange={e => setNewImageUrl(e.target.value)} placeholder="วาง URL รูป..." className={`flex-1 ${inputClass}`} style={inputStyle} onKeyDown={e => e.key === "Enter" && addImage()} />
+                <button onClick={addImage} className="px-3 py-1.5 rounded text-xs text-white/50 hover:text-white/80" style={{ background: "#0a0a0a", border: "1px solid #ffffff08" }}>เพิ่ม</button>
               </div>
+              <p className="text-white/15 text-[0.55rem] mt-1">รองรับ JPG, PNG, WebP, GIF ขนาดไม่เกิน 5MB</p>
             </div>
 
             <label className="flex items-center gap-2 cursor-pointer">
@@ -219,7 +245,7 @@ export default function AdminProductsPage() {
                 {p.images?.[0] ? (
                   <img src={p.images[0]} alt="" className="w-14 h-14 rounded object-cover flex-shrink-0" />
                 ) : (
-                  <div className="w-14 h-14 rounded flex items-center justify-center text-xl text-[#d4af37]/40 flex-shrink-0" style={{ background: "#0a0a0a" }}>{p.icon}</div>
+                  <div className="w-14 h-14 rounded flex items-center justify-center text-xl text-[#d4af37]/40 flex-shrink-0" style={{ background: "#0a0a0a" }}><Icon name={p.icon || "sparkles"} size={24} /></div>
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">

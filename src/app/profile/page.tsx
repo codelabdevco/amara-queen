@@ -6,6 +6,9 @@ import AppShell from "@/components/AppShell";
 import ProfileSetup from "@/components/ui/ProfileSetup";
 import LaurelButton from "@/components/ui/LaurelButton";
 import { EASE } from "@/constants/animation";
+import PageHeader from "@/components/ui/PageHeader";
+import Icon from "@/components/ui/Icon";
+import LineLoginButton from "@/components/ui/LineLoginButton";
 
 interface ProfileData {
   profile: {
@@ -43,8 +46,14 @@ export default function ProfilePage() {
   const [readings, setReadings] = useState<ReadingRecord[]>([]);
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
 
+  const [loggedIn, setLoggedIn] = useState(false);
+
   function fetchProfile() {
-    fetch("/api/auth/profile").then(r => r.ok ? r.json() : null).then(d => { setData(d); setLoading(false); }).catch(() => setLoading(false));
+    fetch("/api/auth/profile").then(r => {
+      if (r.status === 401) { setLoggedIn(false); setLoading(false); return; }
+      setLoggedIn(true);
+      return r.json();
+    }).then(d => { if (d) setData(d); setLoading(false); }).catch(() => setLoading(false));
   }
 
   useEffect(() => {
@@ -85,20 +94,31 @@ export default function ProfilePage() {
     <AppShell>
       <motion.div className="flex flex-col h-full px-4 pt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, ease: EASE }}>
 
-        {/* Header */}
-        <div className="text-center mb-2">
-          <h2 className="text-base font-semibold tracking-[0.1em]" style={{ background: "linear-gradient(135deg, #d4af37, #f0d78c, #d4af37)", backgroundSize: "200% 200%", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", animation: "shimmer-text 4s ease-in-out infinite" }}>โปรไฟล์</h2>
-        </div>
+        <PageHeader title="โปรไฟล์" animated={false} />
 
         {loading ? (
           <div className="flex items-center justify-center flex-1"><div className="w-4 h-4 border-2 border-[#8B7A4A]/30 border-t-[#d4af37] rounded-full animate-spin" /></div>
-        ) : !data?.profile ? (
+        ) : !loggedIn ? (
           <div className="text-center flex-1 flex flex-col items-center justify-center">
             <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: "#3A0E0E", border: "1px solid #8B7A4A30" }}>
-              <span className="text-[#d4af37] text-3xl">♦</span>
+              <Icon name="diamond" size={32} className="text-[#d4af37]" />
             </div>
             <p className="text-[#8B7A4A]/50 text-sm mb-4">ยังไม่ได้เข้าสู่ระบบ</p>
-            <LaurelButton variant="gold" href="/api/auth/line">เข้าสู่ระบบ</LaurelButton>
+            <LineLoginButton />
+          </div>
+        ) : !data?.profile ? (
+          <div className="text-center flex-1 flex flex-col items-center justify-center">
+            {data?.linePictureUrl ? (
+              <img src={data.linePictureUrl} alt="" className="w-20 h-20 rounded-full mx-auto mb-3" style={{ border: "2px solid #8B7A4A30" }} />
+            ) : (
+              <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-3" style={{ background: "#3A0E0E", border: "1px solid #8B7A4A30" }}>
+                <Icon name="user" size={32} className="text-[#d4af37]" />
+              </div>
+            )}
+            <p className="text-[#8B7A4A]/50 text-sm mb-1">ยินดีต้อนรับ!</p>
+            <p className="text-[#8B7A4A]/30 text-xs mb-4">กรุณากรอกข้อมูลเพื่อเริ่มใช้งาน</p>
+            <LaurelButton variant="gold" onClick={() => setShowEdit(true)}>กรอกข้อมูล</LaurelButton>
+            <ProfileSetup open={showEdit} onClose={() => { setShowEdit(false); fetchProfile(); }} />
           </div>
         ) : (
           <>
@@ -204,7 +224,7 @@ export default function ProfilePage() {
                       {[{ name: "ไพ่ทาโร่", cost: 3 }, { name: "ไพ่ยิปซี", cost: 2 }, { name: "เซียมซี", cost: 1 }, { name: "ฤกษ์ยาม", cost: 2 }, { name: "ถอดรหัสดวงชะตา", cost: 1 }].map(s => (
                         <div key={s.name} className="flex justify-between text-[0.65rem]">
                           <span className="text-[#E2D4A0]/40">{s.name}</span>
-                          <span className="text-[#d4af37]/60">★{s.cost}</span>
+                          <span className="text-[#d4af37]/60 flex items-center gap-0.5"><Icon name="star" size={10} />{s.cost}</span>
                         </div>
                       ))}
                     </div>

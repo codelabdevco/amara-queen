@@ -4,21 +4,22 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { EASE } from "@/constants/animation";
 import LaurelButton from "@/components/ui/LaurelButton";
+import Icon from "@/components/ui/Icon";
 
 interface UserInfo { nickname: string; zodiac: { western: { signTh: string } } | null }
 
 const FORTUNE_SERVICES = [
-  { href: "/tarot", icon: "☽", name: "ไพ่ทาโร่", cost: 3 },
-  { href: "/gypsy", icon: "♦", name: "ไพ่ยิปซี", cost: 2 },
-  { href: "/siamsi", icon: "☰", name: "เซียมซี", cost: 1 },
-  { href: "/numerology", icon: "✡", name: "เลขศาสตร์", cost: 1 },
+  { href: "/tarot", icon: "moon", name: "ไพ่ทาโร่", cost: 3 },
+  { href: "/gypsy", icon: "diamond", name: "ไพ่ยิปซี", cost: 2 },
+  { href: "/siamsi", icon: "bookmark", name: "เซียมซี", cost: 1 },
+  { href: "/numerology", icon: "hash", name: "เลขศาสตร์", cost: 1 },
 ];
 
 const OTHER_SERVICES = [
-  { href: "/auspicious", icon: "☆", name: "ฤกษ์ยามมงคล", cost: 2 },
-  { href: "/calendar", icon: "☼", name: "วันดีวันร้าย", cost: 0 },
-  { href: "/subscription", icon: "✦", name: "แพ็กเกจดวง", cost: 0 },
-  { href: "/shop", icon: "❖", name: "ร้านค้ามงคล", cost: 0 },
+  { href: "/auspicious", icon: "compass", name: "ฤกษ์ยามมงคล", cost: 2 },
+  { href: "/calendar", icon: "calendar", name: "วันดีวันร้าย", cost: 0 },
+  { href: "/subscription", icon: "sparkles", name: "แพ็กเกจดวง", cost: 0 },
+  { href: "/shop", icon: "store", name: "ร้านค้ามงคล", cost: 0 },
 ];
 
 export default function HomeScreen() {
@@ -87,9 +88,9 @@ export default function HomeScreen() {
           >
             <LaurelButton variant="crimson" href={svc.href} className="w-[240px]">
               <span className="flex items-center gap-2">
-                <span className="opacity-60">{svc.icon}</span>
+                <Icon name={svc.icon} size={16} className="opacity-60" />
                 <span>{svc.name}</span>
-                <span className="opacity-30 text-[0.55rem]">&#9733;{svc.cost}</span>
+                <span className="opacity-30 text-[0.55rem] flex items-center gap-0.5"><Icon name="star" size={10} />{svc.cost}</span>
               </span>
             </LaurelButton>
           </motion.div>
@@ -103,7 +104,7 @@ export default function HomeScreen() {
         transition={{ delay: 0.65, duration: 0.5 }}
       >
         <div className="flex-1 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, #5A4E34)" }} />
-        <span className="text-[#8B7A4A]/40 text-[0.5rem]">&#10022;</span>
+        <Icon name="sparkles" size={8} className="text-[#8B7A4A]/40" />
         <div className="flex-1 h-[1px]" style={{ background: "linear-gradient(90deg, #5A4E34, transparent)" }} />
       </motion.div>
 
@@ -124,7 +125,7 @@ export default function HomeScreen() {
             >
               <LaurelButton variant="crimson" href={svc.href} className="w-full h-[60px]">
                 <span className="flex flex-col items-center justify-center gap-0.5 leading-tight w-full text-center">
-                  <span className="opacity-50 text-base leading-none">{svc.icon}</span>
+                  <Icon name={svc.icon} size={20} className="opacity-50" />
                   <span className="text-[0.65rem] leading-none">{svc.name}</span>
                 </span>
               </LaurelButton>

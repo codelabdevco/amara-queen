@@ -3,13 +3,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSettings, getUserProfile } from "@/lib/db";
 import { getUserFromRequest } from "@/lib/admin-auth";
 import { calculateZodiac } from "@/lib/zodiac";
-import { requireCredits } from "@/lib/credit-check";
+import { checkCredits, deductCredits } from "@/lib/credit-check";
 
 const client = new Anthropic();
 
+const rateLimitMap = new Map<string, number[]>();
+function checkRate(key: string, maxPerMin = 5): boolean {
+  const now = Date.now();
+  const hits = (rateLimitMap.get(key) || []).filter(t => now - t < 60000);
+  if (hits.length >= maxPerMin) return false;
+  hits.push(now);
+  rateLimitMap.set(key, hits);
+  return true;
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const creditError = requireCredits(req, "siamsi"); // 1 credit
+    const ip = req.headers.get("x-real-ip") || req.headers.get("x-forwarded-for") || "unknown";
+    if (!checkRate(ip)) return NextResponse.json({ error: "คำขอบ่อยเกินไป กรุณารอสักครู่" }, { status: 429 });
+    const creditError = checkCredits(req, "numerology"); // 1 credit
     if (creditError) return creditError;
 
     const settings = getSettings();
@@ -58,6 +70,7 @@ export async function POST(req: NextRequest) {
       messages: [{ role: "user", content: prompt }],
     });
 
+    deductCredits(req, "numerology");
     const text = message.content[0].type === "text" ? message.content[0].text : "";
     try {
       const start = text.indexOf("{");

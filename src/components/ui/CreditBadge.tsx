@@ -24,7 +24,12 @@ export default function CreditBadge() {
   const [errorMsg, setErrorMsg] = useState("");
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  useEffect(() => { fetchBalance(); }, []);
+  useEffect(() => {
+    fetchBalance();
+    const onCreditChanged = () => fetchBalance();
+    window.addEventListener("credit-changed", onCreditChanged);
+    return () => window.removeEventListener("credit-changed", onCreditChanged);
+  }, []);
   useEffect(() => { return () => { if (pollRef.current) clearInterval(pollRef.current); }; }, []);
 
   function fetchBalance() {
